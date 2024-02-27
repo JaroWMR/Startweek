@@ -1,9 +1,6 @@
 # Ignore everything in the .vscode directory (setting folder)
 .vscode/*
 
-# Ignore itself
-.gitignore
-
 # Add other directories:
 Project/build/*
 build/*
