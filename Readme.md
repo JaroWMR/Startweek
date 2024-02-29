@@ -15,7 +15,7 @@ To get started with Startweek, follow these steps:
     (List of recommended extensions here)
 6. If necessary, change the board in the workspace file of VSCode to match your requirements.
    (Instructions for changing the board in the workspace file)
-7. Press "Start Debugging" to begin.
+7. Press `Start Debugging` to begin.
 
 ## Additonal info
-The branch named 'EmptyEnvironment_DO_NOT_DELETE' offers the environment in its starting state.
+The branch named `EmptyEnvironment_DO_NOT_DELETE` offers the environment in its starting state.
