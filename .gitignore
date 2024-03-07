@@ -1,5 +1,6 @@
 # Ignore everything in the .vscode directory (setting folder)
 .vscode/*
+Project/.vscode/*
 
 # Ignore itself
 .gitignore
@@ -11,5 +12,6 @@ build/*
 
 # Ignore specfic files:
 Zephyr.code-workspace
+
 
 
