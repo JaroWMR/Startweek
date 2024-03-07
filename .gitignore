@@ -2,9 +2,6 @@
 .vscode/*
 Project/.vscode/*
 
-# Ignore itself
-.gitignore
-
 # Add other directories:
 Project/build/*
 build/*
