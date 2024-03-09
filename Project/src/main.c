@@ -1,27 +1,27 @@
-// /*
-//  * Copyright (c) 2012-2014 Wind River Systems, Inc.
-//  *
-//  * SPDX-License-Identifier: Apache-2.0
-//  */
-
-// #include <stdio.h>
-
-// int main(void)
-// {
-//      printf("Hello World! %s\n", CONFIG_BOARD);
-//      return 0;
-// }
-
 #include <zephyr/kernel.h>
 #include <zephyr/sys/printk.h>
+#include <zephyr/drivers/gpio.h>
 
-/* STEP 2 - Define stack size and scheduling priority used by each thread */
+// The stack size 
 #define STACKSIZE 1024
 
 #define THREAD0_PRIORITY 7
 #define THREAD1_PRIORITY 7
 
-void thread0(void)
+int brightness = 0;
+int fadeAmount = 5;
+int fadeDelay = 30;
+
+/* The devicetree node identifier for the "led0" alias. */
+#define LED0_NODE DT_ALIAS(led0)
+
+/*
+ * A build error on this line means your board is unsupported.
+ * See the sample documentation for information on how to fix this.
+ */
+static const struct gpio_dt_spec led = GPIO_DT_SPEC_GET(LED0_NODE, gpios);
+
+void thread0(void) // printing thread
 {
 	int cnt = 0;
 	while (1) {
@@ -31,14 +31,38 @@ void thread0(void)
 	}
 }
 
-void thread1(void)
+void thread1(void) // led thread
 {
-	int cnt = 0;
-	while (1) {
-		printk("Hello, I am thread1\t%d\n", cnt);
-		k_msleep(3000);
-		cnt++;
+	// int cnt = 0;
+	// while (1) {
+	// 	printk("Hello, I am thread1\t%d\n", cnt);
+	// 	k_msleep(3000);
+	// 	cnt++;
+	// }
+
+	for (int i = 0; i < 255; i+= fadeAmount) {
+		//setBrightness(i);
+		gpio_pin_toggle_dt(&led);
+		printk("LED!\n");
+		k_msleep(500);
 	}
+
+	// for (int i = 255; i < 0; i-= fadeAmount) {
+	// 	setBrightness(i);
+	// 	k_msleep(fadeDelay);
+	// }
+}
+
+void setBrightness(int brightness) {
+	float dutyCycle = brightness / 255.0;
+
+	int onTime = dutyCycle * fadeDelay;
+
+	gpio_pin_toggle_dt(&led);
+	k_msleep(fadeDelay);
+
+	gpio_pin_toggle_dt(&led);
+	k_msleep(fadeDelay-onTime);
 }
 
 // Define the threads
