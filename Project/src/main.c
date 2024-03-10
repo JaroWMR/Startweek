@@ -19,6 +19,39 @@ static const struct gpio_dt_spec led = GPIO_DT_SPEC_GET(LED0_NODE, gpios);
 #define TCORE_PRIORITY 7
 #define TLED_PRIORITY 7
 
+int ledFunction = 1; //0=fade, 1=step
+
+void pwm(int brightness, int duration) {
+	// brightness may be a value from 0 (off) to 10 (max brightness)
+	// duration in [ms], must be a multiple of 10 ms
+	for (int i = 0; i < duration/10; i++) {
+		gpio_pin_set_dt(&led, 1);
+		k_msleep(brightness);
+		gpio_pin_set_dt(&led, 0);
+		k_msleep(10-brightness);
+	}
+
+}
+
+void ledFade() {
+	int led_time = 30; // ms
+	printk("Starting LED fade\n");
+	for (int i = 1; i <= 10; i++) {
+		pwm(i,led_time);
+	}
+	for (int i = 9; i > 1; i--) {
+		pwm(i,led_time);
+	}
+}
+
+void ledStep() {
+	int led_time = 400; // ms
+	printk("Starting LED step\n");
+	pwm(3,led_time);
+	pwm(6,led_time);
+	pwm(10,led_time);
+}
+
 void tcore(void) // Core thread
 {
 	int cnt = 0;
@@ -31,39 +64,25 @@ void tcore(void) // Core thread
 
 void tled(void) // led thread
 {
-	int ret;
-	int led_time = 30;
-
 	if (!gpio_is_ready_dt(&led)) {
-		return 0;
+		printk("LED gpio is not ready!\n");
 	}
 
-	ret = gpio_pin_configure_dt(&led, GPIO_OUTPUT_ACTIVE);
-	if (ret < 0) {
+	if (gpio_pin_configure_dt(&led, GPIO_OUTPUT_ACTIVE) < 0) {
 		printk("Failed to configure LED gpio!\n");
 	}
 
 	while(1) {
-		printk("Starting LED cycle\n");
-		for (int i = 1; i <= 10; i++) {
-			pwm(i,led_time);
+		if(ledFunction == 0) {
+			ledFade();
 		}
-		for (int i = 9; i > 1; i--) {
-			pwm(i,led_time);
+		else if (ledFunction == 1) {
+			ledStep();
+		}
+		else {
+			printk("Error: invalid value for ledFunction: %d\n", ledFunction);
 		}
 	}
-}
-
-void pwm(int brightness, int duration) {
-	// brightness may be a value from 0 (off) to 10 (max brightness)
-	// duration in [ms], must be a multiple of 10 ms
-	for (int i = 0; i < duration/10; i++) {
-		gpio_pin_set_dt(&led, 1);
-		k_msleep(brightness);
-		gpio_pin_set_dt(&led, 0);
-		k_msleep(10-brightness);
-	}
-
 }
 
 // Define the threads
