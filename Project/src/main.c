@@ -16,23 +16,23 @@
  */
 static const struct gpio_dt_spec led = GPIO_DT_SPEC_GET(LED0_NODE, gpios);
 
-#define THREAD0_PRIORITY 7
-#define THREAD1_PRIORITY 7
+#define TCORE_PRIORITY 7
+#define TLED_PRIORITY 7
 
-void thread0(void) // printing thread
+void tcore(void) // Core thread
 {
 	int cnt = 0;
 	while (1) {
 		printk("Hello, I am thread0\t%d\n", cnt);
-		k_msleep(100);
+		k_msleep(540);
 		cnt++;
 	}
 }
 
-void thread1(void) // led thread
+void tled(void) // led thread
 {
 	int ret;
-	bool led_state = true;
+	int led_time = 30;
 
 	if (!gpio_is_ready_dt(&led)) {
 		return 0;
@@ -40,29 +40,24 @@ void thread1(void) // led thread
 
 	ret = gpio_pin_configure_dt(&led, GPIO_OUTPUT_ACTIVE);
 	if (ret < 0) {
-		return 0;
+		printk("Failed to configure LED gpio!\n");
 	}
 
-	pwm(8,0);
-
-	while (1) {
-		//ret = gpio_pin_toggle_dt(&led);
-		ret = gpio_pin_set_dt(&led, led_state);
-		
-		if (ret < 0) {
-			return 0;
+	while(1) {
+		printk("Starting LED cycle\n");
+		for (int i = 1; i <= 10; i++) {
+			pwm(i,led_time);
 		}
-
-		printf("LED state: %s\n", led_state ? "ON" : "OFF");
-		led_state = !led_state;
-		k_msleep(SLEEP_TIME_MS);
+		for (int i = 9; i > 1; i--) {
+			pwm(i,led_time);
+		}
 	}
 }
 
 void pwm(int brightness, int duration) {
 	// brightness may be a value from 0 (off) to 10 (max brightness)
-	
-	for (int i = 0; i < 200; i++) {
+	// duration in [ms], must be a multiple of 10 ms
+	for (int i = 0; i < duration/10; i++) {
 		gpio_pin_set_dt(&led, 1);
 		k_msleep(brightness);
 		gpio_pin_set_dt(&led, 0);
@@ -72,5 +67,5 @@ void pwm(int brightness, int duration) {
 }
 
 // Define the threads
-K_THREAD_DEFINE(thread0_id, STACKSIZE, thread0, NULL, NULL, NULL, THREAD0_PRIORITY, 0, 0);
-K_THREAD_DEFINE(thread1_id, STACKSIZE, thread1, NULL, NULL, NULL, THREAD1_PRIORITY, 0, 0);
+K_THREAD_DEFINE(tcore_id, STACKSIZE, tcore, NULL, NULL, NULL, TCORE_PRIORITY, 0, 0);
+K_THREAD_DEFINE(tled_id, STACKSIZE, tled, NULL, NULL, NULL, TLED_PRIORITY, 0, 0);
