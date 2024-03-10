@@ -28,6 +28,7 @@ static struct gpio_callback button_cb_data;
  */
 static const struct gpio_dt_spec led = GPIO_DT_SPEC_GET(LED0_NODE, gpios);
 
+#define TBUTTON_PRIORITY 7
 #define TCORE_PRIORITY 7
 #define TLED_PRIORITY 7
 
@@ -69,8 +70,7 @@ void ledStep() {
 	pwm(10,led_time);
 }
 
-void tcore(void) // Core thread
-{
+void tbutton(void) { // button thread
 	int ret;
 
 	if (!gpio_is_ready_dt(&button)) {
@@ -90,7 +90,10 @@ void tcore(void) // Core thread
 	gpio_init_callback(&button_cb_data, button_pressed, BIT(button.pin));
 	gpio_add_callback(button.port, &button_cb_data);
 	printk("Set up button at %s pin %d\n", button.port->name, button.pin);
+}
 
+void tcore(void) // Core thread
+{
 	int cnt = 0;
 	while (1) {
 		printk("Hello, I am thread0\t%d\n", cnt);
@@ -112,10 +115,10 @@ void tled(void) // led thread
 
 	while(1) {
 		if(ledFunction == 0) {
-			ledFade();
+			ledStep();
 		}
 		else if (ledFunction == 1) {
-			ledStep();
+			ledFade();
 		}
 		else {
 			printk("Error: invalid value for ledFunction: %d\n", ledFunction);
@@ -124,5 +127,6 @@ void tled(void) // led thread
 }
 
 // Define the threads
+K_THREAD_DEFINE(tbutton_id, STACKSIZE, tbutton, NULL, NULL, NULL, TBUTTON_PRIORITY, 0,0);
 K_THREAD_DEFINE(tcore_id, STACKSIZE, tcore, NULL, NULL, NULL, TCORE_PRIORITY, 0, 0);
 K_THREAD_DEFINE(tled_id, STACKSIZE, tled, NULL, NULL, NULL, TLED_PRIORITY, 0, 0);
