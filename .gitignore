@@ -10,5 +10,5 @@ build/*
 # Ignore specfic files:
 Zephyr.code-workspace
 
-
-
+# Ignore test results
+Project/tests/results/*

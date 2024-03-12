@@ -2,7 +2,7 @@
 tests:
   # section.subsection
   sample.testing.ztest:
-    build_only: true
+    build_only: false # Changed this to false, was true
     platform_allow:
       - native_posix
       - native_sim
