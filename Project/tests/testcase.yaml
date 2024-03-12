@@ -4,8 +4,7 @@ tests:
   sample.testing.ztest:
     build_only: false # Changed this to false, was true
     platform_allow:
-      - native_posix
-      - native_sim
+      - nucleo_f091rc
     integration_platforms:
       - native_sim
     tags: test_framework
