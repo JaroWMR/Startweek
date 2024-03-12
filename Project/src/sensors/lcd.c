@@ -14,6 +14,7 @@ static const struct gpio_dt_spec Data4 	= GPIO_DT_SPEC_GET(DT_ALIAS(d8), gpios);
 static const struct gpio_dt_spec Data5 	= GPIO_DT_SPEC_GET(DT_ALIAS(d9), gpios);
 static const struct gpio_dt_spec Data6 	= GPIO_DT_SPEC_GET(DT_ALIAS(d10), gpios);
 static const struct gpio_dt_spec Data7 	= GPIO_DT_SPEC_GET(DT_ALIAS(d11), gpios);
+static const struct gpio_dt_spec BacklightEnable 	= GPIO_DT_SPEC_GET(DT_ALIAS(d12), gpios);
 #define HIGH			1
 #define LOW				0
 
@@ -47,6 +48,7 @@ void _lcdWrite8bits(uint8_t bits)
 	gpio_pin_set_dt(&Data5,LOW);
 	gpio_pin_set_dt(&Data6,LOW);
 	gpio_pin_set_dt(&Data7,LOW);
+	
 	
 
 	if ((bits & BIT(0)) == BIT(0)) {
@@ -148,7 +150,7 @@ int _initializeGPIO()
 		!gpio_is_ready_dt(&Data3) && !gpio_is_ready_dt(&Data4) &&
 		!gpio_is_ready_dt(&Data5) && !gpio_is_ready_dt(&Data6) &&
 		!gpio_is_ready_dt(&Data7) && !gpio_is_ready_dt(&Data0) &&
-		!gpio_is_ready_dt(&Enable) && !gpio_is_ready_dt(&RS)) 
+		!gpio_is_ready_dt(&Enable) && !gpio_is_ready_dt(&RS) && !gpio_is_ready_dt(&BacklightEnable)) 
 	{
 		return 1;
 	}
@@ -164,6 +166,7 @@ int _initializeGPIO()
 	ret += gpio_pin_configure_dt(&Data7, GPIO_OUTPUT_ACTIVE);
 	ret += gpio_pin_configure_dt(&Enable, GPIO_OUTPUT_ACTIVE);
 	ret += gpio_pin_configure_dt(&RS, GPIO_OUTPUT_ACTIVE);
+	ret += gpio_pin_configure_dt(&BacklightEnable, GPIO_OUTPUT_ACTIVE);
 	//return when gpio is configured incorrectly
 	if (ret < 0) 
 	{
@@ -217,5 +220,12 @@ void lcd_writeData(char *msg)
 
 void lcd_enable()
 {
+	gpio_pin_set_dt(&BacklightEnable,HIGH);
+	k_sleep(K_USEC(1));
+}
 
+void lcd_disable()
+{
+	gpio_pin_set_dt(&BacklightEnable,LOW);
+	k_sleep(K_USEC(1));
 }
