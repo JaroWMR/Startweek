@@ -16,7 +16,7 @@ ZTEST_SUITE(framework_tests, NULL, NULL, NULL, NULL, NULL);
  * This test verifies various assert macros provided by ztest.
  *
  */
-ZTEST(framework_tests, test_assert)
+ZTEST(framework_tests, test_one_one)
 {
 	zassert_true(1, "1 was false");
 	zassert_false(0, "0 was true");
@@ -29,7 +29,23 @@ ZTEST(framework_tests, test_assert)
 	zassert_equal(a,0);
 }
 
-ZTEST(framework_tests, test_two)
+ZTEST(framework_tests, test_one_two)
+{
+	int a = myFunction();
+	a += a;
+	zassert_equal(a,0);
+}
+
+ZTEST_SUITE(test_suite_two, NULL, NULL, NULL, NULL, NULL);
+
+ZTEST(test_suite_two, test_two_one)
+{
+	int a = myFunction();
+	a += a;
+	zassert_equal(a,0);
+}
+
+ZTEST(test_suite_two, test_two_two)
 {
 	int a = myFunction();
 	a += a;
