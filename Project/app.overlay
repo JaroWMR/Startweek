@@ -4,59 +4,59 @@
     gpioCustom {
         compatible = "gpio-keys";
         D2: gpioa_10 {
-            gpios = <&gpioa 10 GPIO_PULL_UP | GPIO_ACTIVE_LOW>;
+            gpios = <&gpioa 10 GPIO_PULL_UP>;
             label = "gpio D2";
         };
         D3: gpiob_3 {
-            gpios = <&gpiob 3 GPIO_PULL_UP | GPIO_ACTIVE_LOW>;
+            gpios = <&gpiob 3 GPIO_ACTIVE_HIGH>;
             label = "gpio D3";
         };
 		D4: gpiob_5 {
-            gpios = <&gpiob 5 GPIO_PULL_UP | GPIO_ACTIVE_LOW>;
+            gpios = <&gpiob 5 GPIO_ACTIVE_HIGH>;
             label = "gpio D4";
         };
 		D5: gpiob_4 {
-            gpios = <&gpiob 4 GPIO_PULL_UP | GPIO_ACTIVE_LOW>;
+            gpios = <&gpiob 4 GPIO_ACTIVE_HIGH>;
             label = "gpio D5";
         };
 		D6: gpiob_10 {
-            gpios = <&gpiob 10 GPIO_PULL_UP | GPIO_ACTIVE_LOW>;
+            gpios = <&gpiob 10 GPIO_ACTIVE_HIGH>;
             label = "gpio D6";
         };
 		D7: gpioa_8 {
-            gpios = <&gpioa 8 GPIO_PULL_UP | GPIO_ACTIVE_LOW>;
+            gpios = <&gpioa 8 GPIO_ACTIVE_HIGH>;
             label = "gpio D7";
         };
 		D8: gpioa_9 {
-            gpios = <&gpioa 9 GPIO_PULL_UP | GPIO_ACTIVE_LOW>;
+            gpios = <&gpioa 9 GPIO_ACTIVE_HIGH>;
             label = "gpio D8";
         };
 		D9: gpioc_7 {
-            gpios = <&gpioc 7 GPIO_PULL_UP | GPIO_ACTIVE_LOW>;
+            gpios = <&gpioc 7 GPIO_ACTIVE_HIGH>;
             label = "gpio D9";
         };
 		D10: gpiob_6 {
-            gpios = <&gpiob 6 GPIO_PULL_UP | GPIO_ACTIVE_LOW>;
+            gpios = <&gpiob 6 GPIO_ACTIVE_HIGH>;
             label = "gpio D10";
         };
 		D11: gpioa_7 {
-            gpios = <&gpioa 7 GPIO_PULL_UP | GPIO_ACTIVE_LOW>;
+            gpios = <&gpioa 7 GPIO_ACTIVE_HIGH>;
             label = "gpio D11";
         };
 		D12: gpioa_6 {
-            gpios = <&gpioa 6 GPIO_PULL_UP | GPIO_ACTIVE_LOW>;
+            gpios = <&gpioa 6 GPIO_ACTIVE_HIGH>;
             label = "gpio D12";
         };
 		D13: gpioa_5 {
-            gpios = <&gpioa 5 GPIO_PULL_UP | GPIO_ACTIVE_LOW>;
+            gpios = <&gpioa 5 GPIO_ACTIVE_HIGH>;
             label = "gpio D13";
         };
 		D14: gpiob_9 {
-            gpios = <&gpiob 9 GPIO_PULL_UP | GPIO_ACTIVE_LOW>;
+            gpios = <&gpiob 9 GPIO_ACTIVE_HIGH>;
             label = "gpio D14";
         };
 		D15: gpiob_8 {
-            gpios = <&gpiob 8 GPIO_PULL_UP | GPIO_ACTIVE_LOW>;
+            gpios = <&gpiob 8 GPIO_ACTIVE_HIGH>;
             label = "gpio D15";
         };
 		
