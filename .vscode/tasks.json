@@ -33,6 +33,8 @@
 				"flash",
 				"-d",
 				"${config:app.build_dir}",
+				"--runner",
+				"jlink"
 			],
 			"dependsOn": [
 				// "Clean Build",
