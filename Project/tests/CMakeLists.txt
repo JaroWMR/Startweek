@@ -6,4 +6,11 @@ find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})
 project(startweek)
 
 FILE(GLOB app_sources src/*.c)
-target_sources(app PRIVATE ${app_sources})
+target_sources(app PRIVATE
+	${app_sources}
+	../src/walking.c
+)
+
+target_include_directories(app PRIVATE
+	${CMAKE_CURRENT_SOURCE_DIR}/../inc
+)

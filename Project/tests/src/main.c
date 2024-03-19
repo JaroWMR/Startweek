@@ -5,6 +5,7 @@
  */
 
 #include <zephyr/ztest.h>
+#include "walking.h"
 
 
 ZTEST_SUITE(framework_tests, NULL, NULL, NULL, NULL, NULL);
@@ -23,4 +24,14 @@ ZTEST(framework_tests, test_assert)
 	zassert_not_null("foo", "\"foo\" was NULL");
 	zassert_equal(1, 1, "1 was not equal to 1");
 	zassert_equal_ptr(NULL, NULL, "NULL was not equal to NULL");
+
+	int a = myFunction();
+	zassert_equal(a,0);
+}
+
+ZTEST(framework_tests, test_two)
+{
+	int a = myFunction();
+	a += a;
+	zassert_equal(a,0);
 }
