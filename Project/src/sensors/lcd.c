@@ -4,8 +4,8 @@
 #include <string.h>
 
 // GPIO definitions 
-static const struct gpio_dt_spec Enable = GPIO_DT_SPEC_GET(DT_ALIAS(d2), gpios);
-static const struct gpio_dt_spec RS 	= GPIO_DT_SPEC_GET(DT_ALIAS(d3), gpios);
+static const struct gpio_dt_spec RS 	= GPIO_DT_SPEC_GET(DT_ALIAS(d2), gpios);
+static const struct gpio_dt_spec Enable = GPIO_DT_SPEC_GET(DT_ALIAS(d3), gpios);
 static const struct gpio_dt_spec Data0 	= GPIO_DT_SPEC_GET(DT_ALIAS(d4), gpios);
 static const struct gpio_dt_spec Data1 	= GPIO_DT_SPEC_GET(DT_ALIAS(d5), gpios);
 static const struct gpio_dt_spec Data2 	= GPIO_DT_SPEC_GET(DT_ALIAS(d6), gpios);
