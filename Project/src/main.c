@@ -3,7 +3,7 @@
 #include "lcd.h"
 
 int main(void)
-l{
+{
 	lcd_initialize();
 	lcd_enable();
 	char str[20];
