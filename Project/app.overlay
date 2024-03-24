@@ -1,0 +1,284 @@
+#include <zephyr/dt-bindings/gpio/gpio.h>
+
+/ {
+    gpioCustom {
+        compatible = "gpio-keys";
+
+        shift_Data_In_16x16: gpioc_8 {
+            gpios = <&gpioc 8 GPIO_ACTIVE_HIGH>;
+        };
+        shift_Output_Enable_16x16: gpioc_7 {
+            gpios = <&gpioc 7 GPIO_ACTIVE_HIGH>;
+        };
+        shift_Clock_16x16: gpioc_6 {
+            gpios = <&gpioc 6 GPIO_ACTIVE_HIGH>;
+        };
+        MUX_A_16x16: gpiog_8 {
+            gpios = <&gpiog 8 GPIO_ACTIVE_HIGH>;
+        };
+		MUX_B_16x16: gpiog_7 {
+            gpios = <&gpiog 7 GPIO_ACTIVE_HIGH>;
+        };
+		MUX_C_16x16: gpiog_6 {
+            gpios = <&gpiog 6 GPIO_ACTIVE_HIGH>;
+        };
+		MUX_D_16x16: gpiog_5 {
+            gpios = <&gpiog 5 GPIO_ACTIVE_HIGH>;
+        };
+		buzzer: gpioe_12 {
+            gpios = <&gpioe 12 GPIO_ACTIVE_HIGH>;
+        };
+		decimal_Point_7_Segment: gpioe_10 {
+            gpios = <&gpioe 10 GPIO_ACTIVE_HIGH>;
+        };
+		MUX_DIG4_7_Segment: gpioe_9 {
+            gpios = <&gpioe 9 GPIO_ACTIVE_HIGH>;
+        };
+		MUX_DIG3_7_Segment: gpioe_8 {
+            gpios = <&gpioe 8 GPIO_ACTIVE_HIGH>;
+        };
+		MUX_DIG2_7_Segment: gpioe_7 {
+            gpios = <&gpioe 7 GPIO_ACTIVE_HIGH>;
+        };
+		MUX_DIG1_7_Segment: gpiog_1 {
+            gpios = <&gpiog 1 GPIO_ACTIVE_HIGH>;
+        };
+		BCD_D_7_Segment: gpiog_0 {
+            gpios = <&gpiog 0 GPIO_ACTIVE_HIGH>;
+        };
+		BCD_C_7_Segment: gpiof_15 {
+            gpios = <&gpiof 15 GPIO_ACTIVE_HIGH>;
+        };
+		BCD_B_7_Segment: gpiof_14 {
+            gpios = <&gpiof 14 GPIO_ACTIVE_HIGH>;
+        };
+		BCD_A_7_Segment: gpiof_13 {
+            gpios = <&gpiof 13 GPIO_ACTIVE_HIGH>;
+        };
+		rotary_Switch: gpiof_11 {
+            gpios = <&gpiof 11 GPIO_ACTIVE_HIGH>;
+        };
+		button_1_4x4: gpiob_0 {
+            gpios = <&gpiob 0 GPIO_ACTIVE_HIGH>;
+        };
+		button_2_4x4: gpioc_5 {
+            gpios = <&gpioc 5 GPIO_ACTIVE_HIGH>;
+        };
+		button_3_4x4: gpioc_4 {
+            gpios = <&gpioc 4 GPIO_ACTIVE_HIGH>;
+        };
+		button_4_4x4: gpioa_7 {
+            gpios = <&gpioa 7 GPIO_ACTIVE_HIGH>;
+        };
+		button_5_4x4: gpioa_6 {
+            gpios = <&gpioa 6 GPIO_ACTIVE_HIGH>;
+        };
+		button_6_4x4: gpioa_5 {
+            gpios = <&gpioa 5 GPIO_ACTIVE_HIGH>;
+        };
+		button_7_4x4: gpioc_3 {
+            gpios = <&gpioc 3 GPIO_ACTIVE_HIGH>;
+        };
+		button_8_4x4: gpioc_2 {
+            gpios = <&gpioc 2 GPIO_ACTIVE_HIGH>;
+        };
+		button_9_4x4: gpioc_1 {
+            gpios = <&gpioc 1 GPIO_ACTIVE_HIGH>;
+        };
+		button_10_4x4: gpioc_0 {
+            gpios = <&gpioc 0 GPIO_ACTIVE_HIGH>;
+        };
+		button_11_4x4: gpiof_10 {
+            gpios = <&gpiof 10 GPIO_ACTIVE_HIGH>;
+        };
+		button_12_4x4: gpiof_9 {
+            gpios = <&gpiof 9 GPIO_ACTIVE_HIGH>;
+        };
+		button_13_4x4: gpiof_8 {
+            gpios = <&gpiof 8 GPIO_ACTIVE_HIGH>;
+        };
+		button_14_4x4: gpiof_7 {
+            gpios = <&gpiof 7 GPIO_ACTIVE_HIGH>;
+        };
+		button_15_4x4: gpiof_6 {
+            gpios = <&gpiof 6 GPIO_ACTIVE_HIGH>;
+        };
+		button_16_4x4: gpiof_5 {
+            gpios = <&gpiof 5 GPIO_ACTIVE_HIGH>;
+        };
+		shift_Data_in_4x4: gpiof_4 {
+            gpios = <&gpiof 4 GPIO_ACTIVE_HIGH>;
+        };
+		shift_Output_Enable_4x4: gpiof_3 {
+            gpios = <&gpiof 3 GPIO_ACTIVE_HIGH>;
+        };
+		shift_Clock_4x4: gpiof_2 {
+            gpios = <&gpiof 2 GPIO_ACTIVE_HIGH>;
+        };
+		MUX_A_4x4: gpiof_1 {
+            gpios = <&gpiof 1 GPIO_ACTIVE_HIGH>;
+        };
+		MUX_B_4x4: gpiof_0 {
+            gpios = <&gpiof 0 GPIO_ACTIVE_HIGH>;
+        };
+		ABC_button_a: gpioc_13 {
+            gpios = <&gpioc 13 GPIO_ACTIVE_HIGH>;
+        };
+		ABC_led_a: gpioe_6 {
+            gpios = <&gpioe 6 GPIO_ACTIVE_HIGH>;
+        };
+		ABC_button_b: gpioe_5 {
+            gpios = <&gpioe 5 GPIO_ACTIVE_HIGH>;
+        };
+		ABC_led_b: gpioe_4 {
+            gpios = <&gpioe 4 GPIO_ACTIVE_HIGH>;
+        };
+		ABC_button_c: gpioe_3 {
+            gpios = <&gpioe 3 GPIO_ACTIVE_HIGH>;
+        };
+		ABC_led_c: gpioe_2 {
+            gpios = <&gpioe 2 GPIO_ACTIVE_HIGH>;
+        };
+		switches_1_On: gpioe_1 {
+            gpios = <&gpioe 1 GPIO_ACTIVE_HIGH>;
+        };
+		switches_1_Off: gpioe_0 {
+            gpios = <&gpioe 0 GPIO_ACTIVE_HIGH>;
+        };
+		switches_2_On: gpiob_4 {
+            gpios = <&gpiob 4 GPIO_ACTIVE_HIGH>;
+        };
+		switches_2_Off: gpiob_3 {
+            gpios = <&gpiob 3 GPIO_ACTIVE_HIGH>;
+        };
+		switches_3_On: gpiog_15 {
+            gpios = <&gpiog 15 GPIO_ACTIVE_HIGH>;
+        };
+		switches_3_Off: gpiog_14 {
+            gpios = <&gpiog 14 GPIO_ACTIVE_HIGH>;
+        };
+		switches_4_On: gpiog_13 {
+            gpios = <&gpiog 13 GPIO_ACTIVE_HIGH>;
+        };
+		switches_4_Off: gpiog_12 {
+            gpios = <&gpiog 12 GPIO_ACTIVE_HIGH>;
+        };
+		switches_5_On: gpiog_11 {
+            gpios = <&gpiog 11 GPIO_ACTIVE_HIGH>;
+        };
+		switches_5_Off: gpiog_10 {
+            gpios = <&gpiog 10 GPIO_ACTIVE_HIGH>;
+        };
+		LCD_Display_E: gpiog_9 {
+            gpios = <&gpiog 9 GPIO_ACTIVE_HIGH>;
+        };
+		LCD_Display_RS: gpiod_7 {
+            gpios = <&gpiod 7 GPIO_ACTIVE_HIGH>;
+        };
+		LCD_Display_Backlight_Enable: gpiod_6 {
+            gpios = <&gpiod 6 GPIO_ACTIVE_HIGH>;
+        };
+		start_Button: gpiod_5 {
+            gpios = <&gpiod 5 GPIO_ACTIVE_HIGH>;
+        };
+		start_Led: gpiod_4 {
+            gpios = <&gpiod 4 GPIO_ACTIVE_HIGH>;
+        };
+		LCD_Display_D7: gpiod_3 {
+            gpios = <&gpiod 3 GPIO_ACTIVE_HIGH>;
+        };
+		LCD_Display_D6: gpiod_2 {
+            gpios = <&gpiod 2 GPIO_ACTIVE_HIGH>;
+        };
+		LCD_Display_D5: gpiod_1 {
+            gpios = <&gpiod 1 GPIO_ACTIVE_HIGH>;
+        };
+		LCD_Display_D4: gpiod_0 {
+            gpios = <&gpiod 0 GPIO_ACTIVE_HIGH>;
+        };
+		LCD_Display_D3: gpioc_12 {
+            gpios = <&gpioc 12 GPIO_ACTIVE_HIGH>;
+        };
+		LCD_Display_D2: gpioc_11 {
+            gpios = <&gpioc 11 GPIO_ACTIVE_HIGH>;
+        };
+		LCD_Display_D1: gpioc_10 {
+            gpios = <&gpioc 10 GPIO_ACTIVE_HIGH>;
+        };
+		LCD_Display_D0: gpioa_15 {
+            gpios = <&gpioa 15 GPIO_ACTIVE_HIGH>;
+        };
+
+
+    };
+    aliases {
+        shift-data-in-16x16 	= &shift_Data_In_16x16;
+		shift-enable-16x16 		= &shift_Output_Enable_16x16;
+		shift-clock-16x16 		= &shift_Clock_16x16;
+		mux-a-16x16				= &MUX_A_16x16;
+		mux-b-16x16				= &MUX_B_16x16;
+		mux-c-16x16				= &MUX_C_16x16;
+		mux-d-16x16				= &MUX_D_16x16;
+		buzzer					= &buzzer;
+		decimal-point-7-segment = &decimal_Point_7_Segment;
+		mux-dig1-7-segment = &MUX_DIG1_7_Segment;
+		mux-dig2-7-segment = &MUX_DIG2_7_Segment;
+		mux-dig3-7-segment = &MUX_DIG3_7_Segment;
+		mux-dig4-7-segment = &MUX_DIG4_7_Segment;
+		bcd-d-7-segment = &BCD_D_7_Segment;
+		bcd-c-7-segment = &BCD_C_7_Segment;
+		bcd-b-7-segment = &BCD_B_7_Segment;
+		bcd-a-7-segment = &BCD_A_7_Segment;
+		rotary-switch = &rotary_Switch;
+		button-1-4x4 = &button_1_4x4;
+		button-2-4x4 = &button_2_4x4;
+		button-3-4x4 = &button_3_4x4;
+		button-4-4x4 = &button_4_4x4;
+		button-5-4x4 = &button_5_4x4;
+		button-6-4x4 = &button_6_4x4;
+		button-7-4x4 = &button_7_4x4;
+		button-8-4x4 = &button_8_4x4;
+		button-9-4x4 = &button_9_4x4;
+		button-10-4x4 = &button_10_4x4;
+		button-11-4x4 = &button_11_4x4;
+		button-12-4x4 = &button_12_4x4;
+		button-13-4x4 = &button_13_4x4;
+		button-14-4x4 = &button_14_4x4;
+		button-15-4x4 = &button_15_4x4;
+		button-16-4x4 = &button_16_4x4;
+		shift-data-in-4x4 = &shift_Data_in_4x4;
+		shift-output-enable-4x4 = &shift_Output_Enable_4x4;
+		shift-clock-4x4 = &shift_Clock_4x4;
+		mux-a-4x4 = &MUX_A_4x4;
+		mux-b-4x4 = &MUX_B_4x4;
+		abc-button-a = &ABC_button_a;
+		abc-led-a = &ABC_led_a;
+		abc-button-b = &ABC_button_b;
+		abc-led-b = &ABC_led_b;
+		abc-button-c = &ABC_button_c;
+		abc-led-c = &ABC_led_c;
+		switches-1-on = &switches_1_On;
+		switches-1-off = &switches_1_Off;
+		switches-2-on = &switches_2_On;
+		switches-2-off = &switches_2_Off;
+		switches-3-on = &switches_3_On;
+		switches-3-off = &switches_3_Off;
+		switches-4-on = &switches_4_On;
+		switches-4-off = &switches_4_Off;
+		switches-5-on = &switches_5_On;
+		switches-5-off = &switches_5_Off;
+		lcd-display-e = &LCD_Display_E;
+		lcd-display-rs = &LCD_Display_RS;
+		lcd-display-backlight-enable = &LCD_Display_Backlight_Enable;
+		start-button = &start_Button;
+		start-led = &start_Led;
+		lcd-display-d7 = &LCD_Display_D7;
+		lcd-display-d6 = &LCD_Display_D6;
+		lcd-display-d5 = &LCD_Display_D5;
+		lcd-display-d4 = &LCD_Display_D4;
+		lcd-display-d3 = &LCD_Display_D3;
+		lcd-display-d2 = &LCD_Display_D2;
+		lcd-display-d1 = &LCD_Display_D1;
+		lcd-display-d0 = &LCD_Display_D0;
+    };
+};
