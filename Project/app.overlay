@@ -1,12 +1,7 @@
 &usart1 {
-    status = "okay"; // Change "uart1" to match your UART controller's label
-    current-speed = <9600>; // Change the baud rate to match your module's baud rate
-    pinctrl-0 = <&uart1_pins>; // If you have pin control configured for UART
-};
-
-&nmea0183 {
-    compatible = "nmea0183"; // Adjust this to match your NMEA-0183 driver's compatible string
-    uart = <&uart1>; // Reference the UART controller label you defined above
-    label = "nmea0183_uart"; // Label for your NMEA-0183 device
-    status = "okay"; // Activate the NMEA-0183 device
+        current-speed = <9600>;
+        
+        gnss: gnss-nmea-generic {
+                compatible = "gnss-nmea-generic";
+        };
 };
