@@ -10,9 +10,11 @@
 
 static void gnss_data_cb(const struct device *dev, const struct gnss_data *data)
 {
-	printf("Words 'n such!\n");
 	if (data->info.fix_status != GNSS_FIX_STATUS_NO_FIX) {
 		printf("%s has fix!\r\n", dev->name);
+		printf("Lat: %lld\n", data->nav_data.latitude);
+		printf("Lon: %lld\n", data->nav_data.longitude);
+		printf("Alt: %d\n", data->nav_data.altitude);
 	}
 }
 
