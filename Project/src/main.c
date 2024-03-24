@@ -10,6 +10,7 @@
 
 static void gnss_data_cb(const struct device *dev, const struct gnss_data *data)
 {
+	printf("Words 'n such!\n");
 	if (data->info.fix_status != GNSS_FIX_STATUS_NO_FIX) {
 		printf("%s has fix!\r\n", dev->name);
 	}
