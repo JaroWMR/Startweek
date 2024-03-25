@@ -1,8 +1,7 @@
 &i2c1 {
-	gyro: lis3mdl-magn@1c {
+	gyro: lis3mdl-magn@1e {
 	compatible = "st,lis3mdl-magn";
-	reg = <0x1c>;
-	label = "gyro";
+	reg = <0x1E>;
 	irq-gpios = <&gpiob 6 GPIO_ACTIVE_HIGH>;
 	};
 };
