@@ -3,5 +3,6 @@
 	compatible = "st,lis3mdl-magn";
 	reg = <0x1c>;
 	label = "gyro";
+	irq-gpios = <&gpiob 6 GPIO_ACTIVE_HIGH>;
 	};
 };
