@@ -1,6 +1,7 @@
 &i2c1 {
-	gyro: lis3mdl-magn@1e {
+	gyro: lis3mdl-magn@1c {
 	compatible = "st,lis3mdl-magn";
-	reg = <0x1e>;
+	reg = <0x1c>;
+	label = "gyro";
 	};
 };
