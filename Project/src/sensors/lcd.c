@@ -172,6 +172,20 @@ int _initializeGPIO()
 	{
 		return 1;
 	}
+
+	gpio_pin_set_dt(&Data0,LOW);
+	gpio_pin_set_dt(&Data1,LOW);
+	gpio_pin_set_dt(&Data2,LOW);
+	gpio_pin_set_dt(&Data3,LOW);
+	gpio_pin_set_dt(&Data4,LOW);
+	gpio_pin_set_dt(&Data5,LOW);
+	gpio_pin_set_dt(&Data6,LOW);
+	gpio_pin_set_dt(&Data7,LOW);
+	gpio_pin_set_dt(&Enable,LOW);
+	gpio_pin_set_dt(&RS,LOW);
+	gpio_pin_set_dt(&BacklightEnable,LOW);
+
+
 	return 0;
 }
 
