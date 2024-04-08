@@ -59,6 +59,24 @@
             gpios = <&gpiob 8 GPIO_ACTIVE_HIGH>;
             label = "gpio D15";
         };
+		D15_1: gpioc_6 {
+            gpios = <&gpioc 6 GPIO_ACTIVE_HIGH>;
+        };
+		D14_1: gpioc_5 {
+            gpios = <&gpioc 5 GPIO_ACTIVE_HIGH>;
+        };
+		D13_1: gpioa_12 {
+            gpios = <&gpioa 12 GPIO_ACTIVE_HIGH>;
+        };
+		D12_1: gpioa_11 {
+            gpios = <&gpioa 11 GPIO_ACTIVE_HIGH>;
+        };
+		D11_1: gpiob_12 {
+            gpios = <&gpiob 12 GPIO_ACTIVE_HIGH>;
+        };
+		D10_1: gpiob_11 {
+            gpios = <&gpiob 11 GPIO_ACTIVE_HIGH>;
+        };
 		
     };
     aliases {
@@ -76,5 +94,11 @@
 		d13 = &D13;
         d14 = &D14;
 		d15 = &D15;
+		d101 = &D10_1;
+		d111 = &D11_1;
+        d121 = &D12_1;
+		d131 = &D13_1;
+        d141 = &D14_1;
+		d151 = &D15_1;
     };
 };
