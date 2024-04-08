@@ -15,6 +15,18 @@
 #define TBUZZER_PRIORITY 6
 #define TLED_PRIORITY 7
 
+// Setup state machine
+struct state;
+typedef void state_fn(struct state *);
+
+struct state {
+	state_fn *next;
+	int i;
+};
+
+state_fn init_state, walk_state, mg1_state, mg2_state, finish_state;
+
+// Thread functions
 void tbutton(void) { // button thread
 	printf("Button\n");
 }
@@ -33,10 +45,37 @@ void tbuzzer(void) // buzzer thread
 	printf("Buzzer\n");
 }
 
+void init_state(struct state *state) {
+	printf("%s %i\n", __func__, ++state->i);
+	state->next = walk_state;
+}
+
+void walk_state(struct state *state) {
+	printf("%s %i\n", __func__, ++state->i);
+	state->next = mg1_state;
+}
+
+void mg1_state(struct state *state) {
+	printf("%s %i\n", __func__, ++state->i);
+	state->next = mg2_state;
+}
+
+void mg2_state(struct state *state) {
+	printf("%s %i\n", __func__, ++state->i);
+	state->next = finish_state;
+}
+
+void finish_state(struct state *state) {
+	printf("%s %i\n", __func__, ++state->i);
+	state->next = 0;
+}
+
 void tmain(void) // Core thread
 {
 	//will probs contain a while loop
 	printf("Main\n");
+	struct state state = {init_state, 0};
+	while (state.next) state.next(&state);
 }
 
 // Define the threads
