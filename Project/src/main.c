@@ -4,13 +4,13 @@
 #include <string.h>
 
 // GPIO definitions 
-static const struct gpio_dt_spec ShiftDataIn 		= GPIO_DT_SPEC_GET(DT_ALIAS(d2), gpios);
-static const struct gpio_dt_spec ShiftOutputEnable 	= GPIO_DT_SPEC_GET(DT_ALIAS(d3), gpios);
-static const struct gpio_dt_spec ShiftClock 		= GPIO_DT_SPEC_GET(DT_ALIAS(d4), gpios);
-static const struct gpio_dt_spec MuxA 				= GPIO_DT_SPEC_GET(DT_ALIAS(d5), gpios);
-static const struct gpio_dt_spec MuxB 				= GPIO_DT_SPEC_GET(DT_ALIAS(d6), gpios);
-static const struct gpio_dt_spec MuxC 				= GPIO_DT_SPEC_GET(DT_ALIAS(d7), gpios);
-static const struct gpio_dt_spec MuxD 				= GPIO_DT_SPEC_GET(DT_ALIAS(d8), gpios);
+static const struct gpio_dt_spec ShiftDataIn 		= GPIO_DT_SPEC_GET(DT_ALIAS(d3), gpios);
+static const struct gpio_dt_spec ShiftOutputEnable 	= GPIO_DT_SPEC_GET(DT_ALIAS(d4), gpios);
+static const struct gpio_dt_spec ShiftClock 		= GPIO_DT_SPEC_GET(DT_ALIAS(d5), gpios);
+static const struct gpio_dt_spec MuxA 				= GPIO_DT_SPEC_GET(DT_ALIAS(d6), gpios);
+static const struct gpio_dt_spec MuxB 				= GPIO_DT_SPEC_GET(DT_ALIAS(d7), gpios);
+static const struct gpio_dt_spec MuxC 				= GPIO_DT_SPEC_GET(DT_ALIAS(d8), gpios);
+static const struct gpio_dt_spec MuxD 				= GPIO_DT_SPEC_GET(DT_ALIAS(d9), gpios);
 #define HIGH			1
 #define LOW				0
 
@@ -43,7 +43,9 @@ int _initializeGPIO()
 void SendOneBitData(bool ShiftDataValue)
 {
 	gpio_pin_set_dt(&ShiftDataIn,ShiftDataValue);
+	k_busy_wait(10000);
 	gpio_pin_set_dt(&ShiftClock,HIGH);
+	k_busy_wait(10000);
 	gpio_pin_set_dt(&ShiftClock,LOW);
 }
 
@@ -107,25 +109,13 @@ int LedMatrix16by16()
 			count = 0;
 		}
 
-		
-		SendOneBitData(HIGH);
-		SendOneBitData(HIGH);
-		SendOneBitData(HIGH);
-		SendOneBitData(HIGH);
-		SendOneBitData(HIGH);
-		SendOneBitData(HIGH);
-		SendOneBitData(HIGH);
-		SendOneBitData(HIGH);
-		SendOneBitData(HIGH);
-		SendOneBitData(HIGH);
-		SendOneBitData(HIGH);
-		SendOneBitData(HIGH);
-		SendOneBitData(HIGH);
-		SendOneBitData(HIGH);
-		SendOneBitData(HIGH);
-		SendOneBitData(HIGH);
+		for (int i = 0; i < 16; i++)
+		{
+			SendOneBitData(HIGH);
+		}
 		
 		gpio_pin_set_dt(&ShiftOutputEnable,HIGH);
+		k_busy_wait(10000);
 		gpio_pin_set_dt(&ShiftOutputEnable,LOW);
 
 		gpio_pin_set_dt(&MuxA,(count & 0x1));
@@ -134,7 +124,7 @@ int LedMatrix16by16()
 		gpio_pin_set_dt(&MuxD,(count & 0x8));
 
 		count++;
-		k_sleep(K_USEC(300));
+		k_busy_wait(1000000);
 	}
 	return 0;
 }
