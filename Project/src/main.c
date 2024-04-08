@@ -43,9 +43,9 @@ int _initializeGPIO()
 void SendOneBitData(bool ShiftDataValue)
 {
 	gpio_pin_set_dt(&ShiftDataIn,ShiftDataValue);
-	k_busy_wait(10000);
+	//k_busy_wait(10000);
 	gpio_pin_set_dt(&ShiftClock,HIGH);
-	k_busy_wait(10000);
+	//k_busy_wait(10000);
 	gpio_pin_set_dt(&ShiftClock,LOW);
 }
 
@@ -101,21 +101,39 @@ int LedMatrix16by16()
 	gpio_pin_set_dt(&MuxC,LOW);
 	gpio_pin_set_dt(&MuxD,LOW);
 	k_sleep(K_MSEC(10));
+	int pocCount = 100;
 	int count = 0;
 	while (true)
 	{
 		if(count == 16)
 		{
 			count = 0;
+			if(pocCount != 1)
+			{
+				pocCount -=1;
+			}
 		}
 
-		for (int i = 0; i < 16; i++)
+		if(count % 2 == 0)
 		{
-			SendOneBitData(HIGH);
+			for (int i = 0; i < 8; i++)
+			{
+				SendOneBitData(HIGH);
+				SendOneBitData(LOW);
+			}
+		}
+		else
+		{
+			for (int i = 0; i < 8; i++)
+			{
+				SendOneBitData(LOW);
+				SendOneBitData(HIGH);
+			}
 		}
 		
+		
+		
 		gpio_pin_set_dt(&ShiftOutputEnable,HIGH);
-		k_busy_wait(10000);
 		gpio_pin_set_dt(&ShiftOutputEnable,LOW);
 
 		gpio_pin_set_dt(&MuxA,(count & 0x1));
@@ -124,7 +142,9 @@ int LedMatrix16by16()
 		gpio_pin_set_dt(&MuxD,(count & 0x8));
 
 		count++;
-		k_busy_wait(1000000);
+		k_busy_wait(100*pocCount);
+		
+
 	}
 	return 0;
 }
