@@ -3,78 +3,134 @@
 / {
     gpioCustom {
         compatible = "gpio-keys";
-        D2: gpioa_10 {
-            gpios = <&gpioa 10 GPIO_PULL_UP>;
-            label = "gpio D2";
+		R1: gpioa_0 {
+            gpios = <&gpioa 0 GPIO_ACTIVE_HIGH>;
         };
-        D3: gpiob_3 {
-            gpios = <&gpiob 3 GPIO_ACTIVE_HIGH>;
-            label = "gpio D3";
-        };
-		D4: gpiob_5 {
-            gpios = <&gpiob 5 GPIO_ACTIVE_HIGH>;
-            label = "gpio D4";
-        };
-		D5: gpiob_4 {
-            gpios = <&gpiob 4 GPIO_ACTIVE_HIGH>;
-            label = "gpio D5";
-        };
-		D6: gpiob_10 {
-            gpios = <&gpiob 10 GPIO_ACTIVE_HIGH>;
-            label = "gpio D6";
-        };
-		D7: gpioa_8 {
-            gpios = <&gpioa 8 GPIO_ACTIVE_HIGH>;
-            label = "gpio D7";
-        };
-		D8: gpioa_9 {
-            gpios = <&gpioa 9 GPIO_ACTIVE_HIGH>;
-            label = "gpio D8";
-        };
-		D9: gpioc_7 {
-            gpios = <&gpioc 7 GPIO_ACTIVE_HIGH>;
-            label = "gpio D9";
-        };
-		D10: gpiob_6 {
-            gpios = <&gpiob 6 GPIO_ACTIVE_HIGH>;
-            label = "gpio D10";
-        };
-		D11: gpioa_7 {
+		R2: gpioa_7 {
             gpios = <&gpioa 7 GPIO_ACTIVE_HIGH>;
-            label = "gpio D11";
         };
-		D12: gpioa_6 {
-            gpios = <&gpioa 6 GPIO_ACTIVE_HIGH>;
-            label = "gpio D12";
+		R3: gpiob_6 {
+            gpios = <&gpiob 6 GPIO_ACTIVE_HIGH>;
         };
-		D13: gpioa_5 {
-            gpios = <&gpioa 5 GPIO_ACTIVE_HIGH>;
-            label = "gpio D13";
+		R4: gpioc_7 {
+            gpios = <&gpioc 7 GPIO_ACTIVE_HIGH>;
         };
-		D14: gpiob_9 {
-            gpios = <&gpiob 9 GPIO_ACTIVE_HIGH>;
-            label = "gpio D14";
+		R5: gpioa_9 {
+            gpios = <&gpioa 9 GPIO_ACTIVE_HIGH>;
         };
-		D15: gpiob_8 {
+		R6: gpioa_8 {
+            gpios = <&gpioa 8 GPIO_ACTIVE_HIGH>;
+        };
+		R7: gpiob_10 {
+            gpios = <&gpiob 10 GPIO_ACTIVE_HIGH>;
+        };
+		R8: gpiob_4 {
+            gpios = <&gpiob 4 GPIO_ACTIVE_HIGH>;
+        };
+		R9: gpiob_5 {
+            gpios = <&gpiob 5 GPIO_ACTIVE_HIGH>;
+        };
+		R10: gpiob_3 {
+            gpios = <&gpiob 3 GPIO_ACTIVE_HIGH>;
+        };
+		R11: gpioa_10 {
+            gpios = <&gpioa 10 GPIO_ACTIVE_HIGH>;
+        };
+		R12: gpioa_3 {
+            gpios = <&gpioa 3 GPIO_ACTIVE_HIGH>;
+        };
+		R13: gpioa_2 {
+            gpios = <&gpioa 2 GPIO_ACTIVE_HIGH>;
+        };
+		R14: gpioc_4 {
+            gpios = <&gpioc 4 GPIO_ACTIVE_HIGH>;
+        };
+		R15: gpiob_13 {
+            gpios = <&gpiob 13 GPIO_ACTIVE_HIGH>;
+        };
+		R16: gpiob_14 {
+            gpios = <&gpiob 14 GPIO_ACTIVE_HIGH>;
+        };
+		R17: gpiob_15 {
+            gpios = <&gpiob 15 GPIO_ACTIVE_HIGH>;
+        };
+		R18: gpiob_1 {
+            gpios = <&gpiob 1 GPIO_ACTIVE_HIGH>;
+        };
+		R19: gpiob_2 {
+            gpios = <&gpiob 2 GPIO_ACTIVE_HIGH>;
+        };
+		R20: gpiob_12 {
+            gpios = <&gpiob 12 GPIO_ACTIVE_HIGH>;
+        };
+		R21: gpioa_11 {
+            gpios = <&gpioa 11 GPIO_ACTIVE_HIGH>;
+        };
+		R22: gpioa_12 {
+            gpios = <&gpioa 12 GPIO_ACTIVE_HIGH>;
+        };
+		R23: gpioc_5 {
+            gpios = <&gpioc 5 GPIO_ACTIVE_HIGH>;
+        };
+		R24: gpioc_6 {
+            gpios = <&gpioc 6 GPIO_ACTIVE_HIGH>;
+        };
+		R25: gpioc_8 {
+            gpios = <&gpioc 8 GPIO_ACTIVE_HIGH>;
+        };
+		R26: gpioc_9 {
+            gpios = <&gpioc 9 GPIO_ACTIVE_HIGH>;
+        };
+		R27: gpiob_8 {
             gpios = <&gpiob 8 GPIO_ACTIVE_HIGH>;
-            label = "gpio D15";
         };
-		
-    };
+		R28: gpiob_9 {
+            gpios = <&gpiob 9 GPIO_ACTIVE_HIGH>;
+        };
+		R29: gpioa_5 {
+            gpios = <&gpioa 5 GPIO_ACTIVE_HIGH>;
+        };
+		R30: gpioa_6 {
+            gpios = <&gpioa 6 GPIO_ACTIVE_HIGH>;
+        };
+		R31: gpioa_1 {
+            gpios = <&gpioa 1 GPIO_ACTIVE_HIGH>;
+        };
+		R32: gpioa_4 {
+            gpios = <&gpioa 4 GPIO_ACTIVE_HIGH>;
+        };
+	};
+
     aliases {
-        d2 = &D2;
-        d3 = &D3;
-        d4 = &D4;
-		d5 = &D5;
-        d6 = &D6;
-		d7 = &D7;
-        d8 = &D8;
-		d9 = &D9;
-        d10 = &D10;
-		d11 = &D11;
-        d12 = &D12;
-		d13 = &D13;
-        d14 = &D14;
-		d15 = &D15;
+        r1 = &R1;
+		r2 = &R2;
+		r3 = &R3;
+		r4 = &R4;
+		r5 = &R5;
+		r6 = &R6;
+		r7 = &R7;
+		r8 = &R8;
+		r9 = &R9;
+		r10 = &R10;
+		r11 = &R11;
+		r12 = &R12;
+		r13 = &R13;
+		r14 = &R14;
+		r15 = &R15;
+		r16 = &R16;
+		r17 = &R17;
+		r18 = &R18;
+		r19 = &R19;
+		r20 = &R20;
+		r21 = &R21;
+		r22 = &R22;
+		r23 = &R23;
+		r24 = &R24;
+		r25 = &R25;
+		r26 = &R26;
+		r27 = &R27;
+		r28 = &R28;
+		r29 = &R29;
+		r30 = &R30;
     };
 };

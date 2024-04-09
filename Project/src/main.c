@@ -12,18 +12,44 @@
 #define Matrix
 #define Rotary
 
-#define d2	DT_ALIAS(d2)
-#define d3	DT_ALIAS(d3)
-#define d4	DT_ALIAS(d4)
-#define d5	DT_ALIAS(d5)
-#define d6	DT_ALIAS(d6)
-#define d7	DT_ALIAS(d7)
-#define d8	DT_ALIAS(d8)
-#define d9	DT_ALIAS(d9)
-#define d10	DT_ALIAS(d10)
-#define d11	DT_ALIAS(d11)
-static const struct gpio_dt_spec d2 = GPIO_DT_SPEC_GET_OR(d2, gpios,
-							      {0});
+//define btn
+static const struct gpio_dt_spec btn1 = GPIO_DT_SPEC_GET_OR(DT_ALIAS(r1), gpios,{0});
+static const struct gpio_dt_spec btn2 = GPIO_DT_SPEC_GET_OR(DT_ALIAS(r2), gpios,{0});
+static const struct gpio_dt_spec btn3 = GPIO_DT_SPEC_GET_OR(DT_ALIAS(r3), gpios,{0});
+static const struct gpio_dt_spec btn4 = GPIO_DT_SPEC_GET_OR(DT_ALIAS(r4), gpios,{0});
+static const struct gpio_dt_spec btn5 = GPIO_DT_SPEC_GET_OR(DT_ALIAS(r5), gpios,{0});
+static const struct gpio_dt_spec btn6 = GPIO_DT_SPEC_GET_OR(DT_ALIAS(r6), gpios,{0});
+static const struct gpio_dt_spec btn7 = GPIO_DT_SPEC_GET_OR(DT_ALIAS(r7), gpios,{0});
+static const struct gpio_dt_spec btn8 = GPIO_DT_SPEC_GET_OR(DT_ALIAS(r8), gpios,{0});
+static const struct gpio_dt_spec btn9 = GPIO_DT_SPEC_GET_OR(DT_ALIAS(r9), gpios,{0});
+static const struct gpio_dt_spec btn10 = GPIO_DT_SPEC_GET_OR(DT_ALIAS(r10), gpios,{0});
+static const struct gpio_dt_spec btn11 = GPIO_DT_SPEC_GET_OR(DT_ALIAS(r11), gpios,{0});
+static const struct gpio_dt_spec btn12 = GPIO_DT_SPEC_GET_OR(DT_ALIAS(r12), gpios,{0});
+static const struct gpio_dt_spec btn13 = GPIO_DT_SPEC_GET_OR(DT_ALIAS(r13), gpios,{0});
+static const struct gpio_dt_spec btn14 = GPIO_DT_SPEC_GET_OR(DT_ALIAS(r14), gpios,{0});
+static const struct gpio_dt_spec btn15 = GPIO_DT_SPEC_GET_OR(DT_ALIAS(r15), gpios,{0});
+static const struct gpio_dt_spec btn16 = GPIO_DT_SPEC_GET_OR(DT_ALIAS(r16), gpios,{0});
+//define switches
+static const struct gpio_dt_spec swtichon1 = GPIO_DT_SPEC_GET_OR(DT_ALIAS(r17), gpios,{0});
+static const struct gpio_dt_spec swtichoff1 = GPIO_DT_SPEC_GET_OR(DT_ALIAS(r18), gpios,{0});
+static const struct gpio_dt_spec swtichon2 = GPIO_DT_SPEC_GET_OR(DT_ALIAS(r19), gpios,{0});
+static const struct gpio_dt_spec swtichoff2 = GPIO_DT_SPEC_GET_OR(DT_ALIAS(r20), gpios,{0});
+static const struct gpio_dt_spec swtichon3 = GPIO_DT_SPEC_GET_OR(DT_ALIAS(r21), gpios,{0});
+static const struct gpio_dt_spec swtichoff3 = GPIO_DT_SPEC_GET_OR(DT_ALIAS(r22), gpios,{0});
+static const struct gpio_dt_spec swtichon4 = GPIO_DT_SPEC_GET_OR(DT_ALIAS(r23), gpios,{0});
+static const struct gpio_dt_spec swtichoff4 = GPIO_DT_SPEC_GET_OR(DT_ALIAS(r24), gpios,{0});
+static const struct gpio_dt_spec swtichon5 = GPIO_DT_SPEC_GET_OR(DT_ALIAS(r25), gpios,{0});
+static const struct gpio_dt_spec swtichoff5 = GPIO_DT_SPEC_GET_OR(DT_ALIAS(r26), gpios,{0});
+//define leds
+static const struct gpio_dt_spec MUXa = GPIO_DT_SPEC_GET_OR(DT_ALIAS(r27), gpios,{0});
+static const struct gpio_dt_spec MUXb = GPIO_DT_SPEC_GET_OR(DT_ALIAS(r28), gpios,{0});
+static const struct gpio_dt_spec shiftdatain = GPIO_DT_SPEC_GET_OR(DT_ALIAS(r29), gpios,{0});
+static const struct gpio_dt_spec outputenable = GPIO_DT_SPEC_GET_OR(DT_ALIAS(r30), gpios,{0});
+static const struct gpio_dt_spec shiftclock = GPIO_DT_SPEC_GET_OR(DT_ALIAS(r31), gpios,{0});
+//define rotary switch
+static const struct gpio_dt_spec RotarySwitch = GPIO_DT_SPEC_GET_OR(DT_ALIAS(r32), gpios,{0});
+								  
+								  
 
 bool temp;
 
