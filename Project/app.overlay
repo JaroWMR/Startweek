@@ -147,7 +147,37 @@
 		MUX_D_16x16: gpiog_5 {
 			gpios = <&gpiog 5 GPIO_ACTIVE_HIGH>;
 		};
-		buzzer: gpioe_12 {
+		gyro_interrupt_1: gpiog_3 {
+			gpios = <&gpiog 3 GPIO_ACTIVE_HIGH>;
+		};
+		gyro_interrupt_2: gpiog_2 {
+			gpios = <&gpiog 2 GPIO_ACTIVE_HIGH>;
+		};
+		shift_Data_In_Circle: gpiod_9 {
+			gpios = <&gpiod 9 GPIO_ACTIVE_HIGH>;
+		};
+		shift_Output_Enable_Circle: gpiod_8 {
+			gpios = <&gpiod 8 GPIO_ACTIVE_HIGH>;
+		};
+		shift_Clock_Circle: gpiob_15 {
+			gpios = <&gpiob 15 GPIO_ACTIVE_HIGH>;
+		};
+		MUX_A_Circle: gpiob_14 {
+			gpios = <&gpiob 14 GPIO_ACTIVE_HIGH>;
+		};
+		MUX_B_Circle: gpiog_13 {
+			gpios = <&gpiob 13 GPIO_ACTIVE_HIGH>;
+		};
+		MUX_C_Circle: gpiog_12 {
+			gpios = <&gpiob 12 GPIO_ACTIVE_HIGH>;
+		};
+		buzzer3: gpioe_14 {
+			gpios = <&gpioe 14 GPIO_ACTIVE_HIGH>;
+		};
+		buzzer2: gpioe_13 {
+			gpios = <&gpioe 13 GPIO_ACTIVE_HIGH>;
+		};
+		buzzer1: gpioe_12 {
 			gpios = <&gpioe 12 GPIO_ACTIVE_HIGH>;
 		};
 		decimal_Point_7_Segment: gpioe_10 {
@@ -237,10 +267,10 @@
 		shift_Clock_4x4: gpiof_2 {
 			gpios = <&gpiof 2 GPIO_ACTIVE_HIGH>;
 		};
-		MUX_A_4x4: gpiof_1 {
+		MUX_B_4x4: gpiof_1 {
 			gpios = <&gpiof 1 GPIO_ACTIVE_HIGH>;
 		};
-		MUX_B_4x4: gpiof_0 {
+		MUX_A_4x4: gpiof_0 {
 			gpios = <&gpiof 0 GPIO_ACTIVE_HIGH>;
 		};
 		ABC_button_a: gpioc_13 {
