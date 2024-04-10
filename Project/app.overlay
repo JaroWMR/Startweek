@@ -71,7 +71,7 @@
 			usart3_tx_pd8: usart3_tx_pd8 {
 				status = "disabled";
 			};
-			
+
 			//enable and configure pins
 			usb_otg_fs_dm_pa11: usb_otg_fs_dm_pa11 {
 				pinmux = < 0x16a >;
@@ -327,7 +327,7 @@
 			gpios = <&gpiod 6 GPIO_ACTIVE_HIGH>;
 		};
 		start_Button: gpiod_5 {
-			gpios = <&gpiod 5 GPIO_ACTIVE_HIGH>;
+			gpios = <&gpiod 5 GPIO_PULL_UP>;
 		};
 		start_Led: gpiod_4 {
 			gpios = <&gpiod 4 GPIO_ACTIVE_HIGH>;
@@ -360,13 +360,24 @@
 
 	aliases {
 		gnss = &gnss;
-		shift-data-in-16x16 	= &shift_Data_In_16x16;
-		shift-enable-16x16 		= &shift_Output_Enable_16x16;
-		shift-clock-16x16 		= &shift_Clock_16x16;
-		mux-a-16x16				= &MUX_A_16x16;
-		mux-b-16x16				= &MUX_B_16x16;
-		mux-c-16x16				= &MUX_C_16x16;
-		mux-d-16x16				= &MUX_D_16x16;
+		shift-data-in-16x16 = &shift_Data_In_16x16;
+		shift-enable-16x16 = &shift_Output_Enable_16x16;
+		shift-clock-16x16 = &shift_Clock_16x16;
+		mux-a-16x16 = &MUX_A_16x16;
+		mux-b-16x16 = &MUX_B_16x16;
+		mux-c-16x16 = &MUX_C_16x16;
+		mux-d-16x16 = &MUX_D_16x16;
+		gyro-interrupt-1 = &gyro_interrupt_1;
+		gyro-interrupt-2 = &gyro_interrupt_2;
+		shift-data-in-circle = &shift_Data_In_Circle;
+		shift-output-enable-circle = &shift_Output_Enable_Circle;
+		shift-clock-circle = &shift_Clock_Circle;
+		mux-a-circle = &MUX_A_Circle;
+		mux-b-circle = &MUX_B_Circle;
+		mux-c-circle = &MUX_C_Circle;
+		buzzer-1 = &buzzer1;
+		buzzer-2 = &buzzer2;
+		buzzer-3 = &buzzer3;
 		decimal-point-7-segment = &decimal_Point_7_Segment;
 		mux-dig1-7-segment = &MUX_DIG1_7_Segment;
 		mux-dig2-7-segment = &MUX_DIG2_7_Segment;
@@ -426,6 +437,7 @@
 		lcd-display-d2 = &LCD_Display_D2;
 		lcd-display-d1 = &LCD_Display_D1;
 		lcd-display-d0 = &LCD_Display_D0;
+
 	};
 
 	 chosen {
