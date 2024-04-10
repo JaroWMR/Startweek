@@ -71,11 +71,7 @@
 			usart3_tx_pd8: usart3_tx_pd8 {
 				status = "disabled";
 			};
-
-
-
-
-
+			
 			//enable and configure pins
 			usb_otg_fs_dm_pa11: usb_otg_fs_dm_pa11 {
 				pinmux = < 0x16a >;
@@ -119,7 +115,10 @@
 				status = "okay";
 				phandle = < 0xc >;
 			};
-			
+			adc1_inp2_pf11: adc1_inp2_pf11 {
+				pinmux = <STM32_PINMUX('f', 11, AF10)>;
+				status = "okay";
+			};
 		};
 	};
 
@@ -165,10 +164,10 @@
 		MUX_A_Circle: gpiob_14 {
 			gpios = <&gpiob 14 GPIO_ACTIVE_HIGH>;
 		};
-		MUX_B_Circle: gpiog_13 {
+		MUX_B_Circle: gpiob_13 {
 			gpios = <&gpiob 13 GPIO_ACTIVE_HIGH>;
 		};
-		MUX_C_Circle: gpiog_12 {
+		MUX_C_Circle: gpiob_12 {
 			gpios = <&gpiob 12 GPIO_ACTIVE_HIGH>;
 		};
 		buzzer3: gpioe_14 {
@@ -206,9 +205,6 @@
 		};
 		BCD_A_7_Segment: gpiof_13 {
 			gpios = <&gpiof 13 GPIO_ACTIVE_HIGH>;
-		};
-		rotary_Switch: gpiof_11 {
-			gpios = <&gpiof 11 GPIO_ACTIVE_HIGH>;
 		};
 		button_1_4x4: gpiob_0 {
 			gpios = <&gpiob 0 GPIO_PULL_UP>;
@@ -371,7 +367,6 @@
 		mux-b-16x16				= &MUX_B_16x16;
 		mux-c-16x16				= &MUX_C_16x16;
 		mux-d-16x16				= &MUX_D_16x16;
-		buzzer					= &buzzer;
 		decimal-point-7-segment = &decimal_Point_7_Segment;
 		mux-dig1-7-segment = &MUX_DIG1_7_Segment;
 		mux-dig2-7-segment = &MUX_DIG2_7_Segment;
@@ -381,7 +376,6 @@
 		bcd-c-7-segment = &BCD_C_7_Segment;
 		bcd-b-7-segment = &BCD_B_7_Segment;
 		bcd-a-7-segment = &BCD_A_7_Segment;
-		rotary-switch = &rotary_Switch;
 		button-1-4x4 = &button_1_4x4;
 		button-2-4x4 = &button_2_4x4;
 		button-3-4x4 = &button_3_4x4;
@@ -448,7 +442,8 @@
 };
 
 &adc1{
-		status = "disabled";
+		status = "okay";
+		pinctrl-0 = < &adc1_inp2_pf11 >;
 };
 
 &adc3{
