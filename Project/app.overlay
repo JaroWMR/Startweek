@@ -4,82 +4,82 @@
     gpioCustom {
         compatible = "gpio-keys";
 		R1: gpioa_0 {
-            gpios = <&gpioa 0 GPIO_ACTIVE_HIGH>;
+            gpios = <&gpioa 0 GPIO_PULL_UP>;
         };
 		R2: gpioa_7 {
-            gpios = <&gpioa 7 GPIO_ACTIVE_HIGH>;
+            gpios = <&gpioa 7 GPIO_PULL_UP>;
         };
 		R3: gpiob_6 {
-            gpios = <&gpiob 6 GPIO_ACTIVE_HIGH>;
+            gpios = <&gpiob 6 GPIO_PULL_UP>;
         };
 		R4: gpioc_7 {
-            gpios = <&gpioc 7 GPIO_ACTIVE_HIGH>;
+            gpios = <&gpioc 7 GPIO_PULL_UP>;
         };
 		R5: gpioa_9 {
-            gpios = <&gpioa 9 GPIO_ACTIVE_HIGH>;
+            gpios = <&gpioa 9 GPIO_PULL_UP>;
         };
 		R6: gpioa_8 {
-            gpios = <&gpioa 8 GPIO_ACTIVE_HIGH>;
+            gpios = <&gpioa 8 GPIO_PULL_UP>;
         };
 		R7: gpiob_10 {
-            gpios = <&gpiob 10 GPIO_ACTIVE_HIGH>;
+            gpios = <&gpiob 10 GPIO_PULL_UP>;
         };
 		R8: gpiob_4 {
-            gpios = <&gpiob 4 GPIO_ACTIVE_HIGH>;
+            gpios = <&gpiob 4 GPIO_PULL_UP>;
         };
 		R9: gpiob_5 {
-            gpios = <&gpiob 5 GPIO_ACTIVE_HIGH>;
+            gpios = <&gpiob 5 GPIO_PULL_UP>;
         };
 		R10: gpiob_3 {
-            gpios = <&gpiob 3 GPIO_ACTIVE_HIGH>;
+            gpios = <&gpiob 3 GPIO_PULL_UP>;
         };
 		R11: gpioa_10 {
-            gpios = <&gpioa 10 GPIO_ACTIVE_HIGH>;
+            gpios = <&gpioa 10 GPIO_PULL_UP>;
         };
 		R12: gpioa_3 {
-            gpios = <&gpioa 3 GPIO_ACTIVE_HIGH>;
+            gpios = <&gpioa 3 GPIO_PULL_UP>;
         };
 		R13: gpioa_2 {
-            gpios = <&gpioa 2 GPIO_ACTIVE_HIGH>;
+            gpios = <&gpioa 2 GPIO_PULL_UP>;
         };
 		R14: gpioc_4 {
-            gpios = <&gpioc 4 GPIO_ACTIVE_HIGH>;
+            gpios = <&gpioc 4 GPIO_PULL_UP>;
         };
 		R15: gpiob_13 {
-            gpios = <&gpiob 13 GPIO_ACTIVE_HIGH>;
+            gpios = <&gpiob 13 GPIO_PULL_UP>;
         };
 		R16: gpiob_14 {
-            gpios = <&gpiob 14 GPIO_ACTIVE_HIGH>;
+            gpios = <&gpiob 14 GPIO_PULL_UP>;
         };
 		R17: gpiob_15 {
-            gpios = <&gpiob 15 GPIO_ACTIVE_HIGH>;
+            gpios = <&gpiob 15 GPIO_PULL_UP>;
         };
 		R18: gpiob_1 {
-            gpios = <&gpiob 1 GPIO_ACTIVE_HIGH>;
+            gpios = <&gpiob 1 GPIO_PULL_UP>;
         };
 		R19: gpiob_2 {
-            gpios = <&gpiob 2 GPIO_ACTIVE_HIGH>;
+            gpios = <&gpiob 2 GPIO_PULL_UP>;
         };
 		R20: gpiob_12 {
-            gpios = <&gpiob 12 GPIO_ACTIVE_HIGH>;
+            gpios = <&gpiob 12 GPIO_PULL_UP>;
         };
 		R21: gpioa_11 {
-            gpios = <&gpioa 11 GPIO_ACTIVE_HIGH>;
+            gpios = <&gpioa 11 GPIO_PULL_UP>;
         };
 		R22: gpioa_12 {
-            gpios = <&gpioa 12 GPIO_ACTIVE_HIGH>;
+            gpios = <&gpioa 12 GPIO_PULL_UP>;
         };
 		R23: gpioc_5 {
-            gpios = <&gpioc 5 GPIO_ACTIVE_HIGH>;
+            gpios = <&gpioc 5 GPIO_PULL_UP>;
         };
 		R24: gpioc_6 {
-            gpios = <&gpioc 6 GPIO_ACTIVE_HIGH>;
+            gpios = <&gpioc 6 GPIO_PULL_UP>;
         };
 		R25: gpioc_8 {
-            gpios = <&gpioc 8 GPIO_ACTIVE_HIGH>;
+            gpios = <&gpioc 8 GPIO_PULL_UP>;
         };
 		R26: gpioc_9 {
-            gpios = <&gpioc 9 GPIO_ACTIVE_HIGH>;
+            gpios = <&gpioc 9 GPIO_PULL_UP>;
         };
 		R27: gpiob_8 {
             gpios = <&gpiob 8 GPIO_ACTIVE_HIGH>;
@@ -96,9 +96,7 @@
 		R31: gpioa_1 {
             gpios = <&gpioa 1 GPIO_ACTIVE_HIGH>;
         };
-		R32: gpioa_4 {
-            gpios = <&gpioa 4 GPIO_ACTIVE_HIGH>;
-        };
+		
 	};
 
     aliases {
@@ -132,5 +130,6 @@
 		r28 = &R28;
 		r29 = &R29;
 		r30 = &R30;
+		r31 = &R31;
     };
 };
