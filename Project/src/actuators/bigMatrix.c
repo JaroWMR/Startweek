@@ -12,7 +12,7 @@
  * 
  * @return No return
  */ 
-void SendOneBitData(bool ShiftDataValue)
+void bigMatrixSendOneBitData(bool ShiftDataValue)
 {
 	gpio_pin_set_dt(&bigMatrixShiftDataIn,ShiftDataValue);
 	gpio_pin_set_dt(&bigMatrixShiftClock,HIGH);
@@ -20,13 +20,13 @@ void SendOneBitData(bool ShiftDataValue)
 }
 
 /** 
- * @brief Configures the bigLedMatrix.
+ * @brief Configures the bigMatrix.
  * 
  * Checks if the GPIO is available and configures the GPIO for its purpose
  * 
  * @return Returns a 0 on succes and a 1 on error.
  */ 
-bool bigLedMatrixConfig()
+bool bigMatrixConfig()
 {
 	//Checks if gpio is available
 	if (!gpio_is_ready_dt(&bigMatrixShiftDataIn) && !gpio_is_ready_dt(&bigMatrixShiftOutputEnable) &&
@@ -53,14 +53,14 @@ bool bigLedMatrixConfig()
 }
 
 /** 
- * @brief Initializes the bigLedMatrix
+ * @brief Initializes the bigMatrix
  * 
  * Sets all pins from floating to 0
  * Clears the Shift registers by writing 16 times a 0.
  * 
  * @return Returns a 0 on succes and a 1 on error.
  */ 
-int8_t bigLedMatrixInit ()
+int8_t bigMatrixInit ()
 {
 	uint8_t ret = 0;
 	ret += gpio_pin_set_dt(&bigMatrixShiftDataIn,LOW);
@@ -79,7 +79,7 @@ int8_t bigLedMatrixInit ()
 	{
 		for (int i = 0; i < LEDSINROW; i++)
 		{
-			SendOneBitData(LOW);
+			bigMatrixSendOneBitData(LOW);
 		}
 		gpio_pin_set_dt(&bigMatrixShiftOutputEnable,HIGH);
 		gpio_pin_set_dt(&bigMatrixShiftOutputEnable,LOW);
@@ -106,7 +106,7 @@ int8_t bigLedMatrixInit ()
  * Returns a 2 if the Initialiazation has not been perfomed.
  * Returns a 3 if the Configuration and the Initialiazation has not been perfomed.
  */ 
-int8_t bigLedMatrixSetLeds(int16_t data[ROWS])
+int8_t bigMatrixSetLeds(int16_t data[ROWS])
 {
 	for (size_t row = 0; row < ROWS; row++)
 	{
@@ -114,11 +114,11 @@ int8_t bigLedMatrixSetLeds(int16_t data[ROWS])
 		{
 			if(data[row] & 0x1<<led)
 			{
-				SendOneBitData(HIGH);
+				bigMatrixSendOneBitData(HIGH);
 			}
 			else
 			{
-				SendOneBitData(LOW);
+				bigMatrixSendOneBitData(LOW);
 			}
 		}
 

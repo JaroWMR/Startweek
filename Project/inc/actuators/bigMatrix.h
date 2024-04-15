@@ -16,6 +16,6 @@ static const struct gpio_dt_spec bigMatrixMuxD 					= GPIO_DT_SPEC_GET(DT_ALIAS(
 #define LEDSINROW		16
 #define ROWS 			16
 
-bool bigLedMatrixConfig();
-int8_t bigLedMatrixInit();
-int8_t bigLedMatrixSetLeds(int16_t data[16]);
+bool bigMatrixConfig();
+int8_t bigMatrixInit();
+int8_t bigMatrixSetLeds(int16_t data[16]);
