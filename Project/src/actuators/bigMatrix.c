@@ -14,9 +14,9 @@
  */ 
 void SendOneBitData(bool ShiftDataValue)
 {
-	gpio_pin_set_dt(&ShiftDataIn,ShiftDataValue);
-	gpio_pin_set_dt(&ShiftClock,HIGH);
-	gpio_pin_set_dt(&ShiftClock,LOW);
+	gpio_pin_set_dt(&bigMatrixShiftDataIn,ShiftDataValue);
+	gpio_pin_set_dt(&bigMatrixShiftClock,HIGH);
+	gpio_pin_set_dt(&bigMatrixShiftClock,LOW);
 }
 
 /** 
@@ -29,21 +29,21 @@ void SendOneBitData(bool ShiftDataValue)
 bool bigLedMatrixConfig()
 {
 	//Checks if gpio is available
-	if (!gpio_is_ready_dt(&ShiftDataIn) && !gpio_is_ready_dt(&ShiftOutputEnable) &&
-		!gpio_is_ready_dt(&ShiftClock) && !gpio_is_ready_dt(&MuxA) &&
-		!gpio_is_ready_dt(&MuxB) && !gpio_is_ready_dt(&MuxC) && !gpio_is_ready_dt(&MuxD)) 
+	if (!gpio_is_ready_dt(&bigMatrixShiftDataIn) && !gpio_is_ready_dt(&bigMatrixShiftOutputEnable) &&
+		!gpio_is_ready_dt(&bigMatrixShiftClock) && !gpio_is_ready_dt(&bigMatrixMuxA) &&
+		!gpio_is_ready_dt(&bigMatrixMuxB) && !gpio_is_ready_dt(&bigMatrixMuxC) && !gpio_is_ready_dt(&bigMatrixMuxD)) 
 	{
 		return 1;
 	}
 	//configures the gpio
 	uint8_t ret = 0;
-	ret += gpio_pin_configure_dt(&ShiftDataIn, GPIO_OUTPUT_ACTIVE);
-	ret += gpio_pin_configure_dt(&ShiftOutputEnable, GPIO_OUTPUT_ACTIVE);
-	ret += gpio_pin_configure_dt(&ShiftClock, GPIO_OUTPUT_ACTIVE);
-	ret += gpio_pin_configure_dt(&MuxA, GPIO_OUTPUT_ACTIVE);
-	ret += gpio_pin_configure_dt(&MuxB, GPIO_OUTPUT_ACTIVE);
-	ret += gpio_pin_configure_dt(&MuxC, GPIO_OUTPUT_ACTIVE);
-	ret += gpio_pin_configure_dt(&MuxD, GPIO_OUTPUT_ACTIVE);
+	ret += gpio_pin_configure_dt(&bigMatrixShiftDataIn, GPIO_OUTPUT_ACTIVE);
+	ret += gpio_pin_configure_dt(&bigMatrixShiftOutputEnable, GPIO_OUTPUT_ACTIVE);
+	ret += gpio_pin_configure_dt(&bigMatrixShiftClock, GPIO_OUTPUT_ACTIVE);
+	ret += gpio_pin_configure_dt(&bigMatrixMuxA, GPIO_OUTPUT_ACTIVE);
+	ret += gpio_pin_configure_dt(&bigMatrixMuxB, GPIO_OUTPUT_ACTIVE);
+	ret += gpio_pin_configure_dt(&bigMatrixMuxC, GPIO_OUTPUT_ACTIVE);
+	ret += gpio_pin_configure_dt(&bigMatrixMuxD, GPIO_OUTPUT_ACTIVE);
 	//return when gpio is configured incorrectly
 	if (ret != 0) 
 	{
@@ -63,22 +63,31 @@ bool bigLedMatrixConfig()
 int8_t bigLedMatrixInit ()
 {
 	uint8_t ret = 0;
-	ret += gpio_pin_set_dt(&ShiftDataIn,LOW);
-	ret += gpio_pin_set_dt(&ShiftOutputEnable,LOW);
-	ret += gpio_pin_set_dt(&ShiftClock,LOW);
-	ret += gpio_pin_set_dt(&MuxA,LOW);
-	ret += gpio_pin_set_dt(&MuxB,LOW);
-	ret += gpio_pin_set_dt(&MuxC,LOW);
-	ret += gpio_pin_set_dt(&MuxD,LOW);
+	ret += gpio_pin_set_dt(&bigMatrixShiftDataIn,LOW);
+	ret += gpio_pin_set_dt(&bigMatrixShiftOutputEnable,LOW);
+	ret += gpio_pin_set_dt(&bigMatrixShiftClock,LOW);
+	ret += gpio_pin_set_dt(&bigMatrixMuxA,LOW);
+	ret += gpio_pin_set_dt(&bigMatrixMuxB,LOW);
+	ret += gpio_pin_set_dt(&bigMatrixMuxC,LOW);
+	ret += gpio_pin_set_dt(&bigMatrixMuxD,LOW);
 
 	if (ret != 0) 
 	{
 		return 1;
 	}
-
-	for (int i = 0; i < LEDSINROW; i++)
+	for (size_t row = 0; row < ROWS; row++)
 	{
-		SendOneBitData(LOW);
+		for (int i = 0; i < LEDSINROW; i++)
+		{
+			SendOneBitData(LOW);
+		}
+		gpio_pin_set_dt(&bigMatrixShiftOutputEnable,HIGH);
+		gpio_pin_set_dt(&bigMatrixShiftOutputEnable,LOW);
+
+		gpio_pin_set_dt(&bigMatrixMuxA,(row & 0x1));
+		gpio_pin_set_dt(&bigMatrixMuxB,(row & 0x2));
+		gpio_pin_set_dt(&bigMatrixMuxC,(row & 0x4));
+		gpio_pin_set_dt(&bigMatrixMuxD,(row & 0x8));
 	}
 
 	return 0;
@@ -113,13 +122,13 @@ int8_t bigLedMatrixSetLeds(int16_t data[ROWS])
 			}
 		}
 
-		gpio_pin_set_dt(&ShiftOutputEnable,HIGH);
-		gpio_pin_set_dt(&ShiftOutputEnable,LOW);
+		gpio_pin_set_dt(&bigMatrixShiftOutputEnable,HIGH);
+		gpio_pin_set_dt(&bigMatrixShiftOutputEnable,LOW);
 
-		gpio_pin_set_dt(&MuxA,(row & 0x1));
-		gpio_pin_set_dt(&MuxB,(row & 0x2));
-		gpio_pin_set_dt(&MuxC,(row & 0x4));
-		gpio_pin_set_dt(&MuxD,(row & 0x8));
+		gpio_pin_set_dt(&bigMatrixMuxA,(row & 0x1));
+		gpio_pin_set_dt(&bigMatrixMuxB,(row & 0x2));
+		gpio_pin_set_dt(&bigMatrixMuxC,(row & 0x4));
+		gpio_pin_set_dt(&bigMatrixMuxD,(row & 0x8));
 
 		//TODO: determine this k_sleep delay
 		k_sleep(K_USEC(100));
