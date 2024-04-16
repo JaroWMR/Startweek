@@ -11,16 +11,6 @@
 
 // Thread priority values (lower value is higher priority)
 #define TMAIN_PRIORITY 1
-#define TBUTTON_PRIORITY 4
-#define TGYRO_PRIORITY 4
-#define TBUZZER_PRIORITY 6
-#define TLED_PRIORITY 7
-
-// Thread IDs
-extern const k_tid_t tbutton_id;
-extern const k_tid_t tgyro_id;
-extern const k_tid_t tled_id;
-extern const k_tid_t tbuzzer_id;
 
 void tmain(void) // Core thread
 {
@@ -30,9 +20,3 @@ void tmain(void) // Core thread
 
 // Define the threads
 K_THREAD_DEFINE(tmain_id, STACKSIZE, tmain, NULL, NULL, NULL, TMAIN_PRIORITY, 0, 0);
-// Input threads
-K_THREAD_DEFINE(tbutton_id, STACKSIZE, tbutton, NULL, NULL, NULL, TBUTTON_PRIORITY, 0,0);
-K_THREAD_DEFINE(tgyro_id, STACKSIZE, tgyro, NULL, NULL, NULL, TGYRO_PRIORITY, 0,0);
-// Output threads
-K_THREAD_DEFINE(tled_id, STACKSIZE, tled, NULL, NULL, NULL, TLED_PRIORITY, 0, 0);
-K_THREAD_DEFINE(tbuzzer_id, STACKSIZE, tbuzzer, NULL, NULL, NULL, TBUZZER_PRIORITY, 0, 0);
