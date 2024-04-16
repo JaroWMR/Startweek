@@ -30,7 +30,7 @@ struct state {
 	int i;
 };
 
-state_fn init_state, walk_state, mg1_state, mg2_state, finish_state;
+state_fn init_state, walk_state, mg1_state, mg2_state, mg3_state, mg4_state, mg5_state, mg6_state, mg7_state, mg8_state, mg9_state, mg10_state, exit_state;
 
 // Thread functions
 void tbutton(void) { // button thread
@@ -57,6 +57,7 @@ void tbuzzer(void) // buzzer thread
 	while (1) printf("Controlling buzzer\n");
 }
 
+// State functions
 void init_state(struct state *state) {
 	printf("%s %i\n", __func__, ++state->i);
 	state->next = walk_state;
@@ -76,7 +77,7 @@ void mg1_state(struct state *state) { // Makes use of button and led
 	k_thread_suspend(tbuzzer_id);
 
 	// State loop
-	for (int i = 0; i < 500; i++) {
+	for (int i = 0; i < 200; i++) {
 		printf("Looping mg1, %d\n", i);
 		k_msleep(10);
 	}
@@ -85,11 +86,51 @@ void mg1_state(struct state *state) { // Makes use of button and led
 
 void mg2_state(struct state *state) { // Makes use of gyro and buzzer
 	printf("%s %i\n", __func__, ++state->i);
-	state->next = finish_state;
+	state->next = mg3_state;
 }
 
-void finish_state(struct state *state) {
-	printf("%s %i\n", __func__, ++state->i);
+void mg3_state(struct state *state) { // Makes use of gyro and buzzer
+	printf("Minigame 3\n");
+	state->next = mg4_state;
+}
+
+void mg4_state(struct state *state) { // Makes use of gyro and buzzer
+	printf("Minigame 4\n");
+	state->next = mg5_state;
+}
+
+void mg5_state(struct state *state) { // Makes use of gyro and buzzer
+	printf("Minigame 5\n");
+	state->next = mg6_state;
+}
+
+void mg6_state(struct state *state) { // Makes use of gyro and buzzer
+	printf("Minigame 6\n");
+	state->next = mg7_state;
+}
+
+void mg7_state(struct state *state) { // Makes use of gyro and buzzer
+	printf("Minigame 7\n");
+	state->next = mg8_state;
+}
+
+void mg8_state(struct state *state) { // Makes use of gyro and buzzer
+	printf("Minigame 8\n");
+	state->next = mg9_state;
+}
+
+void mg9_state(struct state *state) { // Makes use of gyro and buzzer
+	printf("Minigame 9\n");
+	state->next = mg10_state;
+}
+
+void mg10_state(struct state *state) { // Makes use of gyro and buzzer
+	printf("Minigame 10\n");
+	state->next = exit_state;
+}
+
+void exit_state(struct state *state) {
+	printf("Exit state");
 	k_thread_suspend(tbutton_id);
 	k_thread_suspend(tgyro_id);
 	k_thread_suspend(tled_id);
