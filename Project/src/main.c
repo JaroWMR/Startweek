@@ -15,7 +15,8 @@
 
 
 static const struct gpio_dt_spec buttons[16] = {
-    GPIO_DT_SPEC_GET_OR(DT_ALIAS(r1), gpios, {0}),
+	//GPIO_DT_SPEC_GET_OR(DT_ALIAS(r0), gpios, {0}),
+    //GPIO_DT_SPEC_GET_OR(DT_ALIAS(r1), gpios, {0}),
     GPIO_DT_SPEC_GET_OR(DT_ALIAS(r2), gpios, {0}),
     GPIO_DT_SPEC_GET_OR(DT_ALIAS(r3), gpios, {0}),
     GPIO_DT_SPEC_GET_OR(DT_ALIAS(r4), gpios, {0}),
@@ -29,11 +30,18 @@ static const struct gpio_dt_spec buttons[16] = {
     GPIO_DT_SPEC_GET_OR(DT_ALIAS(r12), gpios, {0}),
     GPIO_DT_SPEC_GET_OR(DT_ALIAS(r13), gpios, {0}),
     GPIO_DT_SPEC_GET_OR(DT_ALIAS(r14), gpios, {0}),
-    GPIO_DT_SPEC_GET_OR(DT_ALIAS(r15), gpios, {0}),
-    GPIO_DT_SPEC_GET_OR(DT_ALIAS(r16), gpios, {0})
+    GPIO_DT_SPEC_GET_OR(DT_ALIAS(r15), gpios, {0})
 };
 //define switches
 static const struct gpio_dt_spec switchon[5] = {
+    GPIO_DT_SPEC_GET_OR(DT_ALIAS(r16), gpios, {0}),
+    GPIO_DT_SPEC_GET_OR(DT_ALIAS(r18), gpios, {0}),
+    GPIO_DT_SPEC_GET_OR(DT_ALIAS(r20), gpios, {0}),
+    GPIO_DT_SPEC_GET_OR(DT_ALIAS(r22), gpios, {0}),
+    GPIO_DT_SPEC_GET_OR(DT_ALIAS(r24), gpios, {0}),
+};
+
+static const struct gpio_dt_spec switchoff[5] = {
     GPIO_DT_SPEC_GET_OR(DT_ALIAS(r17), gpios, {0}),
     GPIO_DT_SPEC_GET_OR(DT_ALIAS(r19), gpios, {0}),
     GPIO_DT_SPEC_GET_OR(DT_ALIAS(r21), gpios, {0}),
@@ -41,20 +49,12 @@ static const struct gpio_dt_spec switchon[5] = {
     GPIO_DT_SPEC_GET_OR(DT_ALIAS(r25), gpios, {0}),
 };
 
-static const struct gpio_dt_spec switchoff[5] = {
-    GPIO_DT_SPEC_GET_OR(DT_ALIAS(r18), gpios, {0}),
-    GPIO_DT_SPEC_GET_OR(DT_ALIAS(r20), gpios, {0}),
-    GPIO_DT_SPEC_GET_OR(DT_ALIAS(r22), gpios, {0}),
-    GPIO_DT_SPEC_GET_OR(DT_ALIAS(r24), gpios, {0}),
-    GPIO_DT_SPEC_GET_OR(DT_ALIAS(r26), gpios, {0}),
-};
-
 //define leds
 static const struct gpio_dt_spec MUXa = GPIO_DT_SPEC_GET_OR(DT_ALIAS(r27), gpios,{0});
-static const struct gpio_dt_spec MUXb = GPIO_DT_SPEC_GET_OR(DT_ALIAS(r28), gpios,{0});
-static const struct gpio_dt_spec shiftdatain = GPIO_DT_SPEC_GET_OR(DT_ALIAS(r29), gpios,{0});
-static const struct gpio_dt_spec outputenable = GPIO_DT_SPEC_GET_OR(DT_ALIAS(r30), gpios,{0});
-static const struct gpio_dt_spec shiftclock = GPIO_DT_SPEC_GET_OR(DT_ALIAS(r31), gpios,{0});
+static const struct gpio_dt_spec MUXb = GPIO_DT_SPEC_GET_OR(DT_ALIAS(r26), gpios,{0});
+static const struct gpio_dt_spec shiftdatain = GPIO_DT_SPEC_GET_OR(DT_ALIAS(r28), gpios,{0});
+static const struct gpio_dt_spec outputenable = GPIO_DT_SPEC_GET_OR(DT_ALIAS(r29), gpios,{0});
+static const struct gpio_dt_spec shiftclock = GPIO_DT_SPEC_GET_OR(DT_ALIAS(r30), gpios,{0});
 //define rotary switch
 //static const struct gpio_dt_spec RotarySwitch = GPIO_DT_SPEC_GET_OR(DT_ALIAS(r32), gpios,{0});
 								  
@@ -73,7 +73,7 @@ bool temp2;
 void gpio_init()
 {
 	int ret = 0;	
-	for (uint8_t i = 0; i < 16; i++)
+	for (uint8_t i = 0; i < 14; i++)
 	{
 		ret += gpio_pin_configure_dt(&buttons[i],GPIO_INPUT);
 	}
@@ -105,75 +105,60 @@ void gpio_init()
 void SendOneBitData(bool ShiftDataValue)
 {
 	gpio_pin_set_dt(&shiftdatain,ShiftDataValue);
-	//k_busy_wait(10000);
+	k_busy_wait(10000);
 	gpio_pin_set_dt(&shiftclock,HIGH);
-	//k_busy_wait(10000);
+	k_busy_wait(10000);
 	gpio_pin_set_dt(&shiftclock,LOW);
 }
 
+int count = 0;
 void LedMatrix()
 {
 	
-
-	int count = 0;
-	
-	for (size_t a = 0; a < 2; a++)
+	if(count == 4)
 	{
-		if(count == 4)
-		{
-			count = 0;
-		}
-
-		for (size_t i = 0; i < 2; i++)
-		{
-			if(a == 0)
-			{
-				SendOneBitData(HIGH);
-				SendOneBitData(LOW);
-			}
-			else
-			{
-				SendOneBitData(LOW);
-				SendOneBitData(HIGH);
-			}
-			
-		}
-		
-		gpio_pin_set_dt(&outputenable,HIGH);
-		gpio_pin_set_dt(&outputenable,LOW);
-
-		gpio_pin_set_dt(&MUXa,(count & 0x1));
-		gpio_pin_set_dt(&MUXb,(count & 0x2));
-
-		count++;
-		k_sleep(K_MSEC(1));
+		count = 0;
 	}
+
+	for (size_t i = 0; i < 4; i++)
+	{
+		SendOneBitData(HIGH);
+	}
+	
+	gpio_pin_set_dt(&outputenable,HIGH);
+	gpio_pin_set_dt(&outputenable,LOW);
+	volatile bool siem = (count & 0b1);
+	gpio_pin_set_dt(&MUXa,(count & 0b1));
+	gpio_pin_set_dt(&MUXb,(count & 0b10));
+
+	count++;
+	k_busy_wait(1000);
+	
 }
 
 
 
-int main(void)
-{
+int main(void){
 	
 
 	gpio_init();
 	gpio_pin_set_dt(&shiftdatain,LOW);
 	gpio_pin_set_dt(&outputenable,LOW);
 	gpio_pin_set_dt(&shiftclock,LOW);
-	gpio_pin_set_dt(&MUXa,LOW);
-	gpio_pin_set_dt(&MUXb,LOW);
+	gpio_pin_set_dt(&MUXa,HIGH);
+	gpio_pin_set_dt(&MUXb,HIGH);
 	k_sleep(K_MSEC(10));
 
 	
-	printk("Begin Test\n");
+	printf("Begin Test\n");
 	
 	while(true)
 	{
-		for (int i = 0; i < 16; i++)
+		for (int i = 0; i < 14; i++)
 		{
 			temp1 = gpio_pin_get(buttons[i].port, buttons[i].pin);
 			if (temp1 != btnState[i]) {
-				printk("btn%d: %d\n", i, temp1);
+				printf("btn%d: %d\n", i, temp1);
 				btnState[i] = temp1;
 			}
 		}
@@ -183,12 +168,12 @@ int main(void)
 			temp1 = gpio_pin_get(switchon[i].port, switchon[i].pin);
 			temp2 = gpio_pin_get(switchoff[i].port, switchoff[i].pin);
 			if (temp1 != switchState[i]) {
-				printk("btn%d: %d\n", i, temp1);
+				printf("btn%d: %d\n", i, temp1);
 				switchState[i] = (bool)temp1;
 			}
 		}
 
-		while (switchState[1] == true && switchState[2] == false && switchState[3] == true && switchState[4] == false && switchState[5] == true)
+		if (switchState[0] == false && switchState[1] == true && switchState[2] == false && switchState[3] == true && switchState[4] == false)
 		{
 			LedMatrix();
 		}
