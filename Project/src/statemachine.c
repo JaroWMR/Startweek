@@ -5,6 +5,8 @@
 #include "buzzers.h"
 #include "gps.h"
 #include "gyroCompass.h"
+#include "ledCircle.h"
+#include "ledMatrix.h"
 #include "potmeter.h"
 
 #include <zephyr/device.h>
@@ -74,22 +76,6 @@ void tswitches(void) // 5 switches thread
 	}
 }
 
-void tledmatrix(void) // LED matrix thread
-{
-	while (1) {
-		printf("Controlling LED matrix\n");
-		k_msleep(1);
-	}
-}
-
-void tledcircle(void) // LED circle thread
-{
-	while (1) {
-		printf("Controlling LED circle\n");
-		k_msleep(1);
-	}
-}
-
 void tsevenseg(void) // Seven segment displays thread
 {
 	while (1) {
@@ -120,10 +106,10 @@ void walk_state(struct state *state) {
 void mg1_state(struct state *state) { // Makes use of button and led
 	// Initialise state, enable and disable corresponding threads
 	printf("%s %i\n", __func__, ++state->i);
-	k_thread_resume(tstartbutton_id);
-	k_thread_suspend(tgyro_id);
-	k_thread_resume(tgps_id);
-	k_thread_suspend(tbtnmatrix_out_id);
+	// k_thread_resume(tstartbutton_id);
+	// k_thread_suspend(tgyro_id);
+	// k_thread_resume(tgps_id);
+	// k_thread_suspend(tbtnmatrix_out_id);
 
 	// State loop
 	for (int i = 0; i < 200; i++) {
@@ -134,7 +120,7 @@ void mg1_state(struct state *state) { // Makes use of button and led
 }
 
 void mg2_state(struct state *state) { // Makes use of gyro and buzzer
-	printf("Minigame 3\n");
+	printf("Minigame 2\n");
 	state->next = mg3_state;
 }
 
