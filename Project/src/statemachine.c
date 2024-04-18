@@ -1,4 +1,4 @@
-// Includes: own header file, program headers, framework headers, system headers (sorted alpabetically)
+// Includes: own header file, hardware headers, minigame headers, framework headers, system headers (sorted alpabetically)
 #include "statemachine.h"
 
 #include "buttonMatrix.h"
@@ -10,6 +10,8 @@
 #include "ledMatrix.h"
 #include "potmeter.h"
 #include "sevenSegment.h"
+
+#include "minigame1.h"
 
 #include <zephyr/device.h>
 #include <zephyr/drivers/gpio.h>
@@ -62,32 +64,48 @@ struct state {
 
 state_fn init_state, walk_state, mg1_state, mg2_state, mg3_state, mg4_state, mg5_state, mg6_state, mg7_state, mg8_state, mg9_state, mg10_state, exit_state;
 
-// Thread functions
-
 // State functions
 void init_state(struct state *state) {
-	printf("%s %i\n", __func__, ++state->i);
+	printf("Initialization\n");
+
+	// Disable all io threads
+	k_thread_suspend(tstartbutton_id);
+	k_thread_suspend(tgyro_id);
+	k_thread_suspend(tgps_id);
+	k_thread_suspend(tbtnmatrix_out_id);
+	k_thread_suspend(tbtnmatrix_in_id);
+	k_thread_suspend(tswitches_id);
+	k_thread_suspend(tpotmeter_id);
+	k_thread_suspend(tbuzzers_id);
+	k_thread_suspend(tledmatrix_id);
+	k_thread_suspend(tledcircle_id);
+	k_thread_suspend(tsevenseg_id);
+	k_thread_suspend(tabcbtn_id);
+
 	state->next = walk_state;
 }
 
 void walk_state(struct state *state) {
-	printf("%s %i\n", __func__, ++state->i);
+	printf("Walking\n");
 	state->next = mg1_state;
 }
 
 void mg1_state(struct state *state) { // Makes use of button and led
 	// Initialise state, enable and disable corresponding threads
-	printf("%s %i\n", __func__, ++state->i);
-	// k_thread_resume(tstartbutton_id);
-	// k_thread_suspend(tgyro_id);
-	// k_thread_resume(tgps_id);
-	// k_thread_suspend(tbtnmatrix_out_id);
+	printf("Minigame 1\n");
 
-	// State loop
-	for (int i = 0; i < 200; i++) {
-		printf("Looping mg1, %d\n", i);
-		k_msleep(10);
-	}
+	// Enable required threads
+	k_thread_resume(tstartbutton_id);
+	k_thread_resume(tgyro_id);
+	k_thread_resume(tledmatrix_id);
+
+	int ret = playMg1();
+
+	// Disable required threads after finishing
+	k_thread_suspend(tstartbutton_id);
+	k_thread_suspend(tgyro_id);
+	k_thread_suspend(tledmatrix_id);
+
 	state->next = mg2_state;
 }
 
