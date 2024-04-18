@@ -199,11 +199,15 @@ void mg6_state(struct state *state) { // Makes use of gyro and buzzer
 
 	// Enable required threads
 	k_thread_resume(tstartbutton_id);
+	k_thread_resume(tsevenseg_id);
+	k_thread_resume(tabcbtn_id);
 
 	int ret = playMg6();
 
 	// Disable required threads after finishing
 	k_thread_suspend(tstartbutton_id);
+	k_thread_suspend(tsevenseg_id);
+	k_thread_suspend(tabcbtn_id);;
 
 	state->next = mg7_state;
 }
@@ -213,11 +217,15 @@ void mg7_state(struct state *state) { // Makes use of gyro and buzzer
 
 	// Enable required threads
 	k_thread_resume(tstartbutton_id);
+	k_thread_resume(tgyro_id);
+	k_thread_resume(tledmatrix_id);
 
 	int ret = playMg7();
 
 	// Disable required threads after finishing
 	k_thread_suspend(tstartbutton_id);
+	k_thread_suspend(tgyro_id);
+	k_thread_suspend(tledmatrix_id);
 
 	state->next = mg8_state;
 }
@@ -227,11 +235,15 @@ void mg8_state(struct state *state) { // Makes use of gyro and buzzer
 
 	// Enable required threads
 	k_thread_resume(tstartbutton_id);
+	k_thread_resume(tledmatrix_id);
+	k_thread_resume(tabcbtn_id);
 
 	int ret = playMg8();
 
 	// Disable required threads after finishing
 	k_thread_suspend(tstartbutton_id);
+	k_thread_suspend(tledmatrix_id);
+	k_thread_suspend(tabcbtn_id);
 
 	state->next = mg9_state;
 }
@@ -241,11 +253,13 @@ void mg9_state(struct state *state) { // Makes use of gyro and buzzer
 
 	// Enable required threads
 	k_thread_resume(tstartbutton_id);
+	k_thread_resume(tswitches_id);
 
 	int ret = playMg9();
 
 	// Disable required threads after finishing
 	k_thread_suspend(tstartbutton_id);
+	k_thread_suspend(tswitches_id);
 
 	state->next = mg10_state;
 }
@@ -255,11 +269,19 @@ void mg10_state(struct state *state) { // Makes use of gyro and buzzer
 
 	// Enable required threads
 	k_thread_resume(tstartbutton_id);
+	k_thread_resume(tbtnmatrix_in_id);
+	k_thread_resume(tswitches_id);
+	k_thread_resume(tpotmeter_id);
+	k_thread_resume(tabcbtn_id);
 
 	int ret = playMg10();
 
 	// Disable required threads after finishing
 	k_thread_suspend(tstartbutton_id);
+	k_thread_suspend(tbtnmatrix_in_id);
+	k_thread_suspend(tswitches_id);
+	k_thread_suspend(tpotmeter_id);
+	k_thread_suspend(tabcbtn_id);
 
 	state->next = exit_state;
 }
