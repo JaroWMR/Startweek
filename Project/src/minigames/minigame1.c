@@ -8,4 +8,6 @@ int playMg1() {
 		printf("Looping mg1, %d\n", i);
 		k_msleep(10);
 	}
+
+	return 0;
 }

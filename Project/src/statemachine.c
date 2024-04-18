@@ -28,16 +28,16 @@
 // Thread priority values (lower value is higher priority)
 #define TSTARTBUTTON_PRIORITY 4
 #define TGYRO_PRIORITY 4
-#define TGPS_PRIORITY 6
+#define TGPS_PRIORITY 4
 #define TBTNMATRIX_OUT_PRIORITY 7
-#define TBTNMATRIX_IN_PRIORITY 7
-#define TSWITCHES_PRIORITY 7
-#define TPOTMETER_PRIORITY 7
+#define TBTNMATRIX_IN_PRIORITY 4
+#define TSWITCHES_PRIORITY 4
+#define TPOTMETER_PRIORITY 4
 #define TBUZZERS_PRIORITY 7
 #define TLEDMATRIX_PRIORITY 7
 #define TLEDCIRCLE_PRIORITY 7
 #define TSEVENSEG_PRIORITY 7
-#define TABCBTN_PRIORITY 7
+#define TABCBTN_PRIORITY 4
 
 // Thread IDs
 extern const k_tid_t tstartbutton_id;
