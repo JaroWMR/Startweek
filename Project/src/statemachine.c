@@ -18,6 +18,8 @@
 #define TSWITCHES_PRIORITY 7
 #define TPOTMETER_PRIORITY 7
 #define TBUZZERS_PRIORITY 7
+#define TLEDMATRIX_PRIORITY 7
+#define TLEDCIRCLE_PRIORITY 7
 
 // Thread IDs
 extern const k_tid_t tstartbutton_id;
@@ -28,6 +30,8 @@ extern const k_tid_t tbtnmatrix_in_id;
 extern const k_tid_t tswitches_id;
 extern const k_tid_t tpotmeter_id;
 extern const k_tid_t tbuzzers_id;
+extern const k_tid_t tledmatrix_id;
+extern const k_tid_t tledcircle_id;
 
 // Setup state machine
 struct state;
@@ -83,6 +87,16 @@ void tpotmeter(void) // Potmeter thread
 void tbuzzers(void) // Buzzers thread
 {
 	while (1) printf("Controlling buzzers\n");
+}
+
+void tledmatrix(void) // LED matrix thread
+{
+	while (1) printf("Controlling LED matrix\n");
+}
+
+void tledcircle(void) // LED circle thread
+{
+	while (1) printf("Controlling LED circle\n");
 }
 
 // State functions
@@ -182,3 +196,5 @@ K_THREAD_DEFINE(tpotmeter_id, STACKSIZE, tpotmeter, NULL, NULL, NULL, TPOTMETER_
 K_THREAD_DEFINE(tgps_id, STACKSIZE, tgps, NULL, NULL, NULL, TGPS_PRIORITY, 0, 0);
 K_THREAD_DEFINE(tbtnmatrix_out_id, STACKSIZE, tbtnmatrix_out, NULL, NULL, NULL, TBTNMATRIX_OUT_PRIORITY, 0, 0);
 K_THREAD_DEFINE(tbuzzers_id, STACKSIZE, tbuzzers, NULL, NULL, NULL, TBUZZERS_PRIORITY, 0, 0);
+K_THREAD_DEFINE(tledmatrix_id, STACKSIZE, tledmatrix, NULL, NULL, NULL, TLEDMATRIX_PRIORITY, 0, 0);
+K_THREAD_DEFINE(tledcircle_id, STACKSIZE, tledcircle, NULL, NULL, NULL, TLEDCIRCLE_PRIORITY, 0, 0);
