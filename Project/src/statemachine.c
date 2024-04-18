@@ -3,11 +3,13 @@
 
 #include "buttonMatrix.h"
 #include "buzzers.h"
+#include "genericGpio.h"
 #include "gps.h"
 #include "gyroCompass.h"
 #include "ledCircle.h"
 #include "ledMatrix.h"
 #include "potmeter.h"
+#include "sevenSegment.h"
 
 #include <zephyr/device.h>
 #include <zephyr/drivers/gpio.h>
@@ -61,36 +63,6 @@ struct state {
 state_fn init_state, walk_state, mg1_state, mg2_state, mg3_state, mg4_state, mg5_state, mg6_state, mg7_state, mg8_state, mg9_state, mg10_state, exit_state;
 
 // Thread functions
-void tstartbutton(void) { // startbutton thread
-	while (1) {
-		printf("Polling startbutton\n");
-		k_msleep(1);
-	}
-}
-
-void tswitches(void) // 5 switches thread
-{
-	while (1) {
-		printf("Reading switches\n");
-		k_msleep(1);
-	}
-}
-
-void tsevenseg(void) // Seven segment displays thread
-{
-	while (1) {
-		printf("Controlling seven segment displays\n");
-		k_msleep(1);
-	}
-}
-
-void tabcbtn(void) // ABC buttons thread
-{
-	while (1) {
-		printf("Polling ABC buttons\n");
-		k_msleep(1);
-	}
-}
 
 // State functions
 void init_state(struct state *state) {
