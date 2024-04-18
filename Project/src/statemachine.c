@@ -12,6 +12,15 @@
 #include "sevenSegment.h"
 
 #include "minigame1.h"
+#include "minigame2.h"
+#include "minigame3.h"
+#include "minigame4.h"
+#include "minigame5.h"
+#include "minigame6.h"
+#include "minigame7.h"
+#include "minigame8.h"
+#include "minigame9.h"
+#include "minigame10.h"
 
 #include <zephyr/device.h>
 #include <zephyr/drivers/gpio.h>
