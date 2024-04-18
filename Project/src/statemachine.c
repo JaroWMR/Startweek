@@ -1,4 +1,5 @@
 #include "statemachine.h"
+#include "gyroCompass.h"
 #include <stdio.h>
 #include <zephyr/kernel.h>
 #include <zephyr/device.h>
@@ -56,13 +57,6 @@ void tstartbutton(void) { // startbutton thread
 	}
 }
 
-void tgyro(void) { // Gyro thread
-	while (1) {
-		printf("Polling gyro\n");
-		k_msleep(1);
-	}
-}
-
 void tgps(void) // gps thread
 {
 	while (1) printf("Reading GPS\n");
@@ -70,47 +64,74 @@ void tgps(void) // gps thread
 
 void tbtnmatrix_out(void) // button matrix output thread
 {
-	while (1) printf("Writing button matrix LEDs\n");
+	while (1) {
+		printf("Writing button matrix LEDs\n");
+		k_msleep(1);
+	}
 }
 
 void tbtnmatrix_in(void) // button matrix input thread
 {
-	while (1) printf("Reading button matrix buttons\n");
+	while (1) {
+		printf("Reading button matrix buttons\n");
+		k_msleep(1);
+	}
 }
 
 void tswitches(void) // 5 switches thread
 {
-	while (1) printf("Reading switches\n");
+	while (1) {
+		printf("Reading switches\n");
+		k_msleep(1);
+	}
 }
 
 void tpotmeter(void) // Potmeter thread
 {
-	while (1) printf("Reading potmeter\n");
+	while (1) {
+		printf("Reading potmeter\n");
+		k_msleep(1);
+	}
 }
 
 void tbuzzers(void) // Buzzers thread
 {
-	while (1) printf("Controlling buzzers\n");
+	while (1) {
+		printf("Controlling buzzers\n");
+		k_msleep(1);
+	}
 }
 
 void tledmatrix(void) // LED matrix thread
 {
-	while (1) printf("Controlling LED matrix\n");
+	while (1) {
+		printf("Controlling LED matrix\n");
+		k_msleep(1);
+	}
 }
 
 void tledcircle(void) // LED circle thread
 {
-	while (1) printf("Controlling LED circle\n");
+	while (1) {
+		printf("Controlling LED circle\n");
+		k_msleep(1);
+	}
 }
 
 void tsevenseg(void) // Seven segment displays thread
 {
-	while (1) printf("Controlling seven segment displays\n");
+	while (1) {
+		printf("Controlling seven segment displays\n");
+		k_msleep(1);
+	}
 }
 
 void tabcbtn(void) // ABC buttons thread
 {
-	while (1) printf("Polling ABC buttons\n");
+	while (1) {
+		printf("Polling ABC buttons\n");
+		k_msleep(1);
+	}
 }
 
 // State functions
