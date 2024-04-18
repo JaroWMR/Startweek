@@ -1,5 +1,6 @@
 #include "statemachine.h"
 #include "gyroCompass.h"
+#include "gps.h"
 #include <stdio.h>
 #include <zephyr/kernel.h>
 #include <zephyr/device.h>
@@ -55,11 +56,6 @@ void tstartbutton(void) { // startbutton thread
 		printf("Polling startbutton\n");
 		k_msleep(1);
 	}
-}
-
-void tgps(void) // gps thread
-{
-	while (1) printf("Reading GPS\n");
 }
 
 void tbtnmatrix_out(void) // button matrix output thread
@@ -212,6 +208,14 @@ void exit_state(struct state *state) {
 	k_thread_suspend(tgyro_id);
 	k_thread_suspend(tgps_id);
 	k_thread_suspend(tbtnmatrix_out_id);
+	k_thread_suspend(tbtnmatrix_in_id);
+	k_thread_suspend(tswitches_id);
+	k_thread_suspend(tpotmeter_id);
+	k_thread_suspend(tbuzzers_id);
+	k_thread_suspend(tledmatrix_id);
+	k_thread_suspend(tledcircle_id);
+	k_thread_suspend(tsevenseg_id);
+	k_thread_suspend(tabcbtn_id);
 	state->next = 0;
 }
 

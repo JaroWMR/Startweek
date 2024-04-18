@@ -10,6 +10,7 @@ file(GLOB SRC_SOURCES 			"src/*.c")
 file(GLOB SRC_ACTUATORS_SOURCES "src/actuators/*.c")
 file(GLOB SRC_MINIGAMES_SOURCES "src/minigames/*.c")
 file(GLOB SRC_SENSORS_SOURCES 	"src/sensors/*.c")
+file(GLOB SRC_SENSORS_SOURCES 	"src/hardware/*.c")
 
 # Add your source files
 target_sources(app PRIVATE 
@@ -25,4 +26,5 @@ target_include_directories(app PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/inc/actuators
 	${CMAKE_CURRENT_SOURCE_DIR}/inc/minigames
 	${CMAKE_CURRENT_SOURCE_DIR}/inc/sensors
+	${CMAKE_CURRENT_SOURCE_DIR}/inc/hardware
 )
