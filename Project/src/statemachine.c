@@ -10,16 +10,20 @@
 #define STACKSIZE 1024
 
 // Thread priority values (lower value is higher priority)
-#define TBUTTON_PRIORITY 4
+#define TSTARTBUTTON_PRIORITY 4
 #define TGYRO_PRIORITY 4
-#define TBUZZER_PRIORITY 6
-#define TLED_PRIORITY 7
+#define TGPS_PRIORITY 6
+#define TBTNMATRIX_OUT_PRIORITY 7
+#define TBTNMATRIX_IN_PRIORITY 7
+#define TSWITCHES_PRIORITY 7
 
 // Thread IDs
-extern const k_tid_t tbutton_id;
+extern const k_tid_t tstartbutton_id;
 extern const k_tid_t tgyro_id;
-extern const k_tid_t tled_id;
-extern const k_tid_t tbuzzer_id;
+extern const k_tid_t tgps_id;
+extern const k_tid_t tbtnmatrix_out_id;
+extern const k_tid_t tbtnmatrix_in_id;
+extern const k_tid_t tswitches_id;
 
 // Setup state machine
 struct state;
@@ -33,9 +37,9 @@ struct state {
 state_fn init_state, walk_state, mg1_state, mg2_state, mg3_state, mg4_state, mg5_state, mg6_state, mg7_state, mg8_state, mg9_state, mg10_state, exit_state;
 
 // Thread functions
-void tbutton(void) { // button thread
+void tstartbutton(void) { // startbutton thread
 	while (1) {
-		printf("Polling button\n");
+		printf("Polling startbutton\n");
 		k_msleep(1);
 	}
 }
@@ -47,14 +51,24 @@ void tgyro(void) { // Gyro thread
 	}
 }
 
-void tled(void) // led thread
+void tgps(void) // gps thread
 {
-	while (1) printf("Writing LED\n");
+	while (1) printf("Reading GPS\n");
 }
 
-void tbuzzer(void) // buzzer thread
+void tbtnmatrix_out(void) // button matrix output thread
 {
-	while (1) printf("Controlling buzzer\n");
+	while (1) printf("Writing button matrix LEDs\n");
+}
+
+void tbtnmatrix_in(void) // button matrix input thread
+{
+	while (1) printf("Reading button matrix buttons\n");
+}
+
+void tswitches(void) // 5 switches thread
+{
+	while (1) printf("Reading switches\n");
 }
 
 // State functions
@@ -71,10 +85,10 @@ void walk_state(struct state *state) {
 void mg1_state(struct state *state) { // Makes use of button and led
 	// Initialise state, enable and disable corresponding threads
 	printf("%s %i\n", __func__, ++state->i);
-	k_thread_resume(tbutton_id);
+	k_thread_resume(tstartbutton_id);
 	k_thread_suspend(tgyro_id);
-	k_thread_resume(tled_id);
-	k_thread_suspend(tbuzzer_id);
+	k_thread_resume(tgps_id);
+	k_thread_suspend(tbtnmatrix_out_id);
 
 	// State loop
 	for (int i = 0; i < 200; i++) {
@@ -85,7 +99,7 @@ void mg1_state(struct state *state) { // Makes use of button and led
 }
 
 void mg2_state(struct state *state) { // Makes use of gyro and buzzer
-	printf("%s %i\n", __func__, ++state->i);
+	printf("Minigame 3\n");
 	state->next = mg3_state;
 }
 
@@ -131,10 +145,10 @@ void mg10_state(struct state *state) { // Makes use of gyro and buzzer
 
 void exit_state(struct state *state) {
 	printf("Exit state");
-	k_thread_suspend(tbutton_id);
+	k_thread_suspend(tstartbutton_id);
 	k_thread_suspend(tgyro_id);
-	k_thread_suspend(tled_id);
-	k_thread_suspend(tbuzzer_id);
+	k_thread_suspend(tgps_id);
+	k_thread_suspend(tbtnmatrix_out_id);
 	state->next = 0;
 }
 
@@ -145,8 +159,10 @@ void startStatemachine() {
 
 // Define the threads
 // Input threads
-K_THREAD_DEFINE(tbutton_id, STACKSIZE, tbutton, NULL, NULL, NULL, TBUTTON_PRIORITY, 0,0);
+K_THREAD_DEFINE(tstartbutton_id, STACKSIZE, tstartbutton, NULL, NULL, NULL, TSTARTBUTTON_PRIORITY, 0,0);
 K_THREAD_DEFINE(tgyro_id, STACKSIZE, tgyro, NULL, NULL, NULL, TGYRO_PRIORITY, 0,0);
+K_THREAD_DEFINE(tbtnmatrix_in_id, STACKSIZE, tbtnmatrix_in, NULL, NULL, NULL, TBTNMATRIX_IN_PRIORITY, 0, 0);
+K_THREAD_DEFINE(tswitches_id, STACKSIZE, tswitches, NULL, NULL, NULL, TSWITCHES_PRIORITY, 0, 0);
 // Output threads
-K_THREAD_DEFINE(tled_id, STACKSIZE, tled, NULL, NULL, NULL, TLED_PRIORITY, 0, 0);
-K_THREAD_DEFINE(tbuzzer_id, STACKSIZE, tbuzzer, NULL, NULL, NULL, TBUZZER_PRIORITY, 0, 0);
+K_THREAD_DEFINE(tgps_id, STACKSIZE, tgps, NULL, NULL, NULL, TGPS_PRIORITY, 0, 0);
+K_THREAD_DEFINE(tbtnmatrix_out_id, STACKSIZE, tbtnmatrix_out, NULL, NULL, NULL, TBTNMATRIX_OUT_PRIORITY, 0, 0);
