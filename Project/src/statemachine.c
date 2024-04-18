@@ -16,6 +16,8 @@
 #define TBTNMATRIX_OUT_PRIORITY 7
 #define TBTNMATRIX_IN_PRIORITY 7
 #define TSWITCHES_PRIORITY 7
+#define TPOTMETER_PRIORITY 7
+#define TBUZZERS_PRIORITY 7
 
 // Thread IDs
 extern const k_tid_t tstartbutton_id;
@@ -24,6 +26,8 @@ extern const k_tid_t tgps_id;
 extern const k_tid_t tbtnmatrix_out_id;
 extern const k_tid_t tbtnmatrix_in_id;
 extern const k_tid_t tswitches_id;
+extern const k_tid_t tpotmeter_id;
+extern const k_tid_t tbuzzers_id;
 
 // Setup state machine
 struct state;
@@ -69,6 +73,16 @@ void tbtnmatrix_in(void) // button matrix input thread
 void tswitches(void) // 5 switches thread
 {
 	while (1) printf("Reading switches\n");
+}
+
+void tpotmeter(void) // Potmeter thread
+{
+	while (1) printf("Reading potmeter\n");
+}
+
+void tbuzzers(void) // Buzzers thread
+{
+	while (1) printf("Controlling buzzers\n");
 }
 
 // State functions
@@ -163,6 +177,8 @@ K_THREAD_DEFINE(tstartbutton_id, STACKSIZE, tstartbutton, NULL, NULL, NULL, TSTA
 K_THREAD_DEFINE(tgyro_id, STACKSIZE, tgyro, NULL, NULL, NULL, TGYRO_PRIORITY, 0,0);
 K_THREAD_DEFINE(tbtnmatrix_in_id, STACKSIZE, tbtnmatrix_in, NULL, NULL, NULL, TBTNMATRIX_IN_PRIORITY, 0, 0);
 K_THREAD_DEFINE(tswitches_id, STACKSIZE, tswitches, NULL, NULL, NULL, TSWITCHES_PRIORITY, 0, 0);
+K_THREAD_DEFINE(tpotmeter_id, STACKSIZE, tpotmeter, NULL, NULL, NULL, TPOTMETER_PRIORITY, 0, 0);
 // Output threads
 K_THREAD_DEFINE(tgps_id, STACKSIZE, tgps, NULL, NULL, NULL, TGPS_PRIORITY, 0, 0);
 K_THREAD_DEFINE(tbtnmatrix_out_id, STACKSIZE, tbtnmatrix_out, NULL, NULL, NULL, TBTNMATRIX_OUT_PRIORITY, 0, 0);
+K_THREAD_DEFINE(tbuzzers_id, STACKSIZE, tbuzzers, NULL, NULL, NULL, TBUZZERS_PRIORITY, 0, 0);
