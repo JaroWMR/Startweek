@@ -1,13 +1,20 @@
+// Includes: own header file, program headers, framework headers, system headers (sorted alpabetically)
 #include "statemachine.h"
+
 #include "buttonMatrix.h"
+#include "buzzers.h"
 #include "gps.h"
 #include "gyroCompass.h"
-#include <stdio.h>
-#include <zephyr/kernel.h>
+#include "potmeter.h"
+
 #include <zephyr/device.h>
+#include <zephyr/drivers/gpio.h>
+#include <zephyr/kernel.h>
 #include <zephyr/sys/util.h>
 #include <zephyr/sys/printk.h>
-#include <zephyr/drivers/gpio.h>
+
+#include <stdio.h>
+
 
 // The stack size of all threads
 #define STACKSIZE 1024
@@ -63,22 +70,6 @@ void tswitches(void) // 5 switches thread
 {
 	while (1) {
 		printf("Reading switches\n");
-		k_msleep(1);
-	}
-}
-
-void tpotmeter(void) // Potmeter thread
-{
-	while (1) {
-		printf("Reading potmeter\n");
-		k_msleep(1);
-	}
-}
-
-void tbuzzers(void) // Buzzers thread
-{
-	while (1) {
-		printf("Controlling buzzers\n");
 		k_msleep(1);
 	}
 }
