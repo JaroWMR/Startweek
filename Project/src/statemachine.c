@@ -120,46 +120,147 @@ void mg1_state(struct state *state) { // Makes use of button and led
 
 void mg2_state(struct state *state) { // Makes use of gyro and buzzer
 	printf("Minigame 2\n");
+
+	// Enable required threads
+	k_thread_resume(tstartbutton_id);
+	k_thread_resume(tbtnmatrix_in_id);
+	k_thread_resume(tbtnmatrix_out_id);
+	k_thread_resume(tbuzzers_id);
+
+	int ret = playMg2();
+
+	// Disable required threads after finishing
+	k_thread_suspend(tstartbutton_id);
+	k_thread_suspend(tbtnmatrix_in_id);
+	k_thread_suspend(tbtnmatrix_out_id);
+	k_thread_suspend(tbuzzers_id);
+
 	state->next = mg3_state;
 }
 
 void mg3_state(struct state *state) { // Makes use of gyro and buzzer
 	printf("Minigame 3\n");
+
+	// Enable required threads
+	k_thread_resume(tstartbutton_id);
+	k_thread_resume(tbtnmatrix_in_id);
+	k_thread_resume(tbtnmatrix_out_id);
+	k_thread_resume(tbuzzers_id);
+
+	int ret = playMg3();
+
+	// Disable required threads after finishing
+	k_thread_suspend(tstartbutton_id);
+	k_thread_suspend(tbtnmatrix_in_id);
+	k_thread_suspend(tbtnmatrix_out_id);
+	k_thread_suspend(tbuzzers_id);
+
 	state->next = mg4_state;
 }
 
 void mg4_state(struct state *state) { // Makes use of gyro and buzzer
 	printf("Minigame 4\n");
+
+	// Enable required threads
+	k_thread_resume(tstartbutton_id);
+	k_thread_resume(tbuzzers_id);
+	k_thread_resume(tabcbtn_id);
+
+	int ret = playMg4();
+
+	// Disable required threads after finishing
+	k_thread_suspend(tstartbutton_id);
+	k_thread_suspend(tbuzzers_id);
+	k_thread_suspend(tabcbtn_id);
+
 	state->next = mg5_state;
 }
 
 void mg5_state(struct state *state) { // Makes use of gyro and buzzer
 	printf("Minigame 5\n");
+
+	// Enable required threads
+	k_thread_resume(tstartbutton_id);
+	k_thread_resume(tbtnmatrix_in_id);
+	k_thread_resume(tbtnmatrix_out_id);
+
+	int ret = playMg5();
+
+	// Disable required threads after finishing
+	k_thread_suspend(tstartbutton_id);
+	k_thread_suspend(tbtnmatrix_in_id);
+	k_thread_suspend(tbtnmatrix_out_id);
+
 	state->next = mg6_state;
 }
 
 void mg6_state(struct state *state) { // Makes use of gyro and buzzer
 	printf("Minigame 6\n");
+
+	// Enable required threads
+	k_thread_resume(tstartbutton_id);
+
+	int ret = playMg6();
+
+	// Disable required threads after finishing
+	k_thread_suspend(tstartbutton_id);
+
 	state->next = mg7_state;
 }
 
 void mg7_state(struct state *state) { // Makes use of gyro and buzzer
 	printf("Minigame 7\n");
+
+	// Enable required threads
+	k_thread_resume(tstartbutton_id);
+
+	int ret = playMg7();
+
+	// Disable required threads after finishing
+	k_thread_suspend(tstartbutton_id);
+
 	state->next = mg8_state;
 }
 
 void mg8_state(struct state *state) { // Makes use of gyro and buzzer
 	printf("Minigame 8\n");
+
+	// Enable required threads
+	k_thread_resume(tstartbutton_id);
+
+	int ret = playMg8();
+
+	// Disable required threads after finishing
+	k_thread_suspend(tstartbutton_id);
+
 	state->next = mg9_state;
 }
 
 void mg9_state(struct state *state) { // Makes use of gyro and buzzer
 	printf("Minigame 9\n");
+
+	// Enable required threads
+	k_thread_resume(tstartbutton_id);
+
+	int ret = playMg9();
+
+	// Disable required threads after finishing
+	k_thread_suspend(tstartbutton_id);
+
 	state->next = mg10_state;
 }
 
 void mg10_state(struct state *state) { // Makes use of gyro and buzzer
 	printf("Minigame 10\n");
+
+	// Enable required threads
+	k_thread_resume(tstartbutton_id);
+
+	int ret = playMg10();
+
+	// Disable required threads after finishing
+	k_thread_suspend(tstartbutton_id);
+
 	state->next = exit_state;
 }
 
