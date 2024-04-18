@@ -1,6 +1,7 @@
 #include "statemachine.h"
-#include "gyroCompass.h"
+#include "buttonMatrix.h"
 #include "gps.h"
+#include "gyroCompass.h"
 #include <stdio.h>
 #include <zephyr/kernel.h>
 #include <zephyr/device.h>
@@ -54,22 +55,6 @@ state_fn init_state, walk_state, mg1_state, mg2_state, mg3_state, mg4_state, mg5
 void tstartbutton(void) { // startbutton thread
 	while (1) {
 		printf("Polling startbutton\n");
-		k_msleep(1);
-	}
-}
-
-void tbtnmatrix_out(void) // button matrix output thread
-{
-	while (1) {
-		printf("Writing button matrix LEDs\n");
-		k_msleep(1);
-	}
-}
-
-void tbtnmatrix_in(void) // button matrix input thread
-{
-	while (1) {
-		printf("Reading button matrix buttons\n");
 		k_msleep(1);
 	}
 }
