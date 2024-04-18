@@ -20,6 +20,8 @@
 #define TBUZZERS_PRIORITY 7
 #define TLEDMATRIX_PRIORITY 7
 #define TLEDCIRCLE_PRIORITY 7
+#define TSEVENSEG_PRIORITY 7
+#define TABCBTN_PRIORITY 7
 
 // Thread IDs
 extern const k_tid_t tstartbutton_id;
@@ -32,6 +34,8 @@ extern const k_tid_t tpotmeter_id;
 extern const k_tid_t tbuzzers_id;
 extern const k_tid_t tledmatrix_id;
 extern const k_tid_t tledcircle_id;
+extern const k_tid_t tsevenseg_id;
+extern const k_tid_t tabcbtn_id;
 
 // Setup state machine
 struct state;
@@ -97,6 +101,16 @@ void tledmatrix(void) // LED matrix thread
 void tledcircle(void) // LED circle thread
 {
 	while (1) printf("Controlling LED circle\n");
+}
+
+void tsevenseg(void) // Seven segment displays thread
+{
+	while (1) printf("Controlling seven segment displays\n");
+}
+
+void tabcbtn(void) // ABC buttons thread
+{
+	while (1) printf("Polling ABC buttons\n");
 }
 
 // State functions
@@ -192,9 +206,11 @@ K_THREAD_DEFINE(tgyro_id, STACKSIZE, tgyro, NULL, NULL, NULL, TGYRO_PRIORITY, 0,
 K_THREAD_DEFINE(tbtnmatrix_in_id, STACKSIZE, tbtnmatrix_in, NULL, NULL, NULL, TBTNMATRIX_IN_PRIORITY, 0, 0);
 K_THREAD_DEFINE(tswitches_id, STACKSIZE, tswitches, NULL, NULL, NULL, TSWITCHES_PRIORITY, 0, 0);
 K_THREAD_DEFINE(tpotmeter_id, STACKSIZE, tpotmeter, NULL, NULL, NULL, TPOTMETER_PRIORITY, 0, 0);
+K_THREAD_DEFINE(tabcbtn_id, STACKSIZE, tabcbtn, NULL, NULL, NULL, TABCBTN_PRIORITY, 0, 0);
 // Output threads
 K_THREAD_DEFINE(tgps_id, STACKSIZE, tgps, NULL, NULL, NULL, TGPS_PRIORITY, 0, 0);
 K_THREAD_DEFINE(tbtnmatrix_out_id, STACKSIZE, tbtnmatrix_out, NULL, NULL, NULL, TBTNMATRIX_OUT_PRIORITY, 0, 0);
 K_THREAD_DEFINE(tbuzzers_id, STACKSIZE, tbuzzers, NULL, NULL, NULL, TBUZZERS_PRIORITY, 0, 0);
 K_THREAD_DEFINE(tledmatrix_id, STACKSIZE, tledmatrix, NULL, NULL, NULL, TLEDMATRIX_PRIORITY, 0, 0);
 K_THREAD_DEFINE(tledcircle_id, STACKSIZE, tledcircle, NULL, NULL, NULL, TLEDCIRCLE_PRIORITY, 0, 0);
+K_THREAD_DEFINE(tsevenseg_id, STACKSIZE, tsevenseg, NULL, NULL, NULL, TSEVENSEG_PRIORITY, 0, 0);
