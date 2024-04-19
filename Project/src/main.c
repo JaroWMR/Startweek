@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-
+#include "statemachine.h"
 #include <stdio.h>
 #include <zephyr/device.h>
 #include <zephyr/drivers/gnss.h>
@@ -34,6 +34,7 @@ GNSS_SATELLITES_CALLBACK_DEFINE(DEVICE_DT_GET(DT_ALIAS(gnss)), gnss_satellites_c
 
 int main(void)
 {
+	startStatemachine();
 	printf("A thing\n");
 	return 0;
 }
