@@ -104,9 +104,11 @@ void mg1_state(struct state *state) { // Makes use of button and led
 	printf("Minigame 1\n");
 
 	// Enable required threads
-	k_thread_resume(tstartbutton_id);
-	k_thread_resume(tgyro_id);
-	k_thread_resume(tledmatrix_id);
+	//k_thread_resume(tstartbutton_id);
+	//k_thread_resume(tgyro_id);
+	//k_thread_resume(tledmatrix_id);
+	/* Temporarily enabling GPS in this mingame so I can test the driver **************************************/
+	k_thread_resume(tgps_id);
 
 	int ret = playMg1();
 
@@ -114,6 +116,8 @@ void mg1_state(struct state *state) { // Makes use of button and led
 	k_thread_suspend(tstartbutton_id);
 	k_thread_suspend(tgyro_id);
 	k_thread_suspend(tledmatrix_id);
+	/* Temporarily enabling GPS in this mingame so I can test the driver **************************************/
+	k_thread_suspend(tgps_id);
 
 	state->next = mg2_state;
 }
