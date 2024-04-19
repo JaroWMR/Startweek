@@ -1,6 +1,4 @@
-#include <stdio.h>
-#include <zephyr/kernel.h>
-#include "bigMatrix.h"
+#include "ledMatrix.h"
 
 /** 
  * @brief Shifts one bit of data in the shift register. 
@@ -12,38 +10,38 @@
  * 
  * @return No return
  */ 
-void bigMatrixSendOneBitData(bool ShiftDataValue)
+void ledMatrixSendOneBitData(bool ShiftDataValue)
 {
-	gpio_pin_set_dt(&bigMatrixShiftDataIn,ShiftDataValue);
-	gpio_pin_set_dt(&bigMatrixShiftClock,HIGH);
-	gpio_pin_set_dt(&bigMatrixShiftClock,LOW);
+	gpio_pin_set_dt(&ledMatrixShiftDataIn,ShiftDataValue);
+	gpio_pin_set_dt(&ledMatrixShiftClock,HIGH);
+	gpio_pin_set_dt(&ledMatrixShiftClock,LOW);
 }
 
 /** 
- * @brief Configures the bigMatrix.
+ * @brief Configures the ledMatrix.
  * 
  * Checks if the GPIO is available and configures the GPIO for its purpose
  * 
  * @return Returns a 0 on succes and a 1 on error.
  */ 
-bool bigMatrixConfig()
+bool ledMatrixConfig()
 {
 	//Checks if gpio is available
-	if (!gpio_is_ready_dt(&bigMatrixShiftDataIn) && !gpio_is_ready_dt(&bigMatrixShiftOutputEnable) &&
-		!gpio_is_ready_dt(&bigMatrixShiftClock) && !gpio_is_ready_dt(&bigMatrixMuxA) &&
-		!gpio_is_ready_dt(&bigMatrixMuxB) && !gpio_is_ready_dt(&bigMatrixMuxC) && !gpio_is_ready_dt(&bigMatrixMuxD)) 
+	if (!gpio_is_ready_dt(&ledMatrixShiftDataIn) && !gpio_is_ready_dt(&ledMatrixShiftOutputEnable) &&
+		!gpio_is_ready_dt(&ledMatrixShiftClock) && !gpio_is_ready_dt(&ledMatrixMuxA) &&
+		!gpio_is_ready_dt(&ledMatrixMuxB) && !gpio_is_ready_dt(&ledMatrixMuxC) && !gpio_is_ready_dt(&ledMatrixMuxD)) 
 	{
 		return 1;
 	}
 	//configures the gpio
 	uint8_t ret = 0;
-	ret += gpio_pin_configure_dt(&bigMatrixShiftDataIn, GPIO_OUTPUT_ACTIVE);
-	ret += gpio_pin_configure_dt(&bigMatrixShiftOutputEnable, GPIO_OUTPUT_ACTIVE);
-	ret += gpio_pin_configure_dt(&bigMatrixShiftClock, GPIO_OUTPUT_ACTIVE);
-	ret += gpio_pin_configure_dt(&bigMatrixMuxA, GPIO_OUTPUT_ACTIVE);
-	ret += gpio_pin_configure_dt(&bigMatrixMuxB, GPIO_OUTPUT_ACTIVE);
-	ret += gpio_pin_configure_dt(&bigMatrixMuxC, GPIO_OUTPUT_ACTIVE);
-	ret += gpio_pin_configure_dt(&bigMatrixMuxD, GPIO_OUTPUT_ACTIVE);
+	ret += gpio_pin_configure_dt(&ledMatrixShiftDataIn, GPIO_OUTPUT_ACTIVE);
+	ret += gpio_pin_configure_dt(&ledMatrixShiftOutputEnable, GPIO_OUTPUT_ACTIVE);
+	ret += gpio_pin_configure_dt(&ledMatrixShiftClock, GPIO_OUTPUT_ACTIVE);
+	ret += gpio_pin_configure_dt(&ledMatrixMuxA, GPIO_OUTPUT_ACTIVE);
+	ret += gpio_pin_configure_dt(&ledMatrixMuxB, GPIO_OUTPUT_ACTIVE);
+	ret += gpio_pin_configure_dt(&ledMatrixMuxC, GPIO_OUTPUT_ACTIVE);
+	ret += gpio_pin_configure_dt(&ledMatrixMuxD, GPIO_OUTPUT_ACTIVE);
 	//return when gpio is configured incorrectly
 	if (ret != 0) 
 	{
@@ -53,23 +51,23 @@ bool bigMatrixConfig()
 }
 
 /** 
- * @brief Initializes the bigMatrix
+ * @brief Initializes the ledMatrix
  * 
  * Sets all pins from floating to 0
  * Clears the Shift registers by writing 16 times a 0.
  * 
  * @return Returns a 0 on succes and a 1 on error.
  */ 
-int8_t bigMatrixInit ()
+int8_t ledMatrixInit ()
 {
 	uint8_t ret = 0;
-	ret += gpio_pin_set_dt(&bigMatrixShiftDataIn,LOW);
-	ret += gpio_pin_set_dt(&bigMatrixShiftOutputEnable,LOW);
-	ret += gpio_pin_set_dt(&bigMatrixShiftClock,LOW);
-	ret += gpio_pin_set_dt(&bigMatrixMuxA,LOW);
-	ret += gpio_pin_set_dt(&bigMatrixMuxB,LOW);
-	ret += gpio_pin_set_dt(&bigMatrixMuxC,LOW);
-	ret += gpio_pin_set_dt(&bigMatrixMuxD,LOW);
+	ret += gpio_pin_set_dt(&ledMatrixShiftDataIn,LOW);
+	ret += gpio_pin_set_dt(&ledMatrixShiftOutputEnable,LOW);
+	ret += gpio_pin_set_dt(&ledMatrixShiftClock,LOW);
+	ret += gpio_pin_set_dt(&ledMatrixMuxA,LOW);
+	ret += gpio_pin_set_dt(&ledMatrixMuxB,LOW);
+	ret += gpio_pin_set_dt(&ledMatrixMuxC,LOW);
+	ret += gpio_pin_set_dt(&ledMatrixMuxD,LOW);
 
 	if (ret != 0) 
 	{
@@ -79,15 +77,15 @@ int8_t bigMatrixInit ()
 	{
 		for (int i = 0; i < LEDSINROW; i++)
 		{
-			bigMatrixSendOneBitData(LOW);
+			ledMatrixSendOneBitData(LOW);
 		}
-		gpio_pin_set_dt(&bigMatrixShiftOutputEnable,HIGH);
-		gpio_pin_set_dt(&bigMatrixShiftOutputEnable,LOW);
+		gpio_pin_set_dt(&ledMatrixShiftOutputEnable,HIGH);
+		gpio_pin_set_dt(&ledMatrixShiftOutputEnable,LOW);
 
-		gpio_pin_set_dt(&bigMatrixMuxA,(row & 0x1));
-		gpio_pin_set_dt(&bigMatrixMuxB,(row & 0x2));
-		gpio_pin_set_dt(&bigMatrixMuxC,(row & 0x4));
-		gpio_pin_set_dt(&bigMatrixMuxD,(row & 0x8));
+		gpio_pin_set_dt(&ledMatrixMuxA,(row & 0x1));
+		gpio_pin_set_dt(&ledMatrixMuxB,(row & 0x2));
+		gpio_pin_set_dt(&ledMatrixMuxC,(row & 0x4));
+		gpio_pin_set_dt(&ledMatrixMuxD,(row & 0x8));
 	}
 
 	return 0;
@@ -106,7 +104,7 @@ int8_t bigMatrixInit ()
  * Returns a 2 if the Initialiazation has not been perfomed.
  * Returns a 3 if the Configuration and the Initialiazation has not been perfomed.
  */ 
-int8_t bigMatrixSetLeds(int16_t data[ROWS])
+int8_t ledMatrixSetLeds(int16_t data[ROWS])
 {
 	for (size_t row = 0; row < ROWS; row++)
 	{
@@ -114,21 +112,21 @@ int8_t bigMatrixSetLeds(int16_t data[ROWS])
 		{
 			if(data[row] & 0x1<<led)
 			{
-				bigMatrixSendOneBitData(HIGH);
+				ledMatrixSendOneBitData(HIGH);
 			}
 			else
 			{
-				bigMatrixSendOneBitData(LOW);
+				ledMatrixSendOneBitData(LOW);
 			}
 		}
 
-		gpio_pin_set_dt(&bigMatrixShiftOutputEnable,HIGH);
-		gpio_pin_set_dt(&bigMatrixShiftOutputEnable,LOW);
+		gpio_pin_set_dt(&ledMatrixShiftOutputEnable,HIGH);
+		gpio_pin_set_dt(&ledMatrixShiftOutputEnable,LOW);
 
-		gpio_pin_set_dt(&bigMatrixMuxA,(row & 0x1));
-		gpio_pin_set_dt(&bigMatrixMuxB,(row & 0x2));
-		gpio_pin_set_dt(&bigMatrixMuxC,(row & 0x4));
-		gpio_pin_set_dt(&bigMatrixMuxD,(row & 0x8));
+		gpio_pin_set_dt(&ledMatrixMuxA,(row & 0x1));
+		gpio_pin_set_dt(&ledMatrixMuxB,(row & 0x2));
+		gpio_pin_set_dt(&ledMatrixMuxC,(row & 0x4));
+		gpio_pin_set_dt(&ledMatrixMuxD,(row & 0x8));
 
 		//TODO: determine this k_sleep delay
 		k_sleep(K_USEC(100));

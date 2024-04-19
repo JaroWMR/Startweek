@@ -1,4 +1,6 @@
 #include <zephyr/drivers/gpio.h>
+#include <stdio.h>
+#include <zephyr/kernel.h>
 
 // GPIO definitions 
 static const struct gpio_dt_spec circleMatrixShiftDataIn 			= GPIO_DT_SPEC_GET(DT_ALIAS(shiftdataincircle), gpios);
