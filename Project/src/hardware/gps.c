@@ -19,6 +19,10 @@ static void gnss_data_cb(const struct device *dev, const struct gnss_data *data)
 	}
 }
 
+struct gnss_data getGnssData() {
+	return gpsData;
+}
+
 int64_t getLatitude() {
 	return gpsData.nav_data.latitude;
 }
