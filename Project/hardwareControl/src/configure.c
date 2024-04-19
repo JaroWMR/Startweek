@@ -1,4 +1,0 @@
-void configure()
-{
-	//nothing
-}
