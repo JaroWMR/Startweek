@@ -1,6 +1,4 @@
-#include <stdio.h>
-#include <zephyr/kernel.h>
-#include "smallMatrix.h"
+#include "buttonMatrix.h"
 
 /** 
  * @brief Shifts one bit of data in the shift register. 
@@ -12,36 +10,36 @@
  * 
  * @return No return
  */ 
-void smallMatrixSendOneBitData(bool ShiftDataValue)
+void buttonMatrixSendOneBitData(bool ShiftDataValue)
 {
-	gpio_pin_set_dt(&smallMatrixShiftDataIn,ShiftDataValue);
-	gpio_pin_set_dt(&smallMatrixShiftClock,HIGH);
-	gpio_pin_set_dt(&smallMatrixShiftClock,LOW);
+	gpio_pin_set_dt(&buttonMatrixShiftDataIn,ShiftDataValue);
+	gpio_pin_set_dt(&buttonMatrixShiftClock,HIGH);
+	gpio_pin_set_dt(&buttonMatrixShiftClock,LOW);
 }
 
 /** 
- * @brief Configures the smallMatrix.
+ * @brief Configures the buttonMatrix.
  * 
  * Checks if the GPIO is available and configures the GPIO for its purpose
  * 
  * @return Returns a 0 on succes and a 1 on error.
  */ 
-bool smallMatrixConfig()
+bool buttonMatrixConfig()
 {
 	//Checks if gpio is available
-	if (!gpio_is_ready_dt(&smallMatrixShiftDataIn) && !gpio_is_ready_dt(&smallMatrixShiftOutputEnable) &&
-		!gpio_is_ready_dt(&smallMatrixShiftClock) && !gpio_is_ready_dt(&smallMatrixMuxA) &&
-		!gpio_is_ready_dt(&smallMatrixMuxB)) 
+	if (!gpio_is_ready_dt(&buttonMatrixShiftDataIn) && !gpio_is_ready_dt(&buttonMatrixShiftOutputEnable) &&
+		!gpio_is_ready_dt(&buttonMatrixShiftClock) && !gpio_is_ready_dt(&buttonMatrixMuxA) &&
+		!gpio_is_ready_dt(&buttonMatrixMuxB)) 
 	{
 		return 1;
 	}
 	//configures the gpio
 	uint8_t ret = 0;
-	ret += gpio_pin_configure_dt(&smallMatrixShiftDataIn, GPIO_OUTPUT_ACTIVE);
-	ret += gpio_pin_configure_dt(&smallMatrixShiftOutputEnable, GPIO_OUTPUT_ACTIVE);
-	ret += gpio_pin_configure_dt(&smallMatrixShiftClock, GPIO_OUTPUT_ACTIVE);
-	ret += gpio_pin_configure_dt(&smallMatrixMuxA, GPIO_OUTPUT_ACTIVE);
-	ret += gpio_pin_configure_dt(&smallMatrixMuxB, GPIO_OUTPUT_ACTIVE);
+	ret += gpio_pin_configure_dt(&buttonMatrixShiftDataIn, GPIO_OUTPUT_ACTIVE);
+	ret += gpio_pin_configure_dt(&buttonMatrixShiftOutputEnable, GPIO_OUTPUT_ACTIVE);
+	ret += gpio_pin_configure_dt(&buttonMatrixShiftClock, GPIO_OUTPUT_ACTIVE);
+	ret += gpio_pin_configure_dt(&buttonMatrixMuxA, GPIO_OUTPUT_ACTIVE);
+	ret += gpio_pin_configure_dt(&buttonMatrixMuxB, GPIO_OUTPUT_ACTIVE);
 	//return when gpio is configured incorrectly
 	if (ret != 0) 
 	{
@@ -51,21 +49,21 @@ bool smallMatrixConfig()
 }
 
 /** 
- * @brief Initializes the smallMatrix
+ * @brief Initializes the buttonMatrix
  * 
  * Sets all pins from floating to 0
  * Clears the Shift registers by writing 16 times a 0.
  * 
  * @return Returns a 0 on succes and a 1 on error.
  */ 
-int8_t smallMatrixInit ()
+int8_t buttonMatrixInit ()
 {
 	uint8_t ret = 0;
-	ret += gpio_pin_set_dt(&smallMatrixShiftDataIn,LOW);
-	ret += gpio_pin_set_dt(&smallMatrixShiftOutputEnable,LOW);
-	ret += gpio_pin_set_dt(&smallMatrixShiftClock,LOW);
-	ret += gpio_pin_set_dt(&smallMatrixMuxA,LOW);
-	ret += gpio_pin_set_dt(&smallMatrixMuxB,LOW);
+	ret += gpio_pin_set_dt(&buttonMatrixShiftDataIn,LOW);
+	ret += gpio_pin_set_dt(&buttonMatrixShiftOutputEnable,LOW);
+	ret += gpio_pin_set_dt(&buttonMatrixShiftClock,LOW);
+	ret += gpio_pin_set_dt(&buttonMatrixMuxA,LOW);
+	ret += gpio_pin_set_dt(&buttonMatrixMuxB,LOW);
 
 	if (ret != 0) 
 	{
@@ -75,13 +73,13 @@ int8_t smallMatrixInit ()
 	{
 		for (int i = 0; i < LEDSINROW; i++)
 		{
-			smallMatrixSendOneBitData(LOW);
+			buttonMatrixSendOneBitData(LOW);
 		}
-		gpio_pin_set_dt(&smallMatrixShiftOutputEnable,HIGH);
-		gpio_pin_set_dt(&smallMatrixShiftOutputEnable,LOW);
+		gpio_pin_set_dt(&buttonMatrixShiftOutputEnable,HIGH);
+		gpio_pin_set_dt(&buttonMatrixShiftOutputEnable,LOW);
 
-		gpio_pin_set_dt(&smallMatrixMuxA,(row & 0x1));
-		gpio_pin_set_dt(&smallMatrixMuxB,(row & 0x2));
+		gpio_pin_set_dt(&buttonMatrixMuxA,(row & 0x1));
+		gpio_pin_set_dt(&buttonMatrixMuxB,(row & 0x2));
 	}
 
 	return 0;
@@ -100,7 +98,7 @@ int8_t smallMatrixInit ()
  * Returns a 2 if the Initialiazation has not been perfomed.
  * Returns a 3 if the Configuration and the Initialiazation has not been perfomed.
  */ 
-int8_t smallMatrixSets(int8_t data[ROWS])
+int8_t buttonMatrixSets(int8_t data[ROWS])
 {
 	for (size_t row = 0; row < ROWS; row++)
 	{
@@ -108,19 +106,19 @@ int8_t smallMatrixSets(int8_t data[ROWS])
 		{
 			if(data[row] & 0x1<<led)
 			{
-				smallMatrixSendOneBitData(HIGH);
+				buttonMatrixSendOneBitData(HIGH);
 			}
 			else
 			{
-				smallMatrixSendOneBitData(LOW);
+				buttonMatrixSendOneBitData(LOW);
 			}
 		}
 
-		gpio_pin_set_dt(&smallMatrixShiftOutputEnable,HIGH);
-		gpio_pin_set_dt(&smallMatrixShiftOutputEnable,LOW);
+		gpio_pin_set_dt(&buttonMatrixShiftOutputEnable,HIGH);
+		gpio_pin_set_dt(&buttonMatrixShiftOutputEnable,LOW);
 
-		gpio_pin_set_dt(&smallMatrixMuxA,(row & 0x1));
-		gpio_pin_set_dt(&smallMatrixMuxB,(row & 0x2));
+		gpio_pin_set_dt(&buttonMatrixMuxA,(row & 0x1));
+		gpio_pin_set_dt(&buttonMatrixMuxB,(row & 0x2));
 
 		//TODO: determine this k_sleep delay
 		k_sleep(K_USEC(100));

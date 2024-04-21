@@ -1,5 +1,4 @@
-#include <stdio.h>
-#include <zephyr/kernel.h>
+
 #include "circleMatrix.h"
 
 /** 
