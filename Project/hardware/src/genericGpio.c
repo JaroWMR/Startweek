@@ -237,7 +237,6 @@ uint8_t abcbuttonsInit()
  * 
  * @return Returns a 0 on succes and a 1 on error.
  */ 
-
 uint8_t abcledsInit()
 {
 	uint8_t ret = 0;

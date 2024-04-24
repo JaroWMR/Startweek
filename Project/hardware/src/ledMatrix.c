@@ -73,9 +73,9 @@ int8_t ledMatrixInit ()
 	{
 		return 1;
 	}
-	for (size_t row = 0; row < ROWS; row++)
+	for (size_t row = 0; row < LEDMATRIXROWS; row++)
 	{
-		for (int i = 0; i < LEDSINROW; i++)
+		for (int i = 0; i < LEDMATRIXLEDSINROW; i++)
 		{
 			ledMatrixSendOneBitData(LOW);
 		}
@@ -104,11 +104,11 @@ int8_t ledMatrixInit ()
  * Returns a 2 if the Initialiazation has not been perfomed.
  * Returns a 3 if the Configuration and the Initialiazation has not been perfomed.
  */ 
-int8_t ledMatrixSetLeds(int16_t data[ROWS])
+int8_t ledMatrixSetLeds(int16_t data[LEDMATRIXROWS])
 {
-	for (size_t row = 0; row < ROWS; row++)
+	for (size_t row = 0; row < LEDMATRIXROWS; row++)
 	{
-		for (size_t led = 0; led < LEDSINROW; led++)
+		for (size_t led = 0; led < LEDMATRIXLEDSINROW; led++)
 		{
 			if(data[row] & 0x1<<led)
 			{
