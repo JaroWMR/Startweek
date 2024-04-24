@@ -76,21 +76,17 @@ state_fn init_state, walk_state, mg1_state, mg2_state, mg3_state, mg4_state, mg5
 // State functions
 void init_state(struct state *state) {
 	printf("Initialization\n");
-
-	// // Disable all io threads
-	// k_thread_suspend(tstartbutton_id);
-	// k_thread_suspend(tgyro_id);
-	// k_thread_suspend(tgps_id);
-	// k_thread_suspend(tbtnmatrix_out_id);
-	// k_thread_suspend(tbtnmatrix_in_id);
-	// k_thread_suspend(tswitches_id);
-	// k_thread_suspend(tpotmeter_id);
-	// k_thread_suspend(tbuzzers_id);
-	// k_thread_suspend(tledmatrix_id);
-	// k_thread_suspend(tledcircle_id);
-	// k_thread_suspend(tsevenseg_id);
-	// k_thread_suspend(tabcbtn_id);
-
+	uint8_t ret = 0;
+	ret = configure();
+	if(ret != 0)
+	{
+		while(true)
+		{
+			__asm__ volatile ("nop");
+		}
+	}
+	initialize();
+	
 	state->next = walk_state;
 }
 

@@ -1,3 +1,6 @@
+#ifndef GENERIC_GPIO_H
+#define GENERIC_GPIO_H
+
 #include <zephyr/kernel.h>
 #include <stdio.h>
 #include <zephyr/drivers/gpio.h>
@@ -52,8 +55,13 @@ static const struct gpio_dt_spec abcleds[3] = {
 static const struct gpio_dt_spec startbutton	= GPIO_DT_SPEC_GET(DT_ALIAS(startbutton), gpios);
 static const struct gpio_dt_spec startled		= GPIO_DT_SPEC_GET(DT_ALIAS(startled), gpios);
 
-#define HIGH			1
-#define LOW				0
+#ifndef HIGH
+#define HIGH 1
+#endif
+
+#ifndef LOW
+#define LOW 0
+#endif
 
 bool buttons4x4Config();
 bool switchesConfig();
@@ -73,3 +81,5 @@ uint8_t abcbuttonsGet(char selectedbtn);
 uint8_t abcledsSet(char selectedled,bool value);
 uint8_t startbuttonGet();
 uint8_t startledSet(bool value);
+
+#endif // GENERIC_GPIO_H

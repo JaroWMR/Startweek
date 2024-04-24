@@ -1,3 +1,6 @@
+#ifndef CIRCLE_MATRIX_H
+#define CIRCLE_MATRIX_H
+
 #include <zephyr/drivers/gpio.h>
 #include <stdio.h>
 #include <zephyr/kernel.h>
@@ -10,13 +13,19 @@ static const struct gpio_dt_spec circleMatrixMuxA 					= GPIO_DT_SPEC_GET(DT_ALI
 static const struct gpio_dt_spec circleMatrixMuxB 					= GPIO_DT_SPEC_GET(DT_ALIAS(muxbcircle), gpios);
 static const struct gpio_dt_spec circleMatrixMuxC 					= GPIO_DT_SPEC_GET(DT_ALIAS(muxccircle), gpios);
 
+#define CIRCLEMATRIXLEDSINROW		8
+#define CIRCLEMATRIXROWS 			8
 
-#define HIGH			1
-#define LOW				0
+#ifndef HIGH
+#define HIGH 1
+#endif
 
-#define LEDSINROW		8
-#define ROWS 			8
+#ifndef LOW
+#define LOW 0
+#endif
 
 bool circleMatrixConfig();
 int8_t circleMatrixInit();
 int8_t circleMatrixSetLeds(int8_t data[8]);
+
+#endif // CIRCLE_MATRIX_H

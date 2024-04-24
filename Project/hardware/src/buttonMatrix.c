@@ -69,9 +69,9 @@ int8_t buttonMatrixInit ()
 	{
 		return 1;
 	}
-	for (size_t row = 0; row < ROWS; row++)
+	for (size_t row = 0; row < BUTTONMATRIXROWS; row++)
 	{
-		for (int i = 0; i < LEDSINROW; i++)
+		for (int i = 0; i < BUTTONMATRIXLEDSINROW; i++)
 		{
 			buttonMatrixSendOneBitData(LOW);
 		}
@@ -98,11 +98,11 @@ int8_t buttonMatrixInit ()
  * Returns a 2 if the Initialiazation has not been perfomed.
  * Returns a 3 if the Configuration and the Initialiazation has not been perfomed.
  */ 
-int8_t buttonMatrixSets(int8_t data[ROWS])
+int8_t buttonMatrixSets(int8_t data[BUTTONMATRIXROWS])
 {
-	for (size_t row = 0; row < ROWS; row++)
+	for (size_t row = 0; row < BUTTONMATRIXROWS; row++)
 	{
-		for (size_t led = 0; led < LEDSINROW; led++)
+		for (size_t led = 0; led < BUTTONMATRIXLEDSINROW; led++)
 		{
 			if(data[row] & 0x1<<led)
 			{

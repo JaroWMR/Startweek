@@ -1,3 +1,6 @@
+#ifndef BUTTON_MATRIX_H
+#define BUTTON_MATRIX_H
+
 #include <zephyr/drivers/gpio.h>
 #include <stdio.h>
 #include <zephyr/kernel.h>
@@ -9,13 +12,19 @@ static const struct gpio_dt_spec buttonMatrixShiftClock 				= GPIO_DT_SPEC_GET(D
 static const struct gpio_dt_spec buttonMatrixMuxA 					= GPIO_DT_SPEC_GET(DT_ALIAS(muxa4x4), gpios);
 static const struct gpio_dt_spec buttonMatrixMuxB 					= GPIO_DT_SPEC_GET(DT_ALIAS(muxb4x4), gpios);
 
+#define BUTTONMATRIXLEDSINROW		4
+#define BUTTONMATRIXROWS 			4
 
-#define HIGH			1
-#define LOW				0
+#ifndef HIGH
+#define HIGH 1
+#endif
 
-#define LEDSINROW		4
-#define ROWS 			4
+#ifndef LOW
+#define LOW 0
+#endif
 
 bool buttonMatrixConfig();
 int8_t buttonMatrixInit();
 int8_t buttonMatrixSetLeds(int8_t data[4]);
+
+#endif // BUTTON_MATRIX_H

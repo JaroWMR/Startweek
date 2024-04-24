@@ -1,5 +1,8 @@
 #include "lcd.h"
 
+//is located in c file as private variable so that it is included ones and only used by lcd.c
+bool lastaction;
+
 
 /** 
  * @brief Writes 8 bit value to lcd.
