@@ -67,7 +67,9 @@ uint8_t abcbuttonsInit();
 uint8_t abcledsInit();
 uint8_t startbuttonledInit();
 
-
-
-// int8_t ledMatrixInit();
-// int8_t ledMatrixSetLeds(int16_t data[16]);
+uint8_t buttons4x4Get(uint8_t selectedbtn);
+uint8_t switchesGet(uint8_t selectedswitch);
+uint8_t abcbuttonsGet(char selectedbtn);
+uint8_t abcledsSet(char selectedled,bool value);
+uint8_t startbuttonGet();
+uint8_t startledSet(bool value);
