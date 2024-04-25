@@ -18,15 +18,83 @@ K_THREAD_DEFINE(tledcircle_id, STACKSIZE, tledcircle, NULL, NULL, NULL, TLEDCIRC
 K_THREAD_DEFINE(tsevenseg_id, STACKSIZE, tsevenseg, NULL, NULL, NULL, TSEVENSEG_PRIORITY, 0, 0);
 
 
-void tstartbutton(void) {}
-void tgyro(void) {}
-void tbtnmatrix_in(void) {}
-void tswitches(void) {}
-void tpotmeter(void) {}
-void tabcbtn(void) {}
+void tstartbutton(void) {
+	while (1) {
+		printf("Reading startbutton\n");
+	}
+}
+
+void tgyro(void) { 
+	while (1) {
+		printf("Reading startbutton\n");
+	}
+}
+
+void tbtnmatrix_in(void) { 
+	while (1) {
+		printf("Reading startbutton\n");
+	}
+}
+
+void tswitches(void) { 
+	while (1) {
+		printf("Reading startbutton\n");
+	}
+}
+
+void tpotmeter(void) { 
+	while (1) {
+		printf("Reading startbutton\n");
+	}
+}
+
+void tabcbtn(void) { 
+	while (1) {
+		printf("Reading startbutton\n");
+	}
+}
+
 // Output thread functions
-void tbtnmatrix_out(void) {}
-void tbuzzers(void) {}
-void tledmatrix(void) {}
-void tledcircle(void) {}
-void tsevenseg(void) {}
+void tbtnmatrix_out(void) { 
+	while (1) {
+		printf("Reading startbutton\n");
+	}
+}
+
+void tbuzzers(void) { 
+	while (1) {
+		printf("Reading startbutton\n");
+	}
+}
+
+void tledmatrix(void) { 
+	while (1) {
+		printf("Reading startbutton\n");
+	}
+}
+
+void tledcircle(void) { 
+	while (1) {
+		printf("Reading startbutton\n");
+	}
+}
+
+void tsevenseg(void) { 
+	while (1) {
+		printf("Reading startbutton\n");
+	}
+}
+
+void enableThreads(k_tid_t threadIds[THREAD_AMOUNT]) {
+	for (int i = 0; i < THREAD_AMOUNT; i++) {
+		// Resume each desired thread
+		k_thread_resume(threadIds[i]);
+	}
+}
+
+void disableThreads(k_tid_t threadIds[THREAD_AMOUNT]) {
+	for (int i = 0; i < THREAD_AMOUNT; i++) {
+		// Resume each desired thread
+		k_thread_suspend(threadIds[i]);
+	}
+}
