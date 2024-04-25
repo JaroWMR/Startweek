@@ -1,4 +1,16 @@
 #include "threads.h"
+
+#include "buttonMatrix.h"
+#include "buzzers.h"
+#include "circleMatrix.h"
+#include "genericGpio.h"
+#include "gps.h"
+#include "gyroCompass.h"
+#include "lcd.h"
+#include "ledMatrix.h"
+#include "potmeter.h"
+#include "sevenSegment.h"
+
 #include <zephyr/kernel.h>
 #include <zephyr/sys/util.h>
 
@@ -20,68 +32,68 @@ K_THREAD_DEFINE(tsevenseg_id, STACKSIZE, tsevenseg, NULL, NULL, NULL, TSEVENSEG_
 
 void tstartbutton(void) {
 	while (1) {
-		printf("Reading startbutton\n");
+		printf("Call start button polling function here!\n");
 	}
 }
 
 void tgyro(void) { 
 	while (1) {
-		printf("Reading startbutton\n");
+		printf("Call gyro polling function here!\n");
 	}
 }
 
 void tbtnmatrix_in(void) { 
 	while (1) {
-		printf("Reading startbutton\n");
+		printf("Call button matrix polling function here!\n");
 	}
 }
 
 void tswitches(void) { 
 	while (1) {
-		printf("Reading startbutton\n");
+		printf("Call switches polling function here!\n");
 	}
 }
 
 void tpotmeter(void) { 
 	while (1) {
-		printf("Reading startbutton\n");
+		printf("Call potmeter polling function here!\n");
 	}
 }
 
 void tabcbtn(void) { 
 	while (1) {
-		printf("Reading startbutton\n");
+		printf("Call abc button polling function here!\n");
 	}
 }
 
 // Output thread functions
 void tbtnmatrix_out(void) { 
 	while (1) {
-		printf("Reading startbutton\n");
+		printf("Call button matrix LED control function here!\n");
 	}
 }
 
 void tbuzzers(void) { 
 	while (1) {
-		printf("Reading startbutton\n");
+		printf("Call buzzers control function here!\n");
 	}
 }
 
 void tledmatrix(void) { 
 	while (1) {
-		printf("Reading startbutton\n");
+		printf("Call LED matrix control function here!\n");
 	}
 }
 
 void tledcircle(void) { 
 	while (1) {
-		printf("Reading startbutton\n");
+		printf("Call LED circle control function here!\n");
 	}
 }
 
 void tsevenseg(void) { 
 	while (1) {
-		printf("Reading startbutton\n");
+		printf("Call seven segment control function here!\n");
 	}
 }
 
