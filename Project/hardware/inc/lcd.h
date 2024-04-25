@@ -1,3 +1,6 @@
+#ifndef LCD_H
+#define LCD_H
+
 #include <stdio.h>
 #include <zephyr/kernel.h>
 #include <zephyr/drivers/gpio.h>
@@ -16,11 +19,6 @@ static const struct gpio_dt_spec lcdData6 				= GPIO_DT_SPEC_GET(DT_ALIAS(lcddis
 static const struct gpio_dt_spec lcdData7 				= GPIO_DT_SPEC_GET(DT_ALIAS(lcddisplayd7), gpios);
 static const struct gpio_dt_spec lcdBacklightEnable		= GPIO_DT_SPEC_GET(DT_ALIAS(lcddisplaybacklightenable), gpios);
 
-
-
-#define HIGH			1
-#define LOW				0
-
 // LCD instructions
 #define Clear           0b00000001          // replace all characters with ASCII 'space'
 #define Home            0b00000010          // return cursor to first position on first line
@@ -36,8 +34,14 @@ static const struct gpio_dt_spec lcdBacklightEnable		= GPIO_DT_SPEC_GET(DT_ALIAS
 // local variable
 #define actioninstruction 0
 #define actiondata 1
-bool lastaction;
 
+#ifndef HIGH
+#define HIGH 1
+#endif
+
+#ifndef LOW
+#define LOW 0
+#endif
 
 bool lcdConfig();
 int8_t lcdInit();
@@ -45,3 +49,5 @@ uint8_t lcdStringWrite(char *msg);
 uint8_t lcdEnable();
 uint8_t lcdDisable();
 uint8_t lcdClear();
+
+#endif // LCD_H
