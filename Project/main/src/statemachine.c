@@ -1,16 +1,8 @@
 // Includes: own header file, hardware headers, minigame headers, framework headers, system headers (sorted alpabetically)
 #include "statemachine.h"
+#include "threads.h"
 
-// #include "buttonMatrix.h"
-// #include "buzzers.h"
-// #include "genericGpio.h"
-// #include "gps.h"
-// #include "gyroCompass.h"
-// #include "ledCircle.h"
-// #include "ledMatrix.h"
-// #include "potmeter.h"
-// #include "sevenSegment.h"
-
+#include "idle.h"
 #include "minigame1.h"
 #include "minigame2.h"
 #include "minigame3.h"
@@ -39,7 +31,7 @@ struct state {
 	int i;
 };
 
-state_fn init_state, walk_state, mg1_state, mg2_state, mg3_state, mg4_state, mg5_state, mg6_state, mg7_state, mg8_state, mg9_state, mg10_state, exit_state;
+state_fn init_state, idle_state, mg1_state, mg2_state, mg3_state, mg4_state, mg5_state, mg6_state, mg7_state, mg8_state, mg9_state, mg10_state, exit_state;
 
 // State functions
 void init_state(struct state *state) {
@@ -55,11 +47,14 @@ void init_state(struct state *state) {
 	}
 	initialize();
 	
-	state->next = walk_state;
+	state->next = idle_state;
 }
 
-void walk_state(struct state *state) {
+void idle_state(struct state *state) {
+	enableThreads(idleRequiredThreads, idleRequiredThreadsCount);
 	printf("Walking\n");
+	disableThreads(idleRequiredThreads, idleRequiredThreadsCount);
+
 	state->next = mg1_state;
 }
 

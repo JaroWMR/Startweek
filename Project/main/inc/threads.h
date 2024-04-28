@@ -48,5 +48,5 @@ void tledcircle(void);
 void tsevenseg(void);
 
 // Functions for enabling and disabling threads
-void enableThreads(k_tid_t threadIds[THREAD_AMOUNT]);
-void disableThreads(k_tid_t threadIds[THREAD_AMOUNT]);
+void enableThreads(k_tid_t *, const unsigned);
+void disableThreads(k_tid_t *, const unsigned);

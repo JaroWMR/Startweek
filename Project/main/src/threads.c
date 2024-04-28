@@ -97,15 +97,15 @@ void tsevenseg(void) {
 	}
 }
 
-void enableThreads(k_tid_t threadIds[THREAD_AMOUNT]) {
-	for (int i = 0; i < THREAD_AMOUNT; i++) {
+void enableThreads(k_tid_t *threadIds, const unsigned threadAmount) {
+	for (int i = 0; i < threadAmount; i++) {
 		// Resume each desired thread
 		k_thread_resume(threadIds[i]);
 	}
 }
 
-void disableThreads(k_tid_t threadIds[THREAD_AMOUNT]) {
-	for (int i = 0; i < THREAD_AMOUNT; i++) {
+void disableThreads(k_tid_t *threadIds, const unsigned threadAmount) {
+	for (int i = 0; i < threadAmount; i++) {
 		// Resume each desired thread
 		k_thread_suspend(threadIds[i]);
 	}
