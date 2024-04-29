@@ -97,16 +97,23 @@ void tsevenseg(void) {
 	}
 }
 
-void enableThreads(k_tid_t *threadIds, const unsigned threadAmount) {
-	for (int i = 0; i < threadAmount; i++) {
+void enableThreads(char **names, unsigned amount) {
+	for (int i = 0; i < amount; i++) {
 		// Resume each desired thread
-		k_thread_resume(threadIds[i]);
+		setThread(names[i], true);
 	}
 }
 
-void disableThreads(k_tid_t *threadIds, const unsigned threadAmount) {
-	for (int i = 0; i < threadAmount; i++) {
+void disableThreads(char **names, unsigned amount) {
+	for (int i = 0; i < amount; i++) {
 		// Resume each desired thread
-		k_thread_suspend(threadIds[i]);
+		setThread(names[i], false);
+	}
+}
+
+void setThread(char* name, bool state) {
+	if (strcmp(name, "gps") == 0) {
+			extern const k_tid_t tledcircle_id;
+			state ? k_thread_resume(tledcircle_id) : k_thread_suspend(tledcircle_id);
 	}
 }

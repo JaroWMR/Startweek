@@ -1,5 +1,6 @@
-#include "threads.h"
-#include <zephyr/kernel.h>
+#ifndef IDLE_H
+#define IDLE_H
 
-extern const unsigned idleRequiredThreadsCount;
-extern const k_tid_t idleRequiredThreads*;
+void getIdleThreads(char ***, unsigned *);
+
+#endif // IDLE_H

@@ -1,8 +1,9 @@
 #include "idle.h"
 
-#include "threads.h"
+unsigned idleThreadCount = 1;
+char *idleThreads[1] = {"gps"};
 
-#include <zephyr/kernel.h>
-
-const unsigned idleRequiredThreadsCount = 1;
-const k_tid_t idleRequiredThreads[THREAD_AMOUNT] = {tledcircle_id};
+void getIdleThreads(char ***names, unsigned *amount) {
+	*names = idleThreads;
+	*amount = idleThreadCount;
+}

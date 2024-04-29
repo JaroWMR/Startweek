@@ -51,9 +51,12 @@ void init_state(struct state *state) {
 }
 
 void idle_state(struct state *state) {
-	enableThreads(idleRequiredThreads, idleRequiredThreadsCount);
+	char **names;
+	unsigned amount;
+	getIdleThreads(&names, &amount);
+	enableThreads(names, amount);
 	printf("Walking\n");
-	disableThreads(idleRequiredThreads, idleRequiredThreadsCount);
+	disableThreads(names, amount);
 
 	state->next = mg1_state;
 }
