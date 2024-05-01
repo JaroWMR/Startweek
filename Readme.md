@@ -1,7 +1,7 @@
 # Startweek
 
 ## Brief Description
-(Insert brief description of the project here)
+Project made for Avans as a game to assist in the Startweek. The game will inlcude a route and minigames that are playing along the route.
 
 ## Getting Started
 To get started with Startweek, follow these steps:
@@ -14,9 +14,26 @@ To get started with Startweek, follow these steps:
 5. Select Zephyr.code-workspace.
 6. Download the recommended extensions for the project.
     (List of recommended extensions here)
-7. If necessary, change the board in the workspace file of VSCode to match your requirements.
-   (Instructions for changing the board in the workspace file)
-8. Press `Start Debugging` to begin.
+7. Change the board in the `Zephyr.code-workspace` to the board that is used.
+8. Use `ctrl + shift + b` and build the project.
+9. Download Segger Ozone:
+   * `https://www.segger.com/downloads/jlink/#Ozone`
+10. Open Segger Ozone and press `File`, `Open` and select the `h7ConfigScriptOzone.jdebug`.
+12. On the top select `Tools`, `J-link settings` and press the `...` to select the Jlink probe.
+13. Then press `File` again and select `edit project file`.
+14. In this configuration file change the following settings:
+   * `Project.AddPathSubstitute ("<directory to project>", "$(ProjectDir)");` Change to project directory.
+   * `Project.AddPathSubstitute ("<directory to project>", "$(ProjectDir)");` Change to project directory.
+   * `Project.SetDevice ("STM32H743ZI");` Change board to correct board if not testing STM32H743ZI.
+   * `File.Open ("$(ProjectDir)<change path>/zephyrproject/Startweek/Project/build/zephyr/zephyr.elf");` Change the path to the directory where the build file is located
+15. To start debugging press the `green drop down arrow` besides the `green power button` on the top left.
+16. Select `Download and Reset Program`.
+17. Debugging has been started tools to debug are in the top left.
 
 ## Additonal info
 The branch named `EmptyEnvironment_DO_NOT_DELETE` offers the environment in its starting state.
+
+## Dependencies
+1. Segger Ozone `https://www.segger.com/downloads/jlink/#Ozone`
+2. Jlink Software `https://www.segger.com/downloads/jlink/`
+
