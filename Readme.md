@@ -22,10 +22,7 @@ To get started with Startweek, follow these steps:
 12. On the top select `Tools`, `J-link settings` and press the `...` to select the Jlink probe.
 13. Then press `File` again and select `edit project file`.
 14. In this configuration file change the following settings:
-   * `Project.AddPathSubstitute ("<directory to project>", "$(ProjectDir)");` Change to project directory.
-   * `Project.AddPathSubstitute ("<directory to project>", "$(ProjectDir)");` Change to project directory.
    * `Project.SetDevice ("STM32H743ZI");` Change board to correct board if not testing STM32H743ZI.
-   * `File.Open ("$(ProjectDir)<change path>/zephyrproject/Startweek/Project/build/zephyr/zephyr.elf");` Change the path to the directory where the build file is located
 15. To start debugging press the `green drop down arrow` besides the `green power button` on the top left.
 16. Select `Download and Reset Program`.
 17. Debugging has been started tools to debug are in the top left.
