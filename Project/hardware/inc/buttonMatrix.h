@@ -25,6 +25,6 @@ static const struct gpio_dt_spec buttonMatrixMuxB 					= GPIO_DT_SPEC_GET(DT_ALI
 
 bool buttonMatrixConfig();
 int8_t buttonMatrixInit();
-int8_t buttonMatrixSetLeds(int8_t data[4]);
+int8_t buttonMatrixSet(int8_t data[BUTTONMATRIXROWS]);
 
 #endif // BUTTON_MATRIX_H
