@@ -7,11 +7,10 @@
 #define X_OFFSET 11.5 / 100
 #define Y_OFFSET -49.63 / 100
 
-static const struct device *gyro;
+static const struct device *magnetometer;
 static bool is_initialized = false;
 
 #ifdef CONFIG_LIS3MDL_TRIGGER
-static int gyro_trig_cnt;
 
 /**
  * @brief Handler for LIS3MDL trigger events.
@@ -19,11 +18,10 @@ static int gyro_trig_cnt;
  * @param dev Pointer to the device structure.
  * @param trig Pointer to the sensor trigger structure.
  */
-static void gyro_trigger_handler(const struct device *dev,
+static void magnetometer_trigger_handler(const struct device *dev,
                                  const struct sensor_trigger *trig)
 {
     sensor_sample_fetch_chan(dev, trig->chan);
-    gyro_trig_cnt++;
 }
 #endif
 
@@ -39,8 +37,8 @@ static void gyro_trigger_handler(const struct device *dev,
  */
 uint8_t magnetometer_init(void)
 {
-    gyro = DEVICE_DT_GET(DT_ALIAS(gyro));
-    if (!device_is_ready(gyro))
+    magnetometer = DEVICE_DT_GET(DT_ALIAS(magnetometer));
+    if (!device_is_ready(magnetometer))
     {
         printf("Could not get LIS3MDL device\n");
         return 1;
@@ -50,7 +48,7 @@ uint8_t magnetometer_init(void)
     struct sensor_trigger trig;
     trig.type = SENSOR_TRIG_DATA_READY;
     trig.chan = SENSOR_CHAN_MAGN_XYZ;
-    if (sensor_trigger_set(gyro, &trig, gyro_trigger_handler) < 0)
+    if (sensor_trigger_set(magnetometer, &trig, magnetometer_trigger_handler) < 0)
     {
         printf("Failed to set sensor trigger\n");
         return 2;
@@ -77,7 +75,7 @@ uint8_t magnetometer_exit(void)
     }
 
 #ifdef CONFIG_LIS3MDL_TRIGGER
-    sensor_trigger_set(gyro, NULL, NULL); // Unset the trigger
+    sensor_trigger_set(magnetometer, NULL, NULL); // Unset the trigger
 #endif
     is_initialized = false;
 
@@ -107,13 +105,13 @@ uint8_t magnetometer_get_heading(double *aHeading)
         return 1;
     }
 
-    if (sensor_sample_fetch(gyro) < 0)
+    if (sensor_sample_fetch(magnetometer) < 0)
     {
         printf("LIS3MDL Sensor sample update error\n");
         return 2;
     }
 
-    sensor_channel_get(gyro, SENSOR_CHAN_MAGN_XYZ, magn_xyz);
+    sensor_channel_get(magnetometer, SENSOR_CHAN_MAGN_XYZ, magn_xyz);
 
     for (int i = 0; i < 3; i++)
     {
