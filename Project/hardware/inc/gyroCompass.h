@@ -9,5 +9,6 @@
 uint8_t magnetometer_init(void);
 uint8_t magnetometer_exit(void);
 uint8_t magnetometer_get_heading(double *aHeading);
+uint8_t gyro_print_data(void);
 
 #endif /* GYROCOMPASS_H */

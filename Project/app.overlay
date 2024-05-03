@@ -451,6 +451,7 @@
 		3dcompassdataready = &data_ready_3d_compass;
 		3dcompassintterupt = &interupt_3d_compass;
 		magnetometer=&magnetometer;
+		gyroscope=&gyroscope;
 	};
 
 	 chosen {
@@ -529,10 +530,17 @@
 &i2c1{
 		status = "okay";
 		pinctrl-0 = < &i2c1_scl_pb8 &i2c1_sda_pb9 >;
+
 		magnetometer: lis3mdl-magn@1e {
-		compatible = "st,lis3mdl-magn";
-		reg = <0x1E>;
-		irq-gpios = <&gpiob 8 GPIO_ACTIVE_HIGH>;
+			compatible = "st,lis3mdl-magn";
+			reg = <0x1E>;
+			irq-gpios = <&gpiob 8 GPIO_ACTIVE_HIGH>;
+		};
+
+		gyroscope: lsm6dso@6a {
+			compatible = "st,lsm6dso";
+			reg = <0x6a>;
+			irq-gpios = <&gpiof 3 GPIO_ACTIVE_HIGH>; //the selected pin is wrong. check schematic
 		};
 };
 
