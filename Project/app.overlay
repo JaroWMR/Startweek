@@ -450,6 +450,7 @@
 		lcddisplayd0 = &LCD_Display_D0;
 		3dcompassdataready = &data_ready_3d_compass;
 		3dcompassintterupt = &interupt_3d_compass;
+		gyro=&gyro;
 	};
 
 	 chosen {
