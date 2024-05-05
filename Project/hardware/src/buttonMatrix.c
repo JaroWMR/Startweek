@@ -98,7 +98,7 @@ int8_t buttonMatrixInit ()
  * Returns a 2 if the Initialiazation has not been perfomed.
  * Returns a 3 if the Configuration and the Initialiazation has not been perfomed.
  */ 
-int8_t buttonMatrixSets(int8_t data[BUTTONMATRIXROWS])
+int8_t buttonMatrixSet(int8_t data[BUTTONMATRIXROWS])
 {
 	for (size_t row = 0; row < BUTTONMATRIXROWS; row++)
 	{
@@ -121,7 +121,7 @@ int8_t buttonMatrixSets(int8_t data[BUTTONMATRIXROWS])
 		gpio_pin_set_dt(&buttonMatrixMuxB,(row & 0x2));
 
 		//TODO: determine this k_sleep delay
-		k_sleep(K_USEC(100));
+		k_sleep(K_USEC(4000));
 	}
 	return 0;
 }
