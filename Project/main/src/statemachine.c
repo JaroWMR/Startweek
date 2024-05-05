@@ -55,7 +55,10 @@ void idle_state(struct state *state) {
 	unsigned amount;
 	getIdleThreads(&names, &amount);
 	enableThreads(names, amount);
-	printf("Walking1\n");
+	for (int i = 0; i < 10; i++) {
+		printf("Walking\n");
+		k_msleep(90);
+	}
 	disableThreads(names, amount);
 
 	state->next = mg1_state;
@@ -65,17 +68,14 @@ void mg1_state(struct state *state) { // Makes use of button and led
 	// Initialise state, enable and disable corresponding threads
 	printf("Minigame 1\n");
 
-	// Enable required threads
-	// k_thread_resume(tstartbutton_id);
-	// k_thread_resume(tgyro_id);
-	// k_thread_resume(tledmatrix_id);
+	char **names;
+	unsigned amount;
+	getMg1Threads(&names, &amount);
+	enableThreads(names, amount);
 
-	// int ret = playMg1();
+	int ret = playMg1();
 
-	// // Disable required threads after finishing
-	// k_thread_suspend(tstartbutton_id);
-	// k_thread_suspend(tgyro_id);
-	// k_thread_suspend(tledmatrix_id);
+	disableThreads(names, amount);
 
 	state->next = mg2_state;
 }
