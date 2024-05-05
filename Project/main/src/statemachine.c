@@ -55,7 +55,7 @@ void idle_state(struct state *state) {
 	unsigned amount;
 	getIdleThreads(&names, &amount);
 	enableThreads(names, amount);
-	printf("Walking\n");
+	printf("Walking1\n");
 	disableThreads(names, amount);
 
 	state->next = mg1_state;
