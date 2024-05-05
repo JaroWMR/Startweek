@@ -17,7 +17,6 @@
 // Define the threads
 // Input threads
 K_THREAD_DEFINE(tstartbutton_id, STACKSIZE, tstartbutton, NULL, NULL, NULL, TSTARTBUTTON_PRIORITY, 0,0);
-K_THREAD_DEFINE(tgyro_id, STACKSIZE, tgyro, NULL, NULL, NULL, TGYRO_PRIORITY, 0,0);
 K_THREAD_DEFINE(tbtnmatrix_in_id, STACKSIZE, tbtnmatrix_in, NULL, NULL, NULL, TBTNMATRIX_IN_PRIORITY, 0, 0);
 K_THREAD_DEFINE(tswitches_id, STACKSIZE, tswitches, NULL, NULL, NULL, TSWITCHES_PRIORITY, 0, 0);
 K_THREAD_DEFINE(tpotmeter_id, STACKSIZE, tpotmeter, NULL, NULL, NULL, TPOTMETER_PRIORITY, 0, 0);
@@ -33,25 +32,21 @@ K_THREAD_DEFINE(tsevenseg_id, STACKSIZE, tsevenseg, NULL, NULL, NULL, TSEVENSEG_
 void tstartbutton(void) {
 	while (1) {
 		printf("Call start button polling function here!\n");
-	}
-}
-
-void tgyro(void) { 
-	while (1) {
-		printf("Call gyro polling function here!\n");
-		k_msleep(1);
+		k_msleep(1);	// This delay should depend on how frequently this sensor / actuator is read / written
 	}
 }
 
 void tbtnmatrix_in(void) { 
 	while (1) {
 		printf("Call button matrix polling function here!\n");
+		k_msleep(1);	// This delay should depend on how frequently this sensor / actuator is read / written
 	}
 }
 
 void tswitches(void) { 
 	while (1) {
 		printf("Call switches polling function here!\n");
+		k_msleep(1);	// This delay should depend on how frequently this sensor / actuator is read / written
 	}
 }
 
@@ -64,6 +59,7 @@ void tpotmeter(void) {
 void tabcbtn(void) { 
 	while (1) {
 		printf("Call abc button polling function here!\n");
+		k_msleep(1);	// This delay should depend on how frequently this sensor / actuator is read / written
 	}
 }
 
@@ -71,30 +67,35 @@ void tabcbtn(void) {
 void tbtnmatrix_out(void) { 
 	while (1) {
 		printf("Call button matrix LED control function here!\n");
+		k_msleep(1);	// This delay should depend on how frequently this sensor / actuator is read / written
 	}
 }
 
 void tbuzzers(void) { 
 	while (1) {
 		printf("Call buzzers control function here!\n");
+		k_msleep(1);	// This delay should depend on how frequently this sensor / actuator is read / written
 	}
 }
 
 void tledmatrix(void) { 
 	while (1) {
 		printf("Call LED matrix control function here!\n");
+		k_msleep(1);	// This delay should depend on how frequently this sensor / actuator is read / written
 	}
 }
 
 void tledcircle(void) { 
 	while (1) {
 		printf("Call LED circle control function here!\n");
+		k_msleep(1);	// This delay should depend on how frequently this sensor / actuator is read / written
 	}
 }
 
 void tsevenseg(void) { 
 	while (1) {
 		printf("Call seven segment control function here!\n");
+		k_msleep(1);	// This delay should depend on how frequently this sensor / actuator is read / written
 	}
 }
 
@@ -108,7 +109,8 @@ void enableThreads(char **names, unsigned amount) {
 
 void disableThreads(char **names, unsigned amount) {
 	for (int i = 0; i < amount; i++) {
-		// Resume each desired thread
+		// Suspend each desired thread
+		printf("Suspending thread %s\n", names[i]);
 		setThread(names[i], false);
 	}
 }
@@ -117,10 +119,6 @@ void setThread(char* name, bool state) {
 	if (strcmp(name, "startbtn") == 0) {
 			extern const k_tid_t tstartbutton_id;
 			state ? k_thread_resume(tstartbutton_id) : k_thread_suspend(tstartbutton_id);
-	}
-	if (strcmp(name, "gyro") == 0) {
-			extern const k_tid_t tgyro_id;
-			state ? k_thread_resume(tgyro_id) : k_thread_suspend(tgyro_id);
 	}
 	if (strcmp(name, "btnmatrix_in") == 0) {
 			extern const k_tid_t tbtnmatrix_in_id;
@@ -158,7 +156,6 @@ void setThread(char* name, bool state) {
 
 void disableAllThreads() {
 	k_thread_suspend(tstartbutton_id);
-	k_thread_suspend(tgyro_id);
 	k_thread_suspend(tbtnmatrix_in_id);
 	k_thread_suspend(tswitches_id);
 	k_thread_suspend(tpotmeter_id);

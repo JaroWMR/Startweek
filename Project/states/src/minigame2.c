@@ -2,8 +2,20 @@
 #include <zephyr/kernel.h>
 #include <stdio.h>
 
+unsigned mg2ThreadCount = 4;
+char *mg2Threads[4] = {"startbtn", "btnmatrix_in", "btnmatrix_out", "buzzers"};
+
+void getMg2Threads(char ***names, unsigned *amount) {
+	*names = mg2Threads;
+	*amount = mg2ThreadCount;
+}
+
 int playMg2() {
-	printf("Minigame 2\n");
+	// State loop
+	for (int i = 0; i < 10; i++) {
+		printf("Looping mg2, %d\n", i);
+		k_msleep(10);
+	}
 
 	return 0;
 }
