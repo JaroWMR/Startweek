@@ -46,7 +46,7 @@ void init_state(struct state *state) {
 		}
 	}
 	initialize();
-	
+	disableAllThreads();
 	state->next = idle_state;
 }
 

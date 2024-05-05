@@ -51,3 +51,5 @@ void tsevenseg(void);
 void enableThreads(char **, unsigned);
 void disableThreads(char **, unsigned);
 void setThread(char *, bool);
+
+void disableAllThreads();
