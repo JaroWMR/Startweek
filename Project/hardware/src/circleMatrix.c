@@ -1,5 +1,4 @@
-#include <stdio.h>
-#include <zephyr/kernel.h>
+
 #include "circleMatrix.h"
 
 /** 
@@ -73,9 +72,9 @@ int8_t circleMatrixInit ()
 	{
 		return 1;
 	}
-	for (size_t row = 0; row < ROWS; row++)
+	for (size_t row = 0; row < CIRCLEMATRIXROWS; row++)
 	{
-		for (int i = 0; i < LEDSINROW; i++)
+		for (int i = 0; i < CIRCLEMATRIXLEDSINROW; i++)
 		{
 			circleMatrixSendOneBitData(LOW);
 		}
@@ -103,11 +102,11 @@ int8_t circleMatrixInit ()
  * Returns a 2 if the Initialiazation has not been perfomed.
  * Returns a 3 if the Configuration and the Initialiazation has not been perfomed.
  */ 
-int8_t circleMatrixSetLeds(int8_t data[ROWS])
+int8_t circleMatrixSetLeds(int8_t data[CIRCLEMATRIXROWS])
 {
-	for (size_t row = 0; row < ROWS; row++)
+	for (size_t row = 0; row < CIRCLEMATRIXROWS; row++)
 	{
-		for (size_t led = 0; led < LEDSINROW; led++)
+		for (size_t led = 0; led < CIRCLEMATRIXLEDSINROW; led++)
 		{
 			if(data[row] & 0x1<<led)
 			{

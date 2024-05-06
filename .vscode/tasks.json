@@ -24,23 +24,23 @@
 			 ],
 			"problemMatcher": [ "$gcc" ]
 		},
-		{
-			"label": "West flash",
-			"type": "process",
-			"group": "build",
-			"command": "${config:west}",
-			"args": [
-				"flash",
-				"-d",
-				"${config:app.build_dir}",
-				"--runner",
-				"jlink"
-			],
-			"dependsOn": [
-				// "Clean Build",
-			 ],
-			"problemMatcher": [ "$gcc" ]
-		},
+		// {
+		// 	"label": "West flash",
+		// 	"type": "process",
+		// 	"group": "build",
+		// 	"command": "${config:west}",
+		// 	"args": [
+		// 		"flash",
+		// 		"-d",
+		// 		"${config:app.build_dir}",
+		// 		"--runner",
+		// 		"jlink"
+		// 	],
+		// 	"dependsOn": [
+		// 		// "Clean Build",
+		// 	 ],
+		// 	"problemMatcher": [ "$gcc" ]
+		// },
 		{
 			"label": "Clean Build App (linux)",
 			"type": "shell",

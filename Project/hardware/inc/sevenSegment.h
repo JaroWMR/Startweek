@@ -1,3 +1,6 @@
+#ifndef SEVEN_SEGMENT_H
+#define SEVEN_SEGMENT_H
+
 #include <stdio.h>
 #include <zephyr/kernel.h>
 #include <zephyr/drivers/gpio.h>
@@ -14,11 +17,17 @@ static const struct gpio_dt_spec sevenSegmentMuxDig2 	= GPIO_DT_SPEC_GET(DT_ALIA
 static const struct gpio_dt_spec sevenSegmentMuxDig3 	= GPIO_DT_SPEC_GET(DT_ALIAS(muxdig37segment), gpios);
 static const struct gpio_dt_spec sevenSegmentMuxDig4 	= GPIO_DT_SPEC_GET(DT_ALIAS(muxdig47segment), gpios);
 
+#ifndef HIGH
+#define HIGH 1
+#endif
 
-#define HIGH			1
-#define LOW				0
+#ifndef LOW
+#define LOW 0
+#endif
 
 bool sevenSegmentConfig();
 uint8_t sevenSegmentInit();
 void sevenSegmentOneSegment(char value,bool dp);
 uint8_t sevenSegmentSet(char input[4],uint8_t dpPosition);
+
+#endif // SEVEN_SEGMENT_H
