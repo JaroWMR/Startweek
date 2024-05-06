@@ -48,10 +48,10 @@
 				status = "disabled";
 			};
 			i2c1_scl_pb8: i2c1_scl_pb8 {
-				status = "disabled";
+				status = "okay";
 			};
 			i2c1_sda_pb9: i2c1_sda_pb9 {
-				status = "disabled";
+				status = "okay";
 			};
 			spi1_miso_pa6: spi1_miso_pa6 {
 				status = "disabled";
@@ -102,14 +102,14 @@
 				status = "okay";
 			};
 			i2c1_scl_pb8: i2c1_scl_pb8 {
-				pinmux = < 0x304 >;
+				pinmux = <STM32_PINMUX('b', 8, AF4)>;
 				bias-pull-up;
 				drive-open-drain;
 				status = "okay";
 				phandle = < 0xb >;
 			};
 			i2c1_sda_pb9: i2c1_sda_pb9 {
-				pinmux = < 0x324 >;
+				pinmux = <STM32_PINMUX('b', 9, AF4)>;
 				bias-pull-up;
 				drive-open-drain;
 				status = "okay";
