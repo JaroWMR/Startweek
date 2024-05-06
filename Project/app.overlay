@@ -119,6 +119,22 @@
 				pinmux = <STM32_PINMUX('f', 11, AF10)>;
 				status = "okay";
 			};
+			tim1_ch1_pe9: tim1_ch1_pe9 {
+				pinmux = <STM32_PINMUX('e', 9, AF1)>;
+				status = "okay";
+			};
+			tim1_ch2_pe11: tim1_ch2_pe11 {
+				pinmux = <STM32_PINMUX('e', 11, AF1)>;
+				status = "okay";
+			};
+			tim1_ch3_pe13: tim1_ch3_pe13 {
+				pinmux = <STM32_PINMUX('e', 13, AF1)>;
+				status = "okay";
+			};
+			tim1_ch4_pe14: tim1_ch4_pe14 {
+				pinmux = <STM32_PINMUX('e', 14, AF1)>;
+				status = "okay";
+			};
 		};
 	};
 
@@ -437,6 +453,7 @@
 		lcddisplayd2 = &LCD_Display_D2;
 		lcddisplayd1 = &LCD_Display_D1;
 		lcddisplayd0 = &LCD_Display_D0;
+		buzzer = &pwm1;
 
 	};
 
@@ -522,4 +539,22 @@
 		reg = <0x1E>;
 		irq-gpios = <&gpiob 8 GPIO_ACTIVE_HIGH>;
 		};
+};
+
+&timers1{
+	status = "okay";
+	pwm1: pwm{
+		compatible = "st,stm32-pwm";
+		status = "okay";
+		#pwm-cells = < 0x3 >;
+		pinctrl-0 = < &tim1_ch1_pe9 &tim1_ch2_pe11 &tim1_ch3_pe13 &tim1_ch4_pe14>;
+		pinctrl-names = "default";
+	};
+};
+
+&timers12{
+	status = "disabled";
+	pwm{
+		status = "disabled";
+	};
 };
