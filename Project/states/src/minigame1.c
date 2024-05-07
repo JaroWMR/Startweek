@@ -2,7 +2,7 @@
 #include <zephyr/kernel.h>
 #include <stdio.h>
 
-char *mg1Threads[mg1ThreadCount] = {"startbtn", "ledmatrix", "gyro"};
+char *mg1Threads[mg1ThreadCount] = {"startbtn", "ledmatrix"};
 
 void getMg1Threads(char ***names, unsigned *amount) {
 	*names = mg1Threads;
