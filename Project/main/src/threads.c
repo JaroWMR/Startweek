@@ -118,45 +118,56 @@ void disableThreads(char **names, unsigned amount) {
 
 void setThread(char* name, bool state) {
 	if (strcmp(name, "startbtn") == 0) {
-			extern const k_tid_t tstartbutton_id;
-			state ? k_thread_resume(tstartbutton_id) : k_thread_suspend(tstartbutton_id);
+		extern const k_tid_t tstartbutton_id;
+		state ? k_thread_resume(tstartbutton_id) : k_thread_suspend(tstartbutton_id);
+		return;
 	}
 	if (strcmp(name, "btnmatrix_in") == 0) {
-			extern const k_tid_t tbtnmatrix_in_id;
-			state ? k_thread_resume(tbtnmatrix_in_id) : k_thread_suspend(tbtnmatrix_in_id);
+		extern const k_tid_t tbtnmatrix_in_id;
+		state ? k_thread_resume(tbtnmatrix_in_id) : k_thread_suspend(tbtnmatrix_in_id);
+		return;
 	}
 	if (strcmp(name, "switches") == 0) {
-			extern const k_tid_t tswitches_id;
-			state ? k_thread_resume(tswitches_id) : k_thread_suspend(tswitches_id);
+		extern const k_tid_t tswitches_id;
+		state ? k_thread_resume(tswitches_id) : k_thread_suspend(tswitches_id);
+		return;
 	}
 	if (strcmp(name, "potmeter") == 0) {
-			extern const k_tid_t tpotmeter_id;
-			state ? k_thread_resume(tpotmeter_id) : k_thread_suspend(tpotmeter_id);
+		extern const k_tid_t tpotmeter_id;
+		state ? k_thread_resume(tpotmeter_id) : k_thread_suspend(tpotmeter_id);
+		return;
 	}
 	if (strcmp(name, "abcbtn") == 0) {
-			extern const k_tid_t tabcbtn_id;
-			state ? k_thread_resume(tabcbtn_id) : k_thread_suspend(tabcbtn_id);
+		extern const k_tid_t tabcbtn_id;
+		state ? k_thread_resume(tabcbtn_id) : k_thread_suspend(tabcbtn_id);
+		return;
 	}
 	if (strcmp(name, "btnmatrix_out") == 0) {
-			extern const k_tid_t tbtnmatrix_out_id;
-			state ? k_thread_resume(tbtnmatrix_out_id) : k_thread_suspend(tbtnmatrix_out_id);
+		extern const k_tid_t tbtnmatrix_out_id;
+		state ? k_thread_resume(tbtnmatrix_out_id) : k_thread_suspend(tbtnmatrix_out_id);
+		return;
 	}
 	if (strcmp(name, "buzzers") == 0) {
-			extern const k_tid_t tbuzzers_id;
-			state ? k_thread_resume(tbuzzers_id) : k_thread_suspend(tbuzzers_id);
+		extern const k_tid_t tbuzzers_id;
+		state ? k_thread_resume(tbuzzers_id) : k_thread_suspend(tbuzzers_id);
+		return;
 	}
 	if (strcmp(name, "ledmatrix") == 0) {
-			extern const k_tid_t tledmatrix_id;
-			state ? k_thread_resume(tledmatrix_id) : k_thread_suspend(tledmatrix_id);
+		extern const k_tid_t tledmatrix_id;
+		state ? k_thread_resume(tledmatrix_id) : k_thread_suspend(tledmatrix_id);
+		return;
 	}
 	if (strcmp(name, "ledcircle") == 0) {
-			extern const k_tid_t tledcircle_id;
-			state ? k_thread_resume(tledcircle_id) : k_thread_suspend(tledcircle_id);
+		extern const k_tid_t tledcircle_id;
+		state ? k_thread_resume(tledcircle_id) : k_thread_suspend(tledcircle_id);
+		return;
 	}
 	if (strcmp(name, "sevenseg") == 0) {
-			extern const k_tid_t tsevenseg_id;
-			state ? k_thread_resume(tsevenseg_id) : k_thread_suspend(tsevenseg_id);
+		extern const k_tid_t tsevenseg_id;
+		state ? k_thread_resume(tsevenseg_id) : k_thread_suspend(tsevenseg_id);
+		return;
 	}
+	printf("Unknown thread: %s\n", name);
 }
 
 void disableAllThreads() {
