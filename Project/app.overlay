@@ -1,6 +1,3 @@
-
-
-
 / {
 	soc {
 		pinctrl: pin-controller@58020000 {
@@ -534,7 +531,7 @@
 		magnetometer: lis3mdl-magn@1e {
 			compatible = "st,lis3mdl-magn";
 			reg = <0x1E>;
-			irq-gpios = <&gpiob 8 GPIO_ACTIVE_HIGH>;
+			irq-gpios = <&gpioa 9 GPIO_ACTIVE_HIGH>;
 		};
 
 		gyroscope: lsm6dso@6a {
