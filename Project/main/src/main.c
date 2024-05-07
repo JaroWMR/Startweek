@@ -1,4 +1,5 @@
 #include "statemachine.h"
+#include "buzzers.h"
 #include <stdio.h>
 #include <zephyr/kernel.h>
 #include <zephyr/device.h>
@@ -15,7 +16,7 @@
 void tmain(void) // Core thread
 {
 	printf("Main\n");
-	startStatemachine();
+	tbuzzers();
 }
 
 // Define the threads

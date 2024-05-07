@@ -63,7 +63,7 @@
 				status = "disabled";
 			};
 			tim12_ch1_pb14: tim12_ch1_pb14 {
-				status = "okay";
+				status = "disabled";
 			};
 			usart3_rx_pd9: usart3_rx_pd9 {
 				status = "disabled";
@@ -185,15 +185,6 @@
 		};
 		MUX_A_Circle: gpiob_12 {
 			gpios = <&gpiob 12 GPIO_ACTIVE_HIGH>;
-		};
-		buzzer3: gpioe_14 {
-			gpios = <&gpioe 14 GPIO_ACTIVE_HIGH>;
-		};
-		buzzer2: gpioe_13 {
-			gpios = <&gpioe 13 GPIO_ACTIVE_HIGH>;
-		};
-		buzzer1: gpioe_12 {
-			gpios = <&gpioe 12 GPIO_ACTIVE_HIGH>;
 		};
 		decimal_Point_7_Segment: gpioe_10 {
 			gpios = <&gpioe 10 GPIO_ACTIVE_HIGH>;
@@ -401,9 +392,6 @@
 		muxacircle = &MUX_A_Circle;
 		muxbcircle = &MUX_B_Circle;
 		muxccircle = &MUX_C_Circle;
-		buzzer1 = &buzzer1;
-		buzzer2 = &buzzer2;
-		buzzer3 = &buzzer3;
 		decimalpoint7segment = &decimal_Point_7_Segment;
 		muxdig17segment = &MUX_DIG1_7_Segment;
 		muxdig27segment = &MUX_DIG2_7_Segment;
@@ -464,7 +452,7 @@
 		lcddisplayd2 = &LCD_Display_D2;
 		lcddisplayd1 = &LCD_Display_D1;
 		lcddisplayd0 = &LCD_Display_D0;
-		buzzer = &pwm1;
+		buzzer=&buzzer;
 		3dcompassdataready = &data_ready_3d_compass;
 		3dcompassintterupt = &interupt_3d_compass;
 	};
@@ -472,6 +460,18 @@
 	 chosen {
 		zephyr,console = &usart2;
 		zephyr,shell-uart = &usart2;
+	};
+
+	pwmdevs {
+		compatible = "pwm-leds";
+		status = "okay";
+		buzzer: buzzer_pwm {
+			pwms = 	<&pwm1 1 0 PWM_POLARITY_NORMAL>;
+			// <&pwm1 2 0 PWM_POLARITY_NORMAL>,
+			// <&pwm1 3 0 PWM_POLARITY_NORMAL>,
+			// <&pwm1 4 0 PWM_POLARITY_NORMAL>;
+			status = "okay";
+		};
 	};
 };
 
@@ -504,14 +504,12 @@
 		status = "disabled";
 };
 
-
-
 &leds{
 		status = "disabled";
 };
 
 &red_pwm_led {
-		status = "disabled";
+		status = "okay";
 };
 
 &user_button {
@@ -554,6 +552,7 @@
 
 &timers1{
 	status = "okay";
+	st,prescaler = < 0x140 >; 
 	pwm1: pwm{
 		compatible = "st,stm32-pwm";
 		status = "okay";
@@ -598,4 +597,8 @@
 	d2ppre1 = < 0x2 >;
 	d2ppre2 = < 0x2 >;
 	d3ppre = < 0x2 >;
+};
+
+&red_pwm_led{
+	status = "disabled";
 };
