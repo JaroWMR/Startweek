@@ -21,6 +21,7 @@ void tmain(void) // Core thread
 	double heading = 0;
 	magnetometer_get_heading(&heading);
 	printf("heading = %.2f\n", heading);
+	gyro_print_data();
 	k_sleep(K_MSEC(1000));
 
 	// while(1){

@@ -103,7 +103,9 @@ uint8_t magnetometer_get_heading(double *aHeading)
     {
         printf("Magnetometer not initialized\n");
         return 1;
-    }
+    }else{
+		printf("Magnetometer initialized\n");
+	}
 
     if (sensor_sample_fetch(magnetometer) < 0)
     {
@@ -172,28 +174,35 @@ static int set_sampling_freq(const struct device *dev)
 
 static void fetch_and_display(const struct device *dev)
 {
-	struct sensor_value x, y, z;
+	struct sensor_value gyro_xyz[3];
+	double gyro_double[3];
 	static int trig_cnt;
 
 	trig_cnt++;
 
 	/* lsm6dso accel */
 	sensor_sample_fetch_chan(dev, SENSOR_CHAN_ACCEL_XYZ);
-	sensor_channel_get(dev, SENSOR_CHAN_ACCEL_X, &x);
-	sensor_channel_get(dev, SENSOR_CHAN_ACCEL_Y, &y);
-	sensor_channel_get(dev, SENSOR_CHAN_ACCEL_Z, &z);
+	sensor_channel_get(dev, SENSOR_CHAN_ACCEL_XYZ, &gyro_xyz);
+
+	    for (int i = 0; i < 3; i++)
+    {
+        gyro_double[i] = sensor_value_to_double(&gyro_xyz[i]);
+    }
 
 	printf("accel x:%f ms/2 y:%f ms/2 z:%f ms/2\n",
-			(double)out_ev(&x), (double)out_ev(&y), (double)out_ev(&z));
+			gyro_double[0], gyro_double[1], gyro_double[2]);
 
 	/* lsm6dso gyro */
 	sensor_sample_fetch_chan(dev, SENSOR_CHAN_GYRO_XYZ);
-	sensor_channel_get(dev, SENSOR_CHAN_GYRO_X, &x);
-	sensor_channel_get(dev, SENSOR_CHAN_GYRO_Y, &y);
-	sensor_channel_get(dev, SENSOR_CHAN_GYRO_Z, &z);
+	sensor_channel_get(dev, SENSOR_CHAN_GYRO_XYZ, &gyro_xyz);
+
+		    for (int i = 0; i < 3; i++)
+    {
+        gyro_double[i] = sensor_value_to_double(&gyro_xyz[i]);
+    }
 
 	printf("gyro x:%f rad/s y:%f rad/s z:%f rad/s\n",
-			(double)out_ev(&x), (double)out_ev(&y), (double)out_ev(&z));
+			gyro_double[0], gyro_double[1], gyro_double[2]);
 
 	printf("trig_cnt:%d\n\n", trig_cnt);
 }
@@ -216,6 +225,8 @@ uint8_t gyro_print_data(void){
 	if (!device_is_ready(dev)) {
 		printk("%s: device not ready.\n", dev->name);
 		return 0;
+	}else{
+		printk("%s: device ready.\n", dev->name);
 	}
 
 	printf("Testing LSM6DSO sensor in polling mode.\n\n");
