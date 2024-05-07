@@ -2,8 +2,7 @@
 #include <zephyr/kernel.h>
 #include <stdio.h>
 
-unsigned mg2ThreadCount = 4;
-char *mg2Threads[4] = {"startbtn", "btnmatrix_in", "btnmatrix_out", "buzzers"};
+char *mg2Threads[mg2ThreadCount] = {"startbtn", "btnmatrix_in", "btnmatrix_out", "buzzers"};
 
 void getMg2Threads(char ***names, unsigned *amount) {
 	*names = mg2Threads;
