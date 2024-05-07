@@ -540,7 +540,7 @@
 		gyroscope: lsm6dso@6a {
 			compatible = "st,lsm6dso";
 			reg = <0x6a>;
-			irq-gpios = <&gpiof 3 GPIO_ACTIVE_HIGH>; //the selected pin is wrong. check schematic
+			irq-gpios = <&gpiog 3 GPIO_ACTIVE_HIGH>; //the selected pin is wrong. check schematic
 		};
 };
 

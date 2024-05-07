@@ -16,14 +16,19 @@
 void tmain(void) // Core thread
 {
 	printf("Main\n");
-	//startStatemachine();
+	// startStatemachine();
 	magnetometer_init();
-	while(1){
-		double heading = 0;
-		magnetometer_get_heading(&heading);
-		printf("heading = %.2f\n", heading);
-		k_sleep(K_MSEC(1000));
-	}
+	double heading = 0;
+	magnetometer_get_heading(&heading);
+	printf("heading = %.2f\n", heading);
+	k_sleep(K_MSEC(1000));
+
+	// while(1){
+	// 	double heading = 0;
+	// 	magnetometer_get_heading(&heading);
+	// 	printf("heading = %.2f\n", heading);
+	// 	k_sleep(K_MSEC(1000));
+	// }
 }
 
 // Define the threads
