@@ -508,11 +508,20 @@
 //enable used
 
 &usart1 {
+		pinctrl-0 = < &usart1_tx_pb7 &usart1_rx_pb6 >;
+		pinctrl-names = "default";
         current-speed = <9600>;
-        status = "ok";
-        gnss: gnss-nmea-generic {
+        status = "okay";
+        gnss: gnss-nmea-generic { 	
                 compatible = "gnss-nmea-generic";
         };
+};
+
+&usart2 {
+		pinctrl-0 = < &usart2_tx_pa2 &usart2_rx_pa3 >;
+		pinctrl-names = "default";
+        current-speed = <115200>;
+        status = "okay";
 };
 
 
