@@ -29,9 +29,12 @@ int playMg1() {
 		printf("Latitude: %lld\n", getLatitude());
 		printf("Longitude: %lld\n", getLongitude());
 		struct gnss_data currLoc = getGnssData();
-		uint64_t dist = 0;
-		//int ret = navigation_distance(&dist, &currLoc.nav_data, &db);
-		printf("Distance: %llu\n", dist);
+		long double currLat = (long double)getLatitude()/1000000000;
+		long double currLon = (long double)getLongitude()/1000000000;
+		long double dbLat = (long double)db.latitude/1000000000;
+		long double dbLon = (long double)db.longitude/1000000000;
+		long double dist = getDistance(currLat,currLon,dbLat, dbLon);
+		printf("Distance: %Lf\n", dist);
 		k_msleep(1000);
 	}
 
