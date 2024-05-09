@@ -202,39 +202,21 @@ void mg9_state(struct state *state) { // Makes use of gyro and buzzer
 void mg10_state(struct state *state) { // Makes use of gyro and buzzer
 	printf("Minigame 10\n");
 
-	// // Enable required threads
-	// k_thread_resume(tstartbutton_id);
-	// k_thread_resume(tbtnmatrix_in_id);
-	// k_thread_resume(tswitches_id);
-	// k_thread_resume(tpotmeter_id);
-	// k_thread_resume(tabcbtn_id);
+	char **names;
+	unsigned amount;
+	getMg10Threads(&names, &amount);
+	enableThreads(names, amount);
 
-	// int ret = playMg10();
+	int ret = playMg10();
 
-	// // Disable required threads after finishing
-	// k_thread_suspend(tstartbutton_id);
-	// k_thread_suspend(tbtnmatrix_in_id);
-	// k_thread_suspend(tswitches_id);
-	// k_thread_suspend(tpotmeter_id);
-	// k_thread_suspend(tabcbtn_id);
+	disableThreads(names, amount);
 
 	state->next = exit_state;
 }
 
 void exit_state(struct state *state) {
 	printf("Exit state");
-	// k_thread_suspend(tstartbutton_id);
-	// k_thread_suspend(tgyro_id);
-	// k_thread_suspend(tgps_id);
-	// k_thread_suspend(tbtnmatrix_out_id);
-	// k_thread_suspend(tbtnmatrix_in_id);
-	// k_thread_suspend(tswitches_id);
-	// k_thread_suspend(tpotmeter_id);
-	// k_thread_suspend(tbuzzers_id);
-	// k_thread_suspend(tledmatrix_id);
-	// k_thread_suspend(tledcircle_id);
-	// k_thread_suspend(tsevenseg_id);
-	// k_thread_suspend(tabcbtn_id);
+	disableAllThreads(); // Shouldn't be required, but just to be sure
 	state->next = 0;
 }
 
