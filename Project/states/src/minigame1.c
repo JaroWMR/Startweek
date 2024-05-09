@@ -29,8 +29,8 @@ int playMg1() {
 		printf("Latitude: %lld\n", getLatitude());
 		printf("Longitude: %lld\n", getLongitude());
 		struct gnss_data currLoc = getGnssData();
-		uint64_t dist;
-		int ret = navigation_distance(&dist, &currLoc.nav_data, &db);
+		uint64_t dist = 0;
+		//int ret = navigation_distance(&dist, &currLoc.nav_data, &db);
 		printf("Distance: %llu\n", dist);
 		k_msleep(1000);
 	}
