@@ -172,17 +172,14 @@ void mg7_state(struct state *state) { // Makes use of gyro and buzzer
 void mg8_state(struct state *state) { // Makes use of gyro and buzzer
 	printf("Minigame 8\n");
 
-	// Enable required threads
-	// k_thread_resume(tstartbutton_id);
-	// k_thread_resume(tledmatrix_id);
-	// k_thread_resume(tabcbtn_id);
+	char **names;
+	unsigned amount;
+	getMg8Threads(&names, &amount);
+	enableThreads(names, amount);
 
-	// int ret = playMg8();
+	int ret = playMg8();
 
-	// // Disable required threads after finishing
-	// k_thread_suspend(tstartbutton_id);
-	// k_thread_suspend(tledmatrix_id);
-	// k_thread_suspend(tabcbtn_id);
+	disableThreads(names, amount);
 
 	state->next = mg9_state;
 }
@@ -190,15 +187,14 @@ void mg8_state(struct state *state) { // Makes use of gyro and buzzer
 void mg9_state(struct state *state) { // Makes use of gyro and buzzer
 	printf("Minigame 9\n");
 
-	// // Enable required threads
-	// k_thread_resume(tstartbutton_id);
-	// k_thread_resume(tswitches_id);
+	char **names;
+	unsigned amount;
+	getMg9Threads(&names, &amount);
+	enableThreads(names, amount);
 
-	// int ret = playMg9();
+	int ret = playMg9();
 
-	// // Disable required threads after finishing
-	// k_thread_suspend(tstartbutton_id);
-	// k_thread_suspend(tswitches_id);
+	disableThreads(names, amount);
 
 	state->next = mg10_state;
 }
