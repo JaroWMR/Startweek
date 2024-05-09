@@ -9,14 +9,14 @@ project(blinky)
 file(GLOB SRC_HARDWARE_SOURCES 			"hardware/src/*.c")
 file(GLOB SRC_HARDWARECONTROL_SOURCES 	"hardwareControl/src/*.c")
 file(GLOB SRC_MAIN_SOURCES 				"main/src/*.c")
-file(GLOB SRC_MINIGAMES_SOURCES 		"minigames/src/*.c")
+file(GLOB SRC_STATES_SOURCES 		"states/src/*.c")
 
 # Add your source files
 target_sources(app PRIVATE 
     ${SRC_HARDWARE_SOURCES}
 	${SRC_HARDWARECONTROL_SOURCES}
 	${SRC_MAIN_SOURCES}
-	${SRC_MINIGAMES_SOURCES}
+	${SRC_STATES_SOURCES}
 )
 
 # Add include directories
@@ -24,5 +24,5 @@ target_include_directories(app PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/hardware/inc
 	${CMAKE_CURRENT_SOURCE_DIR}/hardwareControl/inc
 	${CMAKE_CURRENT_SOURCE_DIR}/main/inc
-	${CMAKE_CURRENT_SOURCE_DIR}/minigames/inc
+	${CMAKE_CURRENT_SOURCE_DIR}/states/inc
 )
