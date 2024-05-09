@@ -6,6 +6,7 @@
 		pinctrl: pin-controller@58020000 {
 			//disable pins
 			adc1_inp15_pa3: adc1_inp15_pa3 {
+
 				status = "disabled";
 			};
 			adc3_inp5_pf3: adc3_inp5_pf3 {
@@ -116,7 +117,7 @@
 				phandle = < 0xc >;
 			};
 			adc1_inp2_pf11: adc1_inp2_pf11 {
-				pinmux = <STM32_PINMUX('f', 11, AF10)>;
+				pinmux = < 0xb70 >;
 				status = "okay";
 			};
 		};
@@ -461,10 +462,29 @@
 
 //disable unused
 
+/ {
+	zephyr,user {
+		/* adjust channel number according to pinmux in board.dts */
+		io-channels = <&adc1 2>;
+	};
+};
+
 
 &adc1{
 		status = "okay";
 		pinctrl-0 = < &adc1_inp2_pf11 >;
+
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		channel@2 {
+			reg = <2>;
+			zephyr,gain = "ADC_GAIN_1";
+			zephyr,reference = "ADC_REF_INTERNAL";
+			zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
+			zephyr,resolution = <12>;
+		};
+	
 };
 
 &adc3{
