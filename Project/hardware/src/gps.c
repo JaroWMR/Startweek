@@ -89,3 +89,7 @@ long double getDistance(long double lat1, long double long1,
  
     return ans;
 }
+
+long double nanoDegToLdDeg(int64_t value) {
+	return (long double)value/1000000000;
+}

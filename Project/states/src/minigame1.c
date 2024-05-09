@@ -26,14 +26,15 @@ int playMg1() {
 	db.longitude = 5286511000;
 	while(1) {
 		printf("Looping mg1\n");
+
+		long double currLat = nanoDegToLdDeg(getLatitude());
+		long double currLon = nanoDegToLdDeg(getLongitude());
+		long double dbLat = nanoDegToLdDeg(db.latitude);
+		long double dbLon = nanoDegToLdDeg(db.longitude);
+		long double dist = getDistance(currLat,currLon,dbLat, dbLon);
+
 		printf("Latitude: %lld\n", getLatitude());
 		printf("Longitude: %lld\n", getLongitude());
-		struct gnss_data currLoc = getGnssData();
-		long double currLat = (long double)getLatitude()/1000000000;
-		long double currLon = (long double)getLongitude()/1000000000;
-		long double dbLat = (long double)db.latitude/1000000000;
-		long double dbLon = (long double)db.longitude/1000000000;
-		long double dist = getDistance(currLat,currLon,dbLat, dbLon);
 		printf("Distance: %Lf\n", dist);
 		k_msleep(1000);
 	}
