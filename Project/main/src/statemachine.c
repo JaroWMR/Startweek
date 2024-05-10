@@ -51,15 +51,16 @@ void init_state(struct state *state) {
 }
 
 void idle_state(struct state *state) {
+	printf("Idle state\n");
+
 	char **names;
 	unsigned amount;
 	getIdleThreads(&names, &amount);
-	enableThreads(names, amount);
-	for (int i = 0; i < 10; i++) {
-		printf("Walking\n");
-		k_msleep(90);
-	}
-	disableThreads(names, amount);
+	//enableThreads(names, amount); Currently disabled for debugging purposese
+	
+	int ret = playIdle();
+
+	disableThreads(&names, &amount);
 
 	state->next = mg1_state;
 }
@@ -71,7 +72,7 @@ void mg1_state(struct state *state) { // Makes use of button and led
 	char **names;
 	unsigned amount;
 	getMg1Threads(&names, &amount);
-	enableThreads(names, amount);
+	//enableThreads(names, amount);
 
 	int ret = playMg1();
 

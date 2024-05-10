@@ -51,7 +51,7 @@ long double toRadians(const long double degree)
     return (one_deg * degree);
 }
  
-long double getDistance(long double lat1, long double long1, 
+long double getDistanceMeters(long double lat1, long double long1, 
                      long double lat2, long double long2)
 {
     // Convert the latitudes 
@@ -79,6 +79,8 @@ long double getDistance(long double lat1, long double long1,
      
     // Calculate the result
     ans = ans * R;
+
+	ans *= 1000;	// Convert km to m
  
     return ans;
 }
