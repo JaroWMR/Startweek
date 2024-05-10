@@ -97,8 +97,12 @@ long double nanoDegToLdDeg(int64_t value) {
 	return (long double)value/1000000000;
 }
 
-long double getAngle(long double lat1, long double long1, long double lat2, long double long2) {
-    long double dLon = (long2 - long1);
+long double getAngle(long double lat1, long double lon1, long double lat2, long double lon2) {
+	lat1 = toRadians(lat1);
+	lon1 = toRadians(lon1);
+	lat2 = toRadians(lat2);
+	lon2 = toRadians(lon2);
+    long double dLon = (lon2 - lon1);
 
     long double y = sin(dLon) * cos(lat2);
     long double x = cos(lat1) * sin(lat2) - sin(lat1) * cos(lat2) * cos(dLon);
@@ -107,7 +111,7 @@ long double getAngle(long double lat1, long double long1, long double lat2, long
 
     brng = toDegrees(brng);
     brng = fmod((brng + 360), 360);
-    brng = 360 - brng; // count degrees counter-clockwise - remove to make clockwise
+    //brng = 360 - brng; // count degrees counter-clockwise - remove to make clockwise
 
     return brng;
 }
