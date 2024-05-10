@@ -14,8 +14,9 @@ void getIdleThreads(char ***names, unsigned *amount) {
 
 int playIdle() {
 
-	while(1) {
-		printf("Looping mg1\n");
+	//while(1) {
+	for (int i = 0; i < 10; i++) {
+		printf("Looping idle\n");
 
 		int64_t currLatNanoDeg = getLatitude();
 		int64_t currLonNanoDeg = getLongitude();
