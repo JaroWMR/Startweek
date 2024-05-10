@@ -50,6 +50,14 @@ long double toRadians(const long double degree)
     long double one_deg = (M_PI) / 180;
     return (one_deg * degree);
 }
+
+// Utility function for 
+// converting radians to degrees
+long double toDegrees(const long double radians)
+{
+    long double one_rad = 180 / (M_PI);
+    return (one_rad * radians);
+}
  
 long double getDistanceMeters(long double lat1, long double long1, 
                      long double lat2, long double long2)
@@ -87,4 +95,19 @@ long double getDistanceMeters(long double lat1, long double long1,
 
 long double nanoDegToLdDeg(int64_t value) {
 	return (long double)value/1000000000;
+}
+
+long double getAngle(long double lat1, long double long1, long double lat2, long double long2) {
+    long double dLon = (long2 - long1);
+
+    long double y = sin(dLon) * cos(lat2);
+    long double x = cos(lat1) * sin(lat2) - sin(lat1) * cos(lat2) * cos(dLon);
+
+    long double brng = atan2(y, x);
+
+    brng = toDegrees(brng);
+    brng = fmod((brng + 360), 360);
+    brng = 360 - brng; // count degrees counter-clockwise - remove to make clockwise
+
+    return brng;
 }

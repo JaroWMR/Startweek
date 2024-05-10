@@ -24,11 +24,13 @@ int playIdle() {
 		} else {
 			long double currLat = nanoDegToLdDeg(getLatitude());
 			long double currLon = nanoDegToLdDeg(getLongitude());
-			long double vnrLat = nanoDegToLdDeg(LAT_VNR);
-			long double vnrLon = nanoDegToLdDeg(LON_VNR);
+			long double vnrLat = nanoDegToLdDeg(LAT_DB);
+			long double vnrLon = nanoDegToLdDeg(LON_DB);
 			long double dist = getDistanceMeters(currLat,currLon,vnrLat, vnrLon);
+			long double angle = getAngle(currLat, currLon, vnrLat, vnrLon);
 
 			printf("Distance (rounded to whole meters): %d\n", (int)round(dist));
+			printf("Angle: %Lf\n", angle);
 		}
 		k_msleep(1000);
 	}

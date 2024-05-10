@@ -8,3 +8,4 @@ int64_t getLatitude();
 int64_t getLongitude();
 long double getDistanceMeters();
 long double nanoDegToLdDeg(int64_t);
+long double getAngle(long double , long double, long double, long double);
