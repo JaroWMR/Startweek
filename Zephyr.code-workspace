@@ -51,7 +51,8 @@
 
 		"files.associations": {
 			"sample_usbd.h": "c",
-			"uart.h": "c"
+			"uart.h": "c",
+			"stdio.h": "c"
 		},
 
 		// The number of spaces a tab is equal to. This setting is overridden

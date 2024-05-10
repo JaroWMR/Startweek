@@ -30,25 +30,25 @@
 
 #include <stdio.h>
 #include <zephyr/device.h>
-#include <zephyr/sys/printk.h>
-
 #include <zephyr/kernel.h>
 #include <zephyr/sys/printk.h>
 #include <zephyr/sys/util.h>
 #include <zephyr/usb/usb_device.h>
 #include <zephyr/drivers/uart.h>
+#include <string.h>
 
 BUILD_ASSERT(DT_NODE_HAS_COMPAT(DT_CHOSEN(zephyr_console), zephyr_cdc_acm_uart),
 			 "Console device is not ACM CDC UART device");
 
-void main(void)
+int main(void)
 {
 	// Configure USB Serial for Console output
 	const struct device *usb_dev = DEVICE_DT_GET(DT_CHOSEN(zephyr_console));
 	uint32_t dtr = 0;
 
 	if (usb_enable(NULL)) {
-		return;
+		printf("error with usb. exit code\n");
+		return -1;
 	}
 
 	// Sleep to wait for a terminal connection. To wait until connected, comment out
@@ -57,13 +57,17 @@ void main(void)
 	// uart_line_ctrl_get(usb_dev, UART_LINE_CTRL_DTR, &dtr);
 
 	/* To wait for a Console connection, uncomment to poll if the DTR flag was set to activate USB */
+	printf("Waiting for usb connection on pc\n");
 	while (!dtr) {
 		uart_line_ctrl_get(usb_dev, UART_LINE_CTRL_DTR, &dtr);
 		k_sleep(K_MSEC(100));
 	}
 
+	printf("Connection made. Printing to uart every second\n");
 	while (1) {
 		printk("Hello USB Console...\n");
-		k_sleep(K_MSEC(5000));
+		k_sleep(K_MSEC(1000));
 	}
+
+	return 0;
 }
