@@ -31,7 +31,7 @@ int playIdle() {
 			long double currLon = nanoDegToLdDeg(getLongitude());
 			long double vnrLat = nanoDegToLdDeg(vnrLatNanoDeg);
 			long double vnrLon = nanoDegToLdDeg(vnrLonNanoDeg);
-			long double dist = getDistance(currLat,currLon,vnrLat, vnrLon);
+			long double dist = getDistanceMeters(currLat,currLon,vnrLat, vnrLon);
 
 			printf("Latitude: %lld\n", getLatitude());
 			printf("Longitude: %lld\n", getLongitude());
