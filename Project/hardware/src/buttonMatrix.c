@@ -121,7 +121,7 @@ int8_t buttonMatrixSet(int8_t data[BUTTONMATRIXROWS])
 		gpio_pin_set_dt(&buttonMatrixMuxB,(row & 0x2));
 
 		//TODO: determine this k_sleep delay
-		k_sleep(K_USEC(4000));
+		k_sleep(K_USEC(3000));
 	}
 	return 0;
 }

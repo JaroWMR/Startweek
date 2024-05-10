@@ -14,6 +14,9 @@
 #include <zephyr/kernel.h>
 #include <zephyr/sys/util.h>
 
+// Thread startupdelay
+uint32_t Startupdelay = 120000;
+
 // Define the threads
 // Input threads
 K_THREAD_DEFINE(tstartbutton_id, STACKSIZE, tstartbutton, NULL, NULL, NULL, TSTARTBUTTON_PRIORITY, 0,0);
@@ -28,75 +31,280 @@ K_THREAD_DEFINE(tledmatrix_id, STACKSIZE, tledmatrix, NULL, NULL, NULL, TLEDMATR
 K_THREAD_DEFINE(tledcircle_id, STACKSIZE, tledcircle, NULL, NULL, NULL, TLEDCIRCLE_PRIORITY, 0, 0);
 K_THREAD_DEFINE(tsevenseg_id, STACKSIZE, tsevenseg, NULL, NULL, NULL, TSEVENSEG_PRIORITY, 0, 0);
 
+// Mutex Defines + protected an unprotected variable
+
+K_MUTEX_DEFINE(startbuttonMutex);// Mutex
+uint8_t startbuttonMutexValue = 0; // MutexValue (Protected)
+uint8_t startbuttonMutexValueRet = 0; // Return value for mutexValue (Not protected)
+
+K_MUTEX_DEFINE(btnmatrix_inMutex);// Mutex
+uint8_t btnmatrix_inMutexValue[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}; // MutexValue (Protected)
+uint8_t btnmatrix_inMutexValueRet[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}; // Return value for mutexValue (Not protected)
+
+K_MUTEX_DEFINE(switchsMutex); // Mutex
+uint8_t switchsMutexValue[5] = {0,0,0,0,0};// MutexValue (Protected)
+uint8_t switchsMutexValueRet[5] = {0,0,0,0,0};// Return value for mutexValue (Not protected)
+
+K_MUTEX_DEFINE(potmeterMutex); // Mutex
+int32_t potmeterMutexValue = 0 ;// MutexValue (Protected)
+int32_t potmeterMutexValueRet = 0 ;// Return value for mutexValue (Not protected)
+
+K_MUTEX_DEFINE(abcbtnMutex); // Mutex
+uint8_t abcbtnMutexValue[3] = {0,0,0} ;// MutexValue (Protected)
+uint8_t abcbtnMutexValueRet[3] = {0,0,0} ;// Return value for mutexValue (Not protected)
+
+K_MUTEX_DEFINE(btnmatrix_outMutex); // Mutex
+uint8_t btnmatrix_outMutexValue[4] = {0,0,0,0}; // MutexValue (Protected)
+uint8_t btnmatrix_outMutexValueOld[4] = {0,0,0,0}; // Return value for mutexValue (Not protected)
+
+K_MUTEX_DEFINE(buzzersMutex); // Mutex
+uint8_t buzzersMutexValue = 0 ;// MutexValue (Protected)
+uint8_t buzzersMutexValueRet = 0 ;// Return value for mutexValue (Not protected)
+
+K_MUTEX_DEFINE(ledmatrixMutex); // Mutex
+uint8_t ledmatrixMutexValue = 0 ;// MutexValue (Protected)
+uint8_t ledmatrixMutexValueRet = 0 ;// Return value for mutexValue (Not protected)
+
+K_MUTEX_DEFINE(ledcircleMutex); // Mutex
+uint8_t ledcircleMutexValue = 0 ;// MutexValue (Protected)
+uint8_t ledcircleMutexValueRet = 0 ;// Return value for mutexValue (Not protected)
+
+K_MUTEX_DEFINE(sevensegMutex); // Mutex
+uint8_t sevensegMutexValue = 0 ;// MutexValue (Protected)
+uint8_t sevensegMutexValueRet = 0 ;// Return value for mutexValue (Not protected)
+
+uint8_t startbuttonGetMutexValue()
+{
+	if (k_mutex_lock(&startbuttonMutex, K_MSEC(100)) == 0) //Check if mutex is not locked by another thread
+	{
+		for (uint8_t i = 0; i < 16; i++)
+		{
+			startbuttonMutexValueRet = startbuttonMutexValue; //access protected value
+		}
+		k_mutex_unlock(&startbuttonMutex);	
+	} 
+	else 
+	{
+		printf("Cannot lock startbutton\n");
+	}
+	return startbuttonMutexValueRet; //Return unprotected value
+}
 
 void tstartbutton(void) {
-	while (1) {
-		printf("Call start button polling function here!\n");
-		k_msleep(10);	// This delay should depend on how frequently this sensor / actuator is read / written
+	k_msleep(Startupdelay); //startup sleep for main thread
+	uint8_t values = 0;// Value to decrease locking amount
+	while (1) 
+	{
+		if(values != startbuttonGet()) 
+		{
+			values = startbuttonGet();
+			k_mutex_lock(&startbuttonMutex, K_FOREVER); // wait forever until mutex is available
+			startbuttonMutexValue = values;
+			k_mutex_unlock(&startbuttonMutex);
+		}
+		k_msleep(1000);	// This delay should depend on how frequently this sensor / actuator is read / written
 	}
+}
+
+uint8_t* btnmatrix_inGetMutexValue()
+{
+	if (k_mutex_lock(&btnmatrix_inMutex, K_MSEC(100)) == 0) //Check if mutex is not locked by another thread
+	{
+		for (uint8_t i = 0; i < 16; i++)
+		{
+			btnmatrix_inMutexValueRet[i] = btnmatrix_inMutexValue[i]; //access protected value
+		}
+		k_mutex_unlock(&btnmatrix_inMutex);	
+	} 
+	else 
+	{
+		printf("Cannot lock btnmatrix_in\n");
+	}
+	return btnmatrix_inMutexValueRet; //Return unprotected value
 }
 
 void tbtnmatrix_in(void) { 
-	while (1) {
-		printf("Call button matrix polling function here!\n");
+	k_msleep(Startupdelay); //startup sleep for main thread
+	uint8_t values[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};// Value to decrease locking amount
+	while (1) 
+	{
+		for (uint8_t i = 0; i < 16; i++)
+		{
+			if(values[i] != buttons4x4Get(i)) 
+			{
+				values[i] = buttons4x4Get(i);
+				k_mutex_lock(&btnmatrix_inMutex, K_FOREVER); // wait forever until mutex is available
+				btnmatrix_inMutexValue[i] = values[i];
+				k_mutex_unlock(&btnmatrix_inMutex);
+			}
+		}
 		k_msleep(10);	// This delay should depend on how frequently this sensor / actuator is read / written
 	}
+}
+
+uint8_t* switchesGetMutexValue()
+{
+	if (k_mutex_lock(&switchsMutex, K_MSEC(100)) == 0) //Check if mutex is not locked by another thread
+	{
+		for (uint8_t i = 0; i < 5; i++)
+		{
+			switchsMutexValueRet[i] = switchsMutexValue[i]; //access protected value
+		}
+		k_mutex_unlock(&switchsMutex);	
+	} 
+	else 
+	{
+		printf("Cannot lock switchs\n");
+	}
+	return switchsMutexValueRet; //Return unprotected value
 }
 
 void tswitches(void) { 
-	while (1) {
-		printf("Call switches polling function here!\n");
+	k_msleep(Startupdelay); //startup sleep for main thread
+	uint8_t values[5] = {0,0,0,0,0};// Value to decrease locking amount
+	while (1) 
+	{
+		for (uint8_t i = 0; i < 5; i++)
+		{
+			if(values[i] != switchesGet(i)) 
+			{
+				values[i] = switchesGet(i);
+				k_mutex_lock(&switchsMutex, K_FOREVER); // wait forever until mutex is available
+				switchsMutexValue[i] = values[i];
+				k_mutex_unlock(&switchsMutex);
+			}
+		}
 		k_msleep(10);	// This delay should depend on how frequently this sensor / actuator is read / written
 	}
+}
+
+int32_t potmeterGetMutexValue()
+{
+	if (k_mutex_lock(&potmeterMutex, K_MSEC(100)) == 0) //Check if mutex is not locked by another thread
+	{
+		potmeterMutexValueRet = potmeterMutexValue; //access protected value
+		k_mutex_unlock(&potmeterMutex);
+	} 
+	else 
+	{
+		printf("Cannot lock potmeter\n");
+	}
+	return potmeterMutexValueRet; //Return unprotected value
 }
 
 void tpotmeter(void) { 
-	while (1) {
-		printf("Call potmeter polling function here!\n");
-		k_msleep(10);
+	k_msleep(Startupdelay); //startup sleep for main thread
+	//int32_t values = 0;// Value to decrease locking amount
+	while (1) 
+	{
+		// if(values != potmeterGet()) 
+		// {
+		// 	values = potmeterGet();
+		// 	k_mutex_lock(&potmeterMutex, K_FOREVER); // wait forever until mutex is available
+		// 	potmeterMutexValue = values;
+		// 	k_mutex_unlock(&potmeterMutex);
+		// }
+		k_msleep(10);	// This delay should depend on how frequently this sensor / actuator is read / written
 	}
 }
 
+uint8_t* abcbtnGetMutexValue()
+{
+	if (k_mutex_lock(&abcbtnMutex, K_MSEC(100)) == 0) //Check if mutex is not locked by another thread
+	{
+		for (uint8_t i = 0; i < 3; i++)
+		{
+			abcbtnMutexValueRet[i] = abcbtnMutexValue[i]; //access protected value
+			
+		}
+		k_mutex_unlock(&abcbtnMutex);	
+	} 
+	else 
+	{
+		printf("Cannot lock abcbtn\n");
+	}
+	return abcbtnMutexValueRet; //Return unprotected value
+}
+
 void tabcbtn(void) { 
-	while (1) {
-		printf("Call abc button polling function here!\n");
+	k_msleep(Startupdelay); //startup sleep for main thread
+	uint8_t values[3] = {0,0,0};// Value to decrease locking amount
+	while (1) 
+	{
+		for (uint8_t i = 0; i < 3; i++)
+		{
+			if(values[i] != abcbuttonsGet((char)97+i)) //conversion to ascii
+			{
+				values[i] = abcbuttonsGet((char)97+i); //conversion to ascii
+				k_mutex_lock(&abcbtnMutex, K_FOREVER); // wait forever until mutex is available
+				abcbtnMutexValue[i] = values[i];
+				k_mutex_unlock(&abcbtnMutex);
+			}
+		}
 		k_msleep(10);	// This delay should depend on how frequently this sensor / actuator is read / written
 	}
+}
+
+void btnmatrix_outSetMutexValue(uint8_t data[4])
+{
+
+	k_mutex_lock(&btnmatrix_outMutex, K_FOREVER);
+	for (uint8_t i = 0; i < 4; i++)
+	{
+		btnmatrix_outMutexValue[i] = data[i]; //access protected value
+		
+	}
+	k_mutex_unlock(&btnmatrix_outMutex);	
+
 }
 
 // Output thread functions
 void tbtnmatrix_out(void) { 
-	while (1) {
-		printf("Call button matrix LED control function here!\n");
+	k_msleep(Startupdelay); //startup sleep for main thread
+	while (1) 
+	{
+		if (k_mutex_lock(&btnmatrix_outMutex, K_MSEC(100)) == 0) //Check if mutex is not locked by another thread
+		{
+			for (uint8_t i = 0; i < 4; i++)
+			{
+				btnmatrix_outMutexValueOld[i] = btnmatrix_outMutexValue[i];
+			}
+			k_mutex_unlock(&btnmatrix_outMutex);	
+		} 
+		buttonMatrixSet(btnmatrix_outMutexValueOld);
 		k_msleep(10);	// This delay should depend on how frequently this sensor / actuator is read / written
 	}
 }
 
 void tbuzzers(void) { 
+	k_msleep(Startupdelay); //startup sleep for main thread
 	while (1) {
 		printf("Call buzzers control function here!\n");
-		k_msleep(10);	// This delay should depend on how frequently this sensor / actuator is read / written
+		k_msleep(1000);	// This delay should depend on how frequently this sensor / actuator is read / written
 	}
 }
 
 void tledmatrix(void) { 
+	k_msleep(Startupdelay); //startup sleep for main thread
 	while (1) {
 		printf("Call LED matrix control function here!\n");
-		k_msleep(10);	// This delay should depend on how frequently this sensor / actuator is read / written
+		k_msleep(1000);	// This delay should depend on how frequently this sensor / actuator is read / written
 	}
 }
 
 void tledcircle(void) { 
+	k_msleep(Startupdelay); //startup sleep for main thread
 	while (1) {
 		printf("Call LED circle control function here!\n");
-		k_msleep(10);	// This delay should depend on how frequently this sensor / actuator is read / written
+		k_msleep(1000);	// This delay should depend on how frequently this sensor / actuator is read / written
 	}
 }
 
 void tsevenseg(void) { 
+	k_msleep(Startupdelay); //startup sleep for main thread
 	while (1) {
 		printf("Call seven segment control function here!\n");
-		k_msleep(10);	// This delay should depend on how frequently this sensor / actuator is read / written
+		k_msleep(1000);	// This delay should depend on how frequently this sensor / actuator is read / written
 	}
 }
 
