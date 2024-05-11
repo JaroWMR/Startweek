@@ -58,20 +58,24 @@ uint8_t btnmatrix_outMutexValue[4] = {0,0,0,0}; // MutexValue (Protected)
 uint8_t btnmatrix_outMutexValueOld[4] = {0,0,0,0}; // Return value for mutexValue (Not protected)
 
 K_MUTEX_DEFINE(buzzersMutex); // Mutex
-uint8_t buzzersMutexValue = 0 ;// MutexValue (Protected)
-uint8_t buzzersMutexValueRet = 0 ;// Return value for mutexValue (Not protected)
+uint8_t buzzersMutexValue[3] = {0,0,0} ;// MutexValue (Protected)
+uint8_t buzzersMutexValueOld[3] = {0,0,0} ;// Return value for mutexValue (Not protected)
 
 K_MUTEX_DEFINE(ledmatrixMutex); // Mutex
-uint8_t ledmatrixMutexValue = 0 ;// MutexValue (Protected)
-uint8_t ledmatrixMutexValueRet = 0 ;// Return value for mutexValue (Not protected)
+int16_t ledmatrixMutexValue[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};// MutexValue (Protected)
+int16_t ledmatrixMutexValueOld[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};// Return value for mutexValue (Not protected)
 
 K_MUTEX_DEFINE(ledcircleMutex); // Mutex
-uint8_t ledcircleMutexValue = 0 ;// MutexValue (Protected)
-uint8_t ledcircleMutexValueRet = 0 ;// Return value for mutexValue (Not protected)
+uint8_t ledcircleMutexValue[8] = {0,0,0,0,0,0,0,0} ;// MutexValue (Protected)
+uint8_t ledcircleMutexValueOld[8] = {0,0,0,0,0,0,0,0} ;// Return value for mutexValue (Not protected)
 
 K_MUTEX_DEFINE(sevensegMutex); // Mutex
-uint8_t sevensegMutexValue = 0 ;// MutexValue (Protected)
-uint8_t sevensegMutexValueRet = 0 ;// Return value for mutexValue (Not protected)
+char sevensegMutexValueInput[4] = "0000";// MutexValue (Protected)
+uint8_t sevensegMutexValuedpPosition = 0 ;// MutexValue (Protected)
+char sevensegMutexValueInputOld[4] = "0000" ;// Return value for mutexValue (Not protected)
+uint8_t sevensegMutexValuedpPositionOld = 0 ;// MutexValue (Protected)
+
+
 
 uint8_t startbuttonGetMutexValue()
 {
@@ -245,6 +249,8 @@ void tabcbtn(void) {
 	}
 }
 
+
+// Output thread functions
 void btnmatrix_outSetMutexValue(uint8_t data[4])
 {
 
@@ -258,7 +264,6 @@ void btnmatrix_outSetMutexValue(uint8_t data[4])
 
 }
 
-// Output thread functions
 void tbtnmatrix_out(void) { 
 	k_msleep(Startupdelay); //startup sleep for main thread
 	while (1) 
@@ -276,35 +281,120 @@ void tbtnmatrix_out(void) {
 	}
 }
 
+void buzzersSetMutexValue(uint8_t data[3])
+{
+
+	k_mutex_lock(&buzzersMutex, K_FOREVER);
+	for (uint8_t i = 0; i < 3; i++)
+	{
+		buzzersMutexValue[i] = data[i]; //access protected value
+		
+	}
+	k_mutex_unlock(&buzzersMutex);	
+
+}
+
 void tbuzzers(void) { 
 	k_msleep(Startupdelay); //startup sleep for main thread
-	while (1) {
-		printf("Call buzzers control function here!\n");
-		k_msleep(1000);	// This delay should depend on how frequently this sensor / actuator is read / written
+	while (1) 
+	{
+		if (k_mutex_lock(&buzzersMutex, K_MSEC(100)) == 0) //Check if mutex is not locked by another thread
+		{
+			for (uint8_t i = 0; i < 3; i++)
+			{
+				buzzersMutexValueOld[i] = buzzersMutexValue[i];
+			}
+			k_mutex_unlock(&buzzersMutex);	
+		} 
+		//buzzersSet(btnmatrix_outMutexValueOld);
+		k_msleep(10);	// This delay should depend on how frequently this sensor / actuator is read / written
 	}
+}
+
+void ledmatrixSetMutexValue(uint16_t data[16])
+{
+	k_mutex_lock(&ledmatrixMutex, K_FOREVER);
+	for (uint8_t i = 0; i < 16; i++)
+	{
+		ledmatrixMutexValue[i] = data[i]; //access protected value
+		
+	}
+	k_mutex_unlock(&ledmatrixMutex);	
 }
 
 void tledmatrix(void) { 
 	k_msleep(Startupdelay); //startup sleep for main thread
-	while (1) {
-		printf("Call LED matrix control function here!\n");
-		k_msleep(1000);	// This delay should depend on how frequently this sensor / actuator is read / written
+	while (1) 
+	{
+		if (k_mutex_lock(&ledmatrixMutex, K_MSEC(100)) == 0) //Check if mutex is not locked by another thread
+		{
+			for (uint8_t i = 0; i < 16; i++)
+			{
+				ledmatrixMutexValueOld[i] = ledmatrixMutexValue[i];
+			}
+			k_mutex_unlock(&ledmatrixMutex);	
+		} 
+		ledMatrixSet(ledmatrixMutexValueOld);
+		k_msleep(16);	// This delay should depend on how frequently this sensor / actuator is read / written
 	}
+}
+
+void ledcircleSetMutexValue(uint8_t data[8])
+{
+	k_mutex_lock(&ledcircleMutex, K_FOREVER);
+	for (uint8_t i = 0; i < 8; i++)
+	{
+		ledcircleMutexValue[i] = data[i]; //access protected value
+		
+	}
+	k_mutex_unlock(&ledcircleMutex);	
 }
 
 void tledcircle(void) { 
 	k_msleep(Startupdelay); //startup sleep for main thread
-	while (1) {
-		printf("Call LED circle control function here!\n");
-		k_msleep(1000);	// This delay should depend on how frequently this sensor / actuator is read / written
+	while (1) 
+	{
+		if (k_mutex_lock(&ledcircleMutex, K_MSEC(100)) == 0) //Check if mutex is not locked by another thread
+		{
+			for (uint8_t i = 0; i < 8; i++)
+			{
+				ledcircleMutexValueOld[i] = ledcircleMutexValue[i];
+			}
+			k_mutex_unlock(&ledcircleMutex);	
+		} 
+		circleMatrixSet(ledcircleMutexValueOld);
+		k_msleep(16);	// This delay should depend on how frequently this sensor / actuator is read / written
 	}
 }
 
+
+void sevensegSetMutexValue(char input[4],uint8_t dpPosition)
+{
+	k_mutex_lock(&sevensegMutex, K_FOREVER);
+	for (uint8_t i = 0; i < 4; i++)
+	{
+		sevensegMutexValueInput[i] = input[i]; //access protected value
+	}
+	sevensegMutexValuedpPosition = dpPosition ;//access protected value
+	k_mutex_unlock(&sevensegMutex);	
+}
+
+
 void tsevenseg(void) { 
 	k_msleep(Startupdelay); //startup sleep for main thread
-	while (1) {
-		printf("Call seven segment control function here!\n");
-		k_msleep(1000);	// This delay should depend on how frequently this sensor / actuator is read / written
+	while (1) 
+	{
+		if (k_mutex_lock(&sevensegMutex, K_MSEC(100)) == 0) //Check if mutex is not locked by another thread
+		{
+			for (uint8_t i = 0; i < 4; i++)
+			{
+				sevensegMutexValueInputOld[i] = sevensegMutexValueInput[i];
+			}
+			sevensegMutexValuedpPositionOld = sevensegMutexValuedpPosition;
+			k_mutex_unlock(&sevensegMutex);	
+		} 
+		sevenSegmentSet(sevensegMutexValueInputOld,sevensegMutexValuedpPositionOld);
+		k_msleep(16);	// This delay should depend on how frequently this sensor / actuator is read / written
 	}
 }
 

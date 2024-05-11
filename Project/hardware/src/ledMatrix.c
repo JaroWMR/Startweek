@@ -104,7 +104,7 @@ int8_t ledMatrixInit ()
  * Returns a 2 if the Initialiazation has not been perfomed.
  * Returns a 3 if the Configuration and the Initialiazation has not been perfomed.
  */ 
-int8_t ledMatrixSetLeds(int16_t data[LEDMATRIXROWS])
+int8_t ledMatrixSet(int16_t data[LEDMATRIXROWS])
 {
 	for (size_t row = 0; row < LEDMATRIXROWS; row++)
 	{

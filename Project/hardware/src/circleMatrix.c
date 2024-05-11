@@ -58,7 +58,7 @@ bool circleMatrixConfig()
  * 
  * @return Returns a 0 on succes and a 1 on error.
  */ 
-int8_t circleMatrixInit ()
+uint8_t circleMatrixInit ()
 {
 	uint8_t ret = 0;
 	ret += gpio_pin_set_dt(&circleMatrixShiftDataIn,LOW);
@@ -102,7 +102,7 @@ int8_t circleMatrixInit ()
  * Returns a 2 if the Initialiazation has not been perfomed.
  * Returns a 3 if the Configuration and the Initialiazation has not been perfomed.
  */ 
-int8_t circleMatrixSetLeds(int8_t data[CIRCLEMATRIXROWS])
+uint8_t circleMatrixSet(uint8_t data[CIRCLEMATRIXROWS])
 {
 	for (size_t row = 0; row < CIRCLEMATRIXROWS; row++)
 	{
