@@ -68,7 +68,10 @@ uint8_t* switchesGetMutexValue();
 int32_t potmeterGetMutexValue();
 uint8_t* abcbtnGetMutexValue();
 void btnmatrix_outSetMutexValue(uint8_t data[4]);
-
+void buzzersSetMutexValue(uint8_t data[3]);
+void ledmatrixSetMutexValue(uint16_t data[16]);
+void ledcircleSetMutexValue(uint8_t data[8]);
+void sevensegSetMutexValue(char input[4],uint8_t dpPosition);
 
 
 #endif //THREADS_H

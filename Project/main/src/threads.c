@@ -75,7 +75,7 @@ uint8_t sevensegMutexValuedpPosition = 0 ;// MutexValue (Protected)
 char sevensegMutexValueInputOld[4] = "0000" ;// Return value for mutexValue (Not protected)
 uint8_t sevensegMutexValuedpPositionOld = 0 ;// MutexValue (Protected)
 
-
+// Input thread and mutex functions
 
 uint8_t startbuttonGetMutexValue()
 {
@@ -249,8 +249,7 @@ void tabcbtn(void) {
 	}
 }
 
-
-// Output thread functions
+// Output thread and mutex functions
 void btnmatrix_outSetMutexValue(uint8_t data[4])
 {
 
@@ -367,7 +366,6 @@ void tledcircle(void) {
 	}
 }
 
-
 void sevensegSetMutexValue(char input[4],uint8_t dpPosition)
 {
 	k_mutex_lock(&sevensegMutex, K_FOREVER);
@@ -378,7 +376,6 @@ void sevensegSetMutexValue(char input[4],uint8_t dpPosition)
 	sevensegMutexValuedpPosition = dpPosition ;//access protected value
 	k_mutex_unlock(&sevensegMutex);	
 }
-
 
 void tsevenseg(void) { 
 	k_msleep(Startupdelay); //startup sleep for main thread
