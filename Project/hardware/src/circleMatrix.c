@@ -126,7 +126,7 @@ uint8_t circleMatrixSet(uint8_t data[CIRCLEMATRIXROWS])
 		gpio_pin_set_dt(&circleMatrixMuxC,(row & 0x4));
 
 		//TODO: determine this k_sleep delay
-		k_sleep(K_USEC(100));
+		k_sleep(K_USEC(2000));
 	}
 	return 0;
 }

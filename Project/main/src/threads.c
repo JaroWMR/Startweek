@@ -276,7 +276,7 @@ void tbtnmatrix_out(void) {
 			k_mutex_unlock(&btnmatrix_outMutex);	
 		} 
 		buttonMatrixSet(btnmatrix_outMutexValueOld);
-		k_msleep(10);	// This delay should depend on how frequently this sensor / actuator is read / written
+		//k_msleep(0);	// This delay should depend on how frequently this sensor / actuator is read / written
 	}
 }
 
@@ -334,7 +334,7 @@ void tledmatrix(void) {
 			k_mutex_unlock(&ledmatrixMutex);	
 		} 
 		ledMatrixSet(ledmatrixMutexValueOld);
-		k_msleep(16);	// This delay should depend on how frequently this sensor / actuator is read / written
+		// k_msleep(16);	// This delay should depend on how frequently this sensor / actuator is read / written
 	}
 }
 
@@ -362,7 +362,7 @@ void tledcircle(void) {
 			k_mutex_unlock(&ledcircleMutex);	
 		} 
 		circleMatrixSet(ledcircleMutexValueOld);
-		k_msleep(16);	// This delay should depend on how frequently this sensor / actuator is read / written
+		//k_msleep(16);	// This delay should depend on how frequently this sensor / actuator is read / written
 	}
 }
 

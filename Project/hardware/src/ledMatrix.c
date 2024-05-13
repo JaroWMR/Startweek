@@ -129,7 +129,7 @@ int8_t ledMatrixSet(int16_t data[LEDMATRIXROWS])
 		gpio_pin_set_dt(&ledMatrixMuxD,(row & 0x8));
 
 		//TODO: determine this k_sleep delay
-		k_sleep(K_USEC(100));
+		k_sleep(K_USEC(1000));
 	}
 	return 0;
 }
