@@ -5,25 +5,6 @@
 #include <stdio.h>
 #include <zephyr/drivers/gpio.h>
 
-static const struct gpio_dt_spec buttons4x4[16] = {
-	GPIO_DT_SPEC_GET(DT_ALIAS(button14x4), gpios),
-	GPIO_DT_SPEC_GET(DT_ALIAS(button24x4), gpios),
-	GPIO_DT_SPEC_GET(DT_ALIAS(button34x4), gpios),
-	GPIO_DT_SPEC_GET(DT_ALIAS(button44x4), gpios),
-	GPIO_DT_SPEC_GET(DT_ALIAS(button54x4), gpios),
-	GPIO_DT_SPEC_GET(DT_ALIAS(button64x4), gpios),
-	GPIO_DT_SPEC_GET(DT_ALIAS(button74x4), gpios),
-	GPIO_DT_SPEC_GET(DT_ALIAS(button84x4), gpios),
-	GPIO_DT_SPEC_GET(DT_ALIAS(button94x4), gpios),
-	GPIO_DT_SPEC_GET(DT_ALIAS(button104x4), gpios),
-	GPIO_DT_SPEC_GET(DT_ALIAS(button114x4), gpios),
-	GPIO_DT_SPEC_GET(DT_ALIAS(button124x4), gpios),
-	GPIO_DT_SPEC_GET(DT_ALIAS(button134x4), gpios),
-	GPIO_DT_SPEC_GET(DT_ALIAS(button144x4), gpios),
-	GPIO_DT_SPEC_GET(DT_ALIAS(button154x4), gpios),
-	GPIO_DT_SPEC_GET(DT_ALIAS(button164x4), gpios)
-};
-
 static const struct gpio_dt_spec switchon[5] = {
 	GPIO_DT_SPEC_GET(DT_ALIAS(switches1on), gpios),
 	GPIO_DT_SPEC_GET(DT_ALIAS(switches2on), gpios),
@@ -63,19 +44,16 @@ static const struct gpio_dt_spec startled		= GPIO_DT_SPEC_GET(DT_ALIAS(startled)
 #define LOW 0
 #endif
 
-bool buttons4x4Config();
 bool switchesConfig();
 bool abcbuttonsConfig();
 bool abcledsConfig();
 bool startbuttonledConfig();
 
-uint8_t buttons4x4Init();
 uint8_t switchesInit();
 uint8_t abcbuttonsInit();
 uint8_t abcledsInit();
 uint8_t startbuttonledInit();
 
-uint8_t buttons4x4Get(uint8_t selectedbtn);
 uint8_t switchesGet(uint8_t selectedswitch);
 uint8_t abcbuttonsGet(char selectedbtn);
 uint8_t abcledsSet(char selectedled,bool value);

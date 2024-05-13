@@ -56,7 +56,7 @@ bool buttonMatrixConfig()
  * 
  * @return Returns a 0 on succes and a 1 on error.
  */ 
-int8_t buttonMatrixInit ()
+uint8_t buttonMatrixInit ()
 {
 	uint8_t ret = 0;
 	ret += gpio_pin_set_dt(&buttonMatrixShiftDataIn,LOW);
@@ -98,7 +98,7 @@ int8_t buttonMatrixInit ()
  * Returns a 2 if the Initialiazation has not been perfomed.
  * Returns a 3 if the Configuration and the Initialiazation has not been perfomed.
  */ 
-int8_t buttonMatrixSet(int8_t data[BUTTONMATRIXROWS])
+uint8_t buttonMatrixSet(uint8_t data[BUTTONMATRIXROWS])
 {
 	for (size_t row = 0; row < BUTTONMATRIXROWS; row++)
 	{
@@ -124,4 +124,74 @@ int8_t buttonMatrixSet(int8_t data[BUTTONMATRIXROWS])
 		k_sleep(K_USEC(4000));
 	}
 	return 0;
+}
+
+
+/** 
+ * @brief Configures the buttonsinsmallmatrix.
+ * 
+ * Checks if the GPIO is available and configures the GPIO for its purpose
+ * 
+ * @return Returns a 0 on succes and a 1 on error.
+ */ 
+bool buttons4x4Config()
+{
+	//check if gpio is available
+	uint8_t ret = 0;
+	uint8_t amount = 16;
+	for (uint8_t i = 0; i < amount; i++)
+	{
+		ret += gpio_is_ready_dt(&buttonsButtonMatrix[i]);
+	}
+	if(ret != amount)
+	{
+		return 1;
+	}
+	return 0;
+}
+
+/** 
+ * @brief Initializes the buttonsinsmallmatrix
+ * 
+ * Sets all pins from floating to 1
+ * 
+ * @return Returns a 0 on succes and a 1 on error.
+ */ 
+uint8_t buttons4x4Init()
+{
+	uint8_t ret = 0;
+	uint8_t amount = 16;
+	for (uint8_t i = 0; i < amount; i++)
+	{
+		ret += gpio_pin_configure_dt(&buttonsButtonMatrix[i],GPIO_INPUT);
+	}
+	if (ret != 0) {
+		return 1;
+	}
+	return 0;
+}
+
+
+/** 
+ * @brief reads value from buttons in small matrix
+ * 
+ * per button the value can be read using this function
+ * 
+ * @param[in] selectedbtn – select which button value is returned
+ * 
+ * @return Returns 0 when the button is pressed
+ * Returns a 1 if the button is not pressed
+ * Returns a 2 when trying to access a button that does not exist
+ */ 
+uint8_t buttons4x4Get(uint8_t selectedbtn)
+{	
+	if(selectedbtn < 16 && selectedbtn >= 0)
+	{
+		return gpio_pin_get(buttonsButtonMatrix[selectedbtn].port, buttonsButtonMatrix[selectedbtn].pin);
+	}
+	else
+	{
+		return 2;
+	}
+	
 }
