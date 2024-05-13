@@ -391,7 +391,7 @@ void tsevenseg(void) {
 			k_mutex_unlock(&sevensegMutex);	
 		} 
 		sevenSegmentSet(sevensegMutexValueInputOld,sevensegMutexValuedpPositionOld);
-		k_msleep(16);	// This delay should depend on how frequently this sensor / actuator is read / written
+		//k_msleep(16);	// This delay should depend on how frequently this sensor / actuator is read / written
 	}
 }
 

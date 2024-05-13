@@ -196,15 +196,14 @@ uint8_t sevenSegmentSet(char input[4],uint8_t dpPosition)
 			gpio_pin_set_dt(&sevenSegmentMuxDig3,LOW);
 			gpio_pin_set_dt(&sevenSegmentMuxDig4,HIGH);
 			break;
-
-			if(dpPosition == i)
-			{
-				dp = true;
-			}
-			sevenSegmentOneSegment(input[i],dp);
 		}
+		if(dpPosition == i)
+		{
+			dp = true;
+		}
+		sevenSegmentOneSegment(input[i],dp);
 		//needs to be determined
-		k_sleep(K_USEC(1));
+		k_msleep(4);
 	}
 	return 0;
 }
