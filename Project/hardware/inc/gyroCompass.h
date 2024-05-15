@@ -7,6 +7,9 @@
 
 //defines
 #define gyro_sample_freq 119 //see lsm6dso kconfig of zephyr for acceptable values. Note this is for accelometer and gyro
+#define magno_sample_freq 155 //see lis3mdl kconfig of zephyr for acceptable values.
+#define magno_sample_freq_off 0.625 //see lis3mdl kconfig of zephyr for acceptable values.
+
 
 // Function prototypes
 uint8_t magnetometer_init(void);

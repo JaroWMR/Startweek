@@ -19,8 +19,13 @@ void tmain(void) // Core thread
 	// startStatemachine();
 	magnetometer_init();
 	double heading = 0;
-	magnetometer_get_heading(&heading);
-	printf("heading = %.2f\n", heading);
+	for(int i = 0; i < 10; i++){
+		magnetometer_get_heading(&heading);
+		printf("heading = %.2f\n", heading);
+		k_sleep(K_MSEC(1000));
+	}
+	
+	
 
 	double gyro[3];
 	gyroscope_init();

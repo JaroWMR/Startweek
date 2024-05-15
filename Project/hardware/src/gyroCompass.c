@@ -4,8 +4,8 @@
 #include <math.h>
 
 #define M_PIL 3.141592653589793238462643383279502884L
-#define X_OFFSET 11.5 / 100
-#define Y_OFFSET -49.63 / 100
+#define X_OFFSET 0 //11.5 / 100
+#define Y_OFFSET 0 //-49.63 / 100
 #define zero 0
 
 static const struct device *magnetometer;
@@ -14,20 +14,32 @@ static bool magnetometer_is_init = false;
 static const struct device *gyroscope;
 static bool gyroscope_is_init = false;
 
-#ifdef CONFIG_LIS3MDL_TRIGGER
-
 /**
- * @brief Handler for LIS3MDL trigger events.
+ * @brief Sets the sampling frequency for the gyroscope.
  *
- * @param dev Pointer to the device structure.
- * @param trig Pointer to the sensor trigger structure.
+ * This function sets the sampling frequency for the gyroscope sensor.
+ *
+ * @return 0 if successful, otherwise a positive error code:
+ *         - 10: Cannot set sampling frequency for accelerometer
  */
-static void magnetometer_trigger_handler(const struct device *dev,
-										 const struct sensor_trigger *trig)
+uint8_t magnetometer_set_sampling_freq(int aFreq)
 {
-	sensor_sample_fetch_chan(dev, trig->chan);
+	int error = 0;
+	struct sensor_value odr_attr;
+
+	odr_attr.val1 = aFreq;
+	odr_attr.val2 = 0;
+
+	error = sensor_attr_set(magnetometer, SENSOR_CHAN_MAGN_XYZ,
+							SENSOR_ATTR_SAMPLING_FREQUENCY, &odr_attr);
+	if (error != 0)
+	{
+		printf("Cannot set sampling frequency for magnetometer.\n");
+		return 10;
+	}
+
+	return 0;
 }
-#endif
 
 /**
  * @brief Initializes the magnetometer sensor.
@@ -37,30 +49,32 @@ static void magnetometer_trigger_handler(const struct device *dev,
  *
  * @return 0 if successful, otherwise a positive error code:
  *         - 1: Failed to get LIS3MDL device
- *         - 2: Failed to set sensor trigger
+ *         - 2: Magnetometer already initialized
+ *         - Errors from magnetometer_set_sampling_freq()
  */
 uint8_t magnetometer_init(void)
 {
-	magnetometer = DEVICE_DT_GET(DT_ALIAS(magnetometer));
-	if (!device_is_ready(magnetometer))
-	{
-		printf("Could not get LIS3MDL device\n");
-		return 1;
-	}
+    if (magnetometer_is_init)
+    {
+        printf("Magnetometer already initialized\n");
+        return 2;
+    }
 
-#ifdef CONFIG_LIS3MDL_TRIGGER
-	struct sensor_trigger trig;
-	trig.type = SENSOR_TRIG_DATA_READY;
-	trig.chan = SENSOR_CHAN_MAGN_XYZ;
-	if (sensor_trigger_set(magnetometer, &trig, magnetometer_trigger_handler) < 0)
-	{
-		printf("Failed to set sensor trigger\n");
-		return 2;
-	}
-#endif
+    magnetometer = DEVICE_DT_GET(DT_ALIAS(magnetometer));
+    if (!device_is_ready(magnetometer))
+    {
+        printf("Could not get LIS3MDL device\n");
+        return 1;
+    }
 
-	magnetometer_is_init = true;
-	return 0;
+    // int error = magnetometer_set_sampling_freq(magno_sample_freq);
+    // if (error != 0)
+    // {
+    //  return error;
+    // }
+
+    magnetometer_is_init = true;
+    return 0;
 }
 
 /**
@@ -69,21 +83,25 @@ uint8_t magnetometer_init(void)
  * This function stops the magnetometer sensor and releases any resources
  * associated with it.
  *
- * @return 0 if successful, 1 if the sensor was not initialized.
+ * @return 0 if successful, otherwise a positive error code:
+ *         - 1: Magnetometer not initialized
+ *         - Errors from magnetometer_set_sampling_freq()
  */
 uint8_t magnetometer_exit(void)
 {
-	if (!magnetometer_is_init)
-	{
-		return 1;
-	}
+    if (!magnetometer_is_init)
+    {
+        return 1;
+    }
 
-#ifdef CONFIG_LIS3MDL_TRIGGER
-	sensor_trigger_set(magnetometer, NULL, NULL); // Unset the trigger
-#endif
-	magnetometer_is_init = false;
+    // int error = magnetometer_set_sampling_freq(magno_sample_freq_off);
+    // if (error != 0)
+    // {
+    //  return error;
+    // }
 
-	return 0;
+    magnetometer_is_init = false;
+    return 0;
 }
 
 /**
@@ -108,18 +126,9 @@ uint8_t magnetometer_get_heading(double *aHeading)
 		printf("Magnetometer not initialized\n");
 		return 1;
 	}
-	else
-	{
-		printf("Magnetometer initialized\n");
-	}
 
-	if (sensor_sample_fetch(magnetometer) < 0)
-	{
-		printf("LIS3MDL Sensor sample update error\n");
-		return 2;
-	}
-
-	sensor_channel_get(magnetometer, SENSOR_CHAN_MAGN_XYZ, magn_xyz);
+	sensor_sample_fetch_chan(magnetometer, SENSOR_CHAN_MAGN_XYZ);
+	sensor_channel_get(magnetometer, SENSOR_CHAN_MAGN_XYZ, &magn_xyz);
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -158,8 +167,8 @@ uint8_t magnetometer_get_heading(double *aHeading)
  * This function sets the sampling frequency for the gyroscope sensor.
  *
  * @return 0 if successful, otherwise a positive error code:
- *         - 1: Cannot set sampling frequency for accelerometer
- *         - 2: Cannot set sampling frequency for gyro
+ *         - 10: Cannot set sampling frequency for accelerometer
+ *         - 20: Cannot set sampling frequency for gyro
  */
 uint8_t gyroscope_set_sampling_freq(int aFreq)
 {
@@ -175,7 +184,7 @@ uint8_t gyroscope_set_sampling_freq(int aFreq)
 	if (error != 0)
 	{
 		printf("Cannot set sampling frequency for accelerometer.\n");
-		return 1;
+		return 10;
 	}
 
 	error = sensor_attr_set(gyroscope, SENSOR_CHAN_GYRO_XYZ,
@@ -183,7 +192,7 @@ uint8_t gyroscope_set_sampling_freq(int aFreq)
 	if (error != 0)
 	{
 		printf("Cannot set sampling frequency for gyro.\n");
-		return 2;
+		return 20;
 	}
 
 	return 0;
@@ -196,10 +205,17 @@ uint8_t gyroscope_set_sampling_freq(int aFreq)
  *
  * @return 0 if successful, otherwise a positive error code:
  *         - 1: Device not ready
+ *         - 2: Gyroscope already initialized
  *         - Errors from gyroscope_set_sampling_freq()
  */
 uint8_t gyroscope_init(void)
 {
+	    if (gyroscope_is_init)
+    {
+        printf("Magnetometer already initialized\n");
+        return 2;
+    }
+
 	gyroscope = DEVICE_DT_GET(DT_ALIAS(gyroscope));
 	int error = 0;
 
@@ -230,13 +246,13 @@ uint8_t gyroscope_init(void)
  */
 uint8_t gyroscope_exit(void)
 {
-		if (!gyroscope_is_init)
+	if (!gyroscope_is_init)
 	{
 		printf("Gyroscope not initialized\n");
 		return 1;
 	}
 
-		int error = gyroscope_set_sampling_freq(zero);
+	int error = gyroscope_set_sampling_freq(zero);
 	if (error != 0)
 	{
 		return error;
@@ -266,7 +282,6 @@ uint8_t gyroscope_get_acceleration(double *aAcceleration)
 
 	struct sensor_value gyro_xyz[3];
 
-	/* lsm6dso accel */
 	sensor_sample_fetch_chan(gyroscope, SENSOR_CHAN_ACCEL_XYZ);
 	sensor_channel_get(gyroscope, SENSOR_CHAN_ACCEL_XYZ, &gyro_xyz);
 
@@ -299,7 +314,6 @@ uint8_t gyroscope_get_gyro(double *aGyro)
 	}
 
 	struct sensor_value gyro_xyz[3];
-	/* lsm6dso gyro */
 	sensor_sample_fetch_chan(gyroscope, SENSOR_CHAN_GYRO_XYZ);
 	sensor_channel_get(gyroscope, SENSOR_CHAN_GYRO_XYZ, &gyro_xyz);
 
