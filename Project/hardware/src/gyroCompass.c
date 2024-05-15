@@ -4,7 +4,7 @@
 #include <math.h>
 
 #define M_PIL 3.141592653589793238462643383279502884L
-#define X_OFFSET 0 //11.5 / 100
+#define X_OFFSET 0 // 11.5 / 100
 #define Y_OFFSET 0 //-49.63 / 100
 #define zero 0
 
@@ -13,6 +13,64 @@ static bool magnetometer_is_init = false;
 
 static const struct device *gyroscope;
 static bool gyroscope_is_init = false;
+
+// Function to perform matrix multiplication
+void multiplyMatrices(float result[3], const float matrix1[3][3], const float matrix2[3])
+{
+	int i, j;
+	for (i = 0; i < 3; ++i)
+	{
+		result[i] = 0;
+		for (j = 0; j < 3; ++j)
+		{
+			result[i] += matrix1[i][j] * matrix2[j];
+		}
+	}
+}
+
+// Function to rotate the x/y/z axis
+void rotate_magno_data(float *aMagnoData)
+{
+	// Original magnetometer data
+	// float originalData[3] = {0.0f, 1.0f, 0.0f}; // Assuming x-axis points right
+
+	printf("Original Data: ");
+	for (int i = 0; i < 3; ++i)
+	{
+		printf("%f ", aMagnoData[i]);
+	}
+	printf("\n");
+
+	// Define rotation matrices
+	// 90-degree rotation about the x-axis
+	float rotationX[3][3] = {
+		{1, 0, 0},
+		{0, 0, -1},
+		{0, 1, 0}};
+
+	// 90-degree rotation about the z-axis
+	float rotationZ[3][3] = {
+		{0, -1, 0},
+		{1, 0, 0},
+		{0, 0, 1}};
+
+	// Temporary storage for result of matrix multiplication
+	float result[3];
+
+	// Apply rotations
+	multiplyMatrices(result, rotationX, aMagnoData);
+	multiplyMatrices(aMagnoData, rotationZ, result);
+
+	// Print rotated data
+	printf("Rotated Data: ");
+	for (int i = 0; i < 3; ++i)
+	{
+		printf("%f ", aMagnoData[i]);
+	}
+	printf("\n");
+
+	return 0;
+}
 
 /**
  * @brief Sets the sampling frequency for the gyroscope.
@@ -54,27 +112,27 @@ uint8_t magnetometer_set_sampling_freq(int aFreq)
  */
 uint8_t magnetometer_init(void)
 {
-    if (magnetometer_is_init)
-    {
-        printf("Magnetometer already initialized\n");
-        return 2;
-    }
+	if (magnetometer_is_init)
+	{
+		printf("Magnetometer already initialized\n");
+		return 2;
+	}
 
-    magnetometer = DEVICE_DT_GET(DT_ALIAS(magnetometer));
-    if (!device_is_ready(magnetometer))
-    {
-        printf("Could not get LIS3MDL device\n");
-        return 1;
-    }
+	magnetometer = DEVICE_DT_GET(DT_ALIAS(magnetometer));
+	if (!device_is_ready(magnetometer))
+	{
+		printf("Could not get LIS3MDL device\n");
+		return 1;
+	}
 
-    // int error = magnetometer_set_sampling_freq(magno_sample_freq);
-    // if (error != 0)
-    // {
-    //  return error;
-    // }
+	// int error = magnetometer_set_sampling_freq(magno_sample_freq);
+	// if (error != 0)
+	// {
+	//  return error;
+	// }
 
-    magnetometer_is_init = true;
-    return 0;
+	magnetometer_is_init = true;
+	return 0;
 }
 
 /**
@@ -89,19 +147,19 @@ uint8_t magnetometer_init(void)
  */
 uint8_t magnetometer_exit(void)
 {
-    if (!magnetometer_is_init)
-    {
-        return 1;
-    }
+	if (!magnetometer_is_init)
+	{
+		return 1;
+	}
 
-    // int error = magnetometer_set_sampling_freq(magno_sample_freq_off);
-    // if (error != 0)
-    // {
-    //  return error;
-    // }
+	// int error = magnetometer_set_sampling_freq(magno_sample_freq_off);
+	// if (error != 0)
+	// {
+	//  return error;
+	// }
 
-    magnetometer_is_init = false;
-    return 0;
+	magnetometer_is_init = false;
+	return 0;
 }
 
 /**
@@ -116,10 +174,9 @@ uint8_t magnetometer_exit(void)
  *         - 1: Magnetometer not initialized
  *         - 2: LIS3MDL Sensor sample update error
  */
-uint8_t magnetometer_get_heading(double *aHeading)
+uint8_t magnetometer_get_magneto(float *aMagneto)
 {
 	struct sensor_value magn_xyz[3];
-	double magn_xyz_double[3];
 
 	if (!magnetometer_is_init)
 	{
@@ -132,32 +189,41 @@ uint8_t magnetometer_get_heading(double *aHeading)
 
 	for (int i = 0; i < 3; i++)
 	{
-		magn_xyz_double[i] = sensor_value_to_double(&magn_xyz[i]);
+		aMagneto[i] = sensor_value_to_float(&magn_xyz[i]);
 	}
 
-	magn_xyz_double[0] -= X_OFFSET;
-	magn_xyz_double[1] -= Y_OFFSET;
+	aMagneto[0] -= X_OFFSET;
+	aMagneto[1] -= Y_OFFSET;
 
-	double direction;
-	if (magn_xyz_double[0] == 0)
-	{
-		direction = (magn_xyz_double[1] < 0) ? 90 : 0;
-	}
-	else
-	{
-		direction = atan2(magn_xyz_double[1], magn_xyz_double[0]) * 180 / M_PIL;
-	}
+	// double direction;
+	// if (aMagneto[0] == 0)
+	// {
+	// 	direction = (aMagneto[1] < 0) ? 90 : 0;
+	// }
+	// else
+	// {
+	// 	direction = atan2(aMagneto[1], aMagneto[0]) * 180 / M_PIL;
+	// }
 
-	if (direction < 0)
-	{
-		direction += 360;
-	}
-	else if (direction > 360)
-	{
-		direction -= 360;
-	}
+	// if (direction < 0)
+	// {
+	// 	direction += 360;
+	// }
+	// else if (direction > 360)
+	// {
+	// 	direction -= 360;
+	// }
 
-	*aHeading = direction;
+	// *aHeading = direction;
+	return 0;
+}
+
+uint8_t magnetometer_get_heading(double *aHeading)
+{
+	float magnetoValue[3];
+	magnetometer_get_magneto(magnetoValue);
+	rotate_magno_data(magnetoValue);
+
 	return 0;
 }
 
@@ -210,11 +276,11 @@ uint8_t gyroscope_set_sampling_freq(int aFreq)
  */
 uint8_t gyroscope_init(void)
 {
-	    if (gyroscope_is_init)
-    {
-        printf("Magnetometer already initialized\n");
-        return 2;
-    }
+	if (gyroscope_is_init)
+	{
+		printf("Magnetometer already initialized\n");
+		return 2;
+	}
 
 	gyroscope = DEVICE_DT_GET(DT_ALIAS(gyroscope));
 	int error = 0;
