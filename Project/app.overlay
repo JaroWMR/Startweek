@@ -541,7 +541,11 @@
 };
 
 &clk_hsi48{
-	status = "disabled";
+	status = "okay";
+};
+
+&rng{
+	status = "okay";
 };
 
 &pll {

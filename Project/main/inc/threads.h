@@ -5,8 +5,6 @@
 
 extern uint32_t Startupdelay;
 
-#define printf(...)
-
 // Total number of threads
 #define THREAD_AMOUNT 10
 
