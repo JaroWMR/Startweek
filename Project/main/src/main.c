@@ -21,15 +21,12 @@ void tmain(void) // Core thread
 	double heading = 0;
 	magnetometer_get_heading(&heading);
 	printf("heading = %.2f\n", heading);
-	gyro_print_data();
-	k_sleep(K_MSEC(1000));
 
-	// while(1){
-	// 	double heading = 0;
-	// 	magnetometer_get_heading(&heading);
-	// 	printf("heading = %.2f\n", heading);
-	// 	k_sleep(K_MSEC(1000));
-	// }
+	double gyro[3];
+	gyroscope_init();
+	gyroscope_get_acceleration(gyro);
+	gyroscope_get_gyro(gyro);
+	gyroscope_exit();
 }
 
 // Define the threads
