@@ -13,39 +13,113 @@ void getMg2Threads(char ***names, unsigned *amount) {
 }
 
 int playMg2() {
-
+	uint32_t score = 1000;
+	uint8_t *btnValues;
+	uint8_t sequence[8] = {0,0,0,0,0,0,0,0};
+	uint8_t level = 0;
+	bool genValue = false;
 	while (true)
 	{
-		uint8_t randomValue = 0;
-		sys_rand_get(&randomValue, sizeof(randomValue));
-		printf("randomValue %d,\n",randomValue);
-		k_sleep(K_MSEC(10));
+		if(score == 0 || level == 8)
+		{
+			printf("end\n");
+			break;
+		}
+		if(!genValue)
+		{
+			for (uint8_t i = 0; i < 8; i++)
+			{
+				uint8_t randomValue = 0;
+				sys_rand_get(&randomValue, sizeof(randomValue));
+				randomValue = randomValue & (0b11);
+				printf("randomValue %d,\n",randomValue);
+				sequence[i] = randomValue;
+			}
+			genValue = true;
+			level = 0;
+		}
+		uint8_t data[4] = {0b00000000,0b00000000,0b00000000,0b00000000};
+		switch (sequence[level])
+		{
+		case 3:
+		data[0] = 0b00001000;
+			break;
+		case 2:
+		data[0] = 0b00000001;
+			break;
+		case 1:
+		data[4] = 0b00001000;
+			break;
+		case 0:
+		data[4] = 0b00000001;
+			break;
+		default:
+			//should not reach
+			break;
+		}	
+		btnmatrix_outSetMutexValue(data);		
+		btnValues = btnmatrix_inGetMutexValue();
+		if(!btnValues[15] || !btnValues[11] || !btnValues[3] || !btnValues[0])
+		{
+			switch (sequence[level])
+			{
+			case 3:
+				if(!btnValues[15] && btnValues[11] && btnValues[3] && btnValues[0])
+				{
+					level++;
+					printf("correct \n");
+				}
+				else
+				{
+					genValue = false;
+					score -= 100;
+					printf("incorrect \n");
+				}
+				break;
+			case 2:
+				if(btnValues[15] && !btnValues[11] && btnValues[3] && btnValues[0])
+				{
+					level++;
+					printf("correct \n");
+				}
+				else
+				{
+					genValue = false;
+					score -= 100;
+					printf("incorrect \n");
+				}
+				break;
+			case 1:
+				if(btnValues[15] && btnValues[11] && !btnValues[3] && btnValues[0])
+				{
+					level++;
+					printf("correct \n");
+				}
+				else
+				{
+					genValue = false;
+					score -= 100;
+					printf("incorrect \n");
+				}
+				break;
+			case 0:
+				if(btnValues[15] && btnValues[11] && btnValues[3] && !btnValues[0])
+				{
+					level++;
+					printf("correct \n");
+				}
+				else
+				{
+					genValue = false;
+					score -= 100;
+					printf("incorrect \n");
+				}
+				break;
+			default:
+				//should not reach
+				break;
+			}	
+		}
 	}
-	
-	
-
-
-
-
-
-
-
-	//uint8_t *values;
-	// State loop
-	// while(true)//for (int i = 0; i < 10; i++)
-	// {	
-	// 	uint8_t data[4] = {0b00000000,0b00000000,0b00000000,0b00000000};
-	// 	printf("Looping mg2,\n");
-	// 	values = btnmatrix_inGetMutexValue();
-	// 	for (uint8_t section = 1; section < 5; section++) {
-	// 		for (uint8_t i = 1; i < 5; i++) {
-	// 			printf("value in loop:%d value:%d\n",section * 4 - i,values[section * 4 - i]);
-	// 			data[section-1] |= (values[section * 4 - i]) << (i-1);
-	// 		}
-	// 		printf("data[%d]: %d\n",section,data[section]);
-	// 	}
-	// 	btnmatrix_outSetMutexValue(data);
-
-	// }
 	return 0;
 }
