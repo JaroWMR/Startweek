@@ -11,7 +11,7 @@
 #define STACKSIZE 1024
 
 // Thread priority values (lower value is higher priority)
-#define TMAIN_PRIORITY 1
+#define TMAIN_PRIORITY 8
 
 void tmain(void) // Core thread
 {

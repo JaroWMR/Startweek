@@ -36,6 +36,7 @@ state_fn init_state, idle_state, mg1_state, mg2_state, mg3_state, mg4_state, mg5
 // State functions
 void init_state(struct state *state) {
 	printf("Initialization\n");
+	disableAllThreads();
 	uint8_t ret = 0;
 	ret = configure();
 	if(ret != 0)
@@ -46,7 +47,7 @@ void init_state(struct state *state) {
 		}
 	}
 	initialize();
-	disableAllThreads();
+	Startupdelay = 0;
 	state->next = idle_state;
 }
 
