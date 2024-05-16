@@ -1,4 +1,5 @@
 // Example of how to define locatoins (use latitude and longitude in units of nanodegrees)
+#define NR_OF_LOCS 2
 #define LAT_LOC_A 1
 #define LON_LOC_A 2
 #define LAT_LOC_B 3
