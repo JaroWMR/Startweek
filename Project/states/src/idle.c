@@ -45,8 +45,12 @@ int playIdle() {
 		// 		k_msleep(200);
 		// 	}
 		// }
-		setLedCircleDirWidth(180, 10);
-		k_msleep(200);
+		// setLedCircleDirWidth(180, 10);
+		// k_msleep(200);
+		for (int i = 0; i < 360; i++) {
+			setLedCircleDirWidth(i, 10);
+			k_msleep(40);
+		}
 	}
 
 
@@ -74,6 +78,10 @@ int playIdle() {
 }
 
 void setLedCircleDirWidth(unsigned dir, unsigned width) {
+	// NOTE: two issues currently
+	//	1. When the dir is low and width too great, the pixels below zero are not turend on (e.g. dir = 2, width = 10, the pixels below zero (359, 359 etc.) are not turned on)
+	//	2. Vice versa but when dir is great (near 359)
+
 	// dir must be in degrees (so zero through 359)
 	// widtb: total width of the 'band' in pixels
 	const int nrPixels = 64;
@@ -84,10 +92,10 @@ void setLedCircleDirWidth(unsigned dir, unsigned width) {
 	const int nrBits = 8;
 	uint8_t outputValues[8] = {0,0,0,0,0,0,0,0};	// Initialize to zero (all LEDs off)
 	for (int byteCount = 0; byteCount < nrBytes; byteCount++) {
-		for (int bitCount = 7; bitCount >= 0; bitCount--) {
-			int bitIndex = 8 * byteCount + (7-bitCount);
+		for (int bitCount = 0; bitCount < nrBits; bitCount++) {
+			int bitIndex = 8 * byteCount + bitCount;
 			if (bitIndex > centerPixel - (width/2) && bitIndex < centerPixel + (width / 2)) {
-				outputValues[byteCount] |= (1 << bitCount);
+				outputValues[byteCount] |= (1 << (7-bitCount));
 			}
 		}
 	}
