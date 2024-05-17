@@ -37,16 +37,16 @@ int playIdle() {
 			printf("Distance (rounded to whole meters): %d\n", (int)round(dist));
 			printf("Angle: %Lf\n", angle);
 		}
-		uint8_t ledData[8] = {0b0, 0b11111111, 0b11111111, 0b10101010, 0b0, 0b0, 0b0, 0b0};
-		//ledcircleSetMutexValue(ledData);
-		i++;
-		//setLedCircleDirWidth(i, 10);
-		ledcircleSetMutexValue(ledData);
-		k_msleep(500);
-		//for (int i = 0; i < 8; i++) {
-		//	ledData[i] = 0;
-		//}
-		//ledcircleSetMutexValue(ledData);
+		uint8_t ledData[8] = {0b0, 0b0, 0b0, 0b0, 0b0, 0b0, 0b0, 0b0};
+		// for (int i = 0; i < 8; i++) {
+		// 	for (int j = 7; j >= 0; j--) {
+		// 		ledData[i] |= (1 << j);
+		// 		ledcircleSetMutexValue(ledData);
+		// 		k_msleep(200);
+		// 	}
+		// }
+		setLedCircleDirWidth(180, 10);
+		k_msleep(200);
 	}
 
 
@@ -84,8 +84,8 @@ void setLedCircleDirWidth(unsigned dir, unsigned width) {
 	const int nrBits = 8;
 	uint8_t outputValues[8] = {0,0,0,0,0,0,0,0};	// Initialize to zero (all LEDs off)
 	for (int byteCount = 0; byteCount < nrBytes; byteCount++) {
-		for (int bitCount = 0; bitCount < nrBits; bitCount++) {
-			int bitIndex = 8 * byteCount + bitCount;
+		for (int bitCount = 7; bitCount >= 0; bitCount--) {
+			int bitIndex = 8 * byteCount + (7-bitCount);
 			if (bitIndex > centerPixel - (width/2) && bitIndex < centerPixel + (width / 2)) {
 				outputValues[byteCount] |= (1 << bitCount);
 			}
