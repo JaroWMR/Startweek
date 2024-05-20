@@ -11,7 +11,7 @@
 void getMg4Threads(char ***, unsigned *);
 
 int playMg4();
-#define AMOUNT_QUESTIONS 5
+#define AMOUNT_QUESTIONS 4
 #define AMOUNT_ANSWERS 3
 #define MAX_SIZE 32
 
