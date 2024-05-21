@@ -11,13 +11,13 @@
 #define zero 0
 
 // rotation matrix for magnetometer
-const float rotation_magno[3][3] = {
+const uint16_t rotation_magno[3][3] = {
 	{1, 0, 0},
 	{0, -1, 0},
 	{0, 0, -1}};
 
 // rotation matrix for accelometer
-const float rotation_accel[3][3] = {
+const uint16_t rotation_accel[3][3] = {
 	{0, 1, 0},
 	{1, 0, 0},
 	{0, 0, -1}};
@@ -52,16 +52,16 @@ const int16_t K3 = 446;
 const uint16_t MINDELTADIV = 1;
 
 uint8_t mapFloatToInt(float floatValue, int *intValue) {
-    // Define the range of the output integer (-1 to 1)
-    const int minOutput = -1;
-    const int maxOutput = 1;
+    // // Define the range of the output integer (-1 to 1)
+    // const int minOutput = -1;
+    // const int maxOutput = 1;
 
-    // Define the range of the input float (assumed to be between 0 and 1)
-    const float minInput = 0.0f;
-    const float maxInput = 1.0f;
+    // // Define the range of the input float (assumed to be between 0 and 1)
+    // const float minInput = 0.0f;
+    // const float maxInput = 1.0f;
 
-    // Map the input value to the output range
-    float mappedValue = minOutput + (maxOutput - minOutput) * ((floatValue - minInput) / (maxInput - minInput));
+    // // Map the input value to the output range
+    // float mappedValue = minOutput + (maxOutput - minOutput) * ((floatValue - minInput) / (maxInput - minInput));
 	*intValue = (int)(floatValue*32767);
 
     // Round the mapped value to the nearest integer
@@ -250,7 +250,7 @@ void implementLPFPsi()
 	if (tmpAngle < -18000)
 		tmpAngle += 36000;
 	/* Calculate the new low pass filtered angle */
-	tmpAngle = (int32_t)iLPPsi + ((ANGLE_LPF * tmpAngle) >> 15);
+	tmpAngle = (int32_t)iLPPsi + ((ANGLE_LPF * tmpAngle) >> 30);
 	/* Check that the angle remains in -180 to 180 deg bounds */
 	if (tmpAngle > 18000)
 		tmpAngle -= 36000;
@@ -276,7 +276,7 @@ void implementLPFPhi()
 	if (tmpAngle < -18000)
 		tmpAngle += 36000;
 	/* Calculate the new low pass filtered angle */
-	tmpAngle = (int32_t)iLPPhi + ((ANGLE_LPF * tmpAngle) >> 15);
+	tmpAngle = (int32_t)iLPPhi + ((ANGLE_LPF * tmpAngle) >> 30);
 	/* Check that the angle remains in -180 to 180 deg bounds */
 	if (tmpAngle > 18000)
 		tmpAngle -= 36000;
@@ -302,7 +302,7 @@ void implementLPFThe()
 	if (tmpAngle < -18000)
 		tmpAngle += 36000;
 	/* Calculate the new low pass filtered angle */
-	tmpAngle = (int32_t)iLPThe + ((ANGLE_LPF * tmpAngle) >> 15);
+	tmpAngle = (int32_t)iLPThe + ((ANGLE_LPF * tmpAngle) >> 30);
 	/* Check that the angle remains in -90 to 90 deg bounds */
 	if (tmpAngle > 9000)
 		tmpAngle = (18000 - tmpAngle);
@@ -328,7 +328,7 @@ void iecompass(int16_t iBpx, int16_t iBpy, int16_t iBpz,
 
 	/* calculate current roll angle Phi */
 	iPhi = iHundredAtan2Deg(iGpy, iGpz); /* Eq 13 */
-	implementLPFPhi();
+	//implementLPFPhi();
 	printf("roll/iPhi = %i\n", iPhi/100);
 	/* calculate sin and cosine of roll angle Phi */
 	iSin = iTrig(iGpy, iGpz); /* Eq 13: sin = opposite / hypotenuse */
@@ -340,7 +340,7 @@ void iecompass(int16_t iBpx, int16_t iBpy, int16_t iBpz,
 
 	/* calculate current pitch angle Theta */
 	iThe = iHundredAtan2Deg((int16_t)-iGpx, iGpz); /* Eq 15 */
-	implementLPFThe();
+	//implementLPFThe();
 	printf("pitch/iThe = %i\n", iThe/100);
 	/* restrict pitch angle to range -90 to 90 degrees */
 	if (iThe > 9000)
@@ -359,14 +359,14 @@ void iecompass(int16_t iBpx, int16_t iBpy, int16_t iBpz,
 
 	/* calculate current yaw = e-compass angle Psi */
 	iPsi = iHundredAtan2Deg((int16_t)-iBfy, iBfx); /* Eq 22 */
-	implementLPFPsi();
-	printf("yaw/iPsi = %i\n", iPsi/100);
+	//implementLPFPsi();
+	printf("yaw/iPsi = %i\n\n", iPsi/100);
 
 	*angle = iPsi;
 }
 
 // Function to perform matrix multiplication
-void multiplyMatrices(float result[3], const float matrix1[3][3], const float matrix2[3])
+void multiplyMatrices(int16_t result[3], const int16_t matrix1[3][3], const int16_t matrix2[3])
 {
 	int i, j;
 	for (i = 0; i < 3; ++i)
@@ -380,7 +380,7 @@ void multiplyMatrices(float result[3], const float matrix1[3][3], const float ma
 }
 
 // Function to rotate the x/y/z axis
-void rotate_data(float aMagnoData[3], float aAccelData[3])
+void rotate_data(int16_t aMagnoData[3], int16_t aAccelData[3])
 {
 	// printf("Original Data magno: ");
 	// for (int i = 0; i < 3; ++i)
@@ -396,7 +396,7 @@ void rotate_data(float aMagnoData[3], float aAccelData[3])
 	// }
 	// printf("\n");
 
-	float tempResult[3];
+	uint16_t tempResult[3];
 
 	// Apply rotations
 	multiplyMatrices(tempResult, rotation_magno, aMagnoData);
@@ -529,7 +529,7 @@ uint8_t magnetometer_exit(void)
  *         - 1: Magnetometer not initialized
  *         - 2: LIS3MDL Sensor sample update error
  */
-uint8_t magnetometer_get_magneto(float *aMagneto)
+uint8_t magnetometer_get_magneto(int16_t *aMagneto)
 {
 	struct sensor_value magn_xyz[3];
 
@@ -544,7 +544,8 @@ uint8_t magnetometer_get_magneto(float *aMagneto)
 
 	for (int i = 0; i < 3; i++)
 	{
-		aMagneto[i] = sensor_value_to_float(&magn_xyz[i]);
+		float floatValue = magn_xyz[i].val2;
+		aMagneto[i] = floatValue/1000000*32767;
 	}
 
 	aMagneto[0] -= X_OFFSET;
@@ -685,7 +686,7 @@ uint8_t gyroscope_exit(void)
  *
  * @return 0 if successful, 1 if the gyroscope was not initialized.
  */
-uint8_t gyroscope_get_acceleration(float aAcceleration[3])
+uint8_t gyroscope_get_acceleration(int16_t aAcceleration[3])
 {
 	if (!gyroscope_is_init)
 	{
@@ -700,7 +701,8 @@ uint8_t gyroscope_get_acceleration(float aAcceleration[3])
 
 	for (int i = 0; i < 3; i++)
 	{
-		aAcceleration[i] = sensor_value_to_float(&gyro_xyz[i]);
+		float floatValue = sensor_value_to_float(&gyro_xyz[i]);
+		aAcceleration[i] = floatValue*0.061*32767;
 	}
 
 	// printf("accel x:%f ms/2 y:%f ms/2 z:%f ms/2\n",
@@ -743,18 +745,18 @@ uint8_t gyroscope_get_gyro(float aGyro[3])
 
 uint8_t gyroCompass_get_heading(double *aHeading)
 {
-	float floatMagnetoValue[3], floatAccelValue[3];
-	int intMagnetoValue[3], intAccelValue[3];
+	int16_t MagnetoValue[3], AccelValue[3];
+	//int intMagnetoValue[3], intAccelValue[3];
 	int16_t angle;
-	magnetometer_get_magneto(floatMagnetoValue);
-	gyroscope_get_acceleration(floatAccelValue);
-	rotate_data(floatMagnetoValue, floatAccelValue);
-	for(int i = 0; i < 3; i++){
-		mapFloatToInt(floatMagnetoValue[i], &intMagnetoValue[i]);
-		mapFloatToInt(floatAccelValue[i], &intAccelValue[i]);
-	}
+	magnetometer_get_magneto(MagnetoValue);
+	gyroscope_get_acceleration(AccelValue);
+	rotate_data(MagnetoValue, AccelValue);
+	// for(int i = 0; i < 3; i++){
+	// 	mapFloatToInt(floatMagnetoValue[i], &intMagnetoValue[i]);
+	// 	mapFloatToInt(floatAccelValue[i], &intAccelValue[i]);
+	// }
 
-	iecompass(intMagnetoValue[0], intMagnetoValue[1], intMagnetoValue[2], intAccelValue[0], intAccelValue[1], intAccelValue[2], &angle);
+	iecompass(MagnetoValue[0], MagnetoValue[1], MagnetoValue[2], AccelValue[0], AccelValue[1], AccelValue[2], &angle);
 
 	// printf("Angle * 100 is: %i\n", angle);
 	// angle = angle * 0.01;

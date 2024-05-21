@@ -22,7 +22,7 @@ void tmain(void) // Core thread
 	double heading = 0;
 while(1){
 gyroCompass_get_heading(&heading);
-k_sleep(K_MSEC(200));
+k_sleep(K_MSEC(500));
 }
 	
 	magnetometer_exit();
