@@ -29,17 +29,17 @@ static const struct device *gyroscope;
 static bool gyroscope_is_init = false;
 
 /* roll pitch and yaw angles computed by iecompass */
-static int16_t iPhi, iThe, iPsi;
+static int32_t iPhi, iThe, iPsi;
 /* magnetic field readings corrected for hard iron effects and PCB orientation */
 static int16_t iBfx, iBfy, iBfz;
 /* hard iron estimate */
 static int16_t iVx, iVy, iVz;
 
-int32_t tmpAngle;		   /* temporary angle*100 deg: range -36000 to 36000 */
-static int16_t iLPPsi;	   /* low pass filtered angle*100 deg: range -18000 to 18000 */
-static int16_t iLPPhi;	   /* low pass filtered angle*100 deg: range -18000 to 18000 */
-static int16_t iLPThe;	   /* low pass filtered angle*100 deg: range -18000 to 18000 */
-static uint16_t ANGLE_LPF = 32768/5; /* low pass filter: set to 32768 / N for N samples averaging */
+int32_t tmpAngle;					   /* temporary angle*100 deg: range -36000 to 36000 */
+static int16_t iLPPsi;				   /* low pass filtered angle*100 deg: range -18000 to 18000 */
+static int16_t iLPPhi;				   /* low pass filtered angle*100 deg: range -18000 to 18000 */
+static int16_t iLPThe;				   /* low pass filtered angle*100 deg: range -18000 to 18000 */
+static uint16_t ANGLE_LPF = 32768 / 5; /* low pass filter: set to 32768 / N for N samples averaging */
 
 #define MINDELTATRIG 1
 
@@ -51,33 +51,34 @@ const int16_t K3 = 446;
 /* Final step size for iDivide */
 const uint16_t MINDELTADIV = 1;
 
-uint8_t mapFloatToInt(float floatValue, int *intValue) {
-    // // Define the range of the output integer (-1 to 1)
-    // const int minOutput = -1;
-    // const int maxOutput = 1;
+uint8_t mapFloatToInt(float floatValue, int *intValue)
+{
+	// // Define the range of the output integer (-1 to 1)
+	// const int minOutput = -1;
+	// const int maxOutput = 1;
 
-    // // Define the range of the input float (assumed to be between 0 and 1)
-    // const float minInput = 0.0f;
-    // const float maxInput = 1.0f;
+	// // Define the range of the input float (assumed to be between 0 and 1)
+	// const float minInput = 0.0f;
+	// const float maxInput = 1.0f;
 
-    // // Map the input value to the output range
-    // float mappedValue = minOutput + (maxOutput - minOutput) * ((floatValue - minInput) / (maxInput - minInput));
-	*intValue = (int)(floatValue*32767);
+	// // Map the input value to the output range
+	// float mappedValue = minOutput + (maxOutput - minOutput) * ((floatValue - minInput) / (maxInput - minInput));
+	*intValue = (int)(floatValue * 32767);
 
-    // Round the mapped value to the nearest integer
-    //int roundedValue = (int)(mappedValue + 0.5f);
+	// Round the mapped value to the nearest integer
+	// int roundedValue = (int)(mappedValue + 0.5f);
 
-    // Clamp the result to ensure it stays within the range [-1, 1]
-    // if (roundedValue < minOutput) {
+	// Clamp the result to ensure it stays within the range [-1, 1]
+	// if (roundedValue < minOutput) {
 	// 	*intValue = minOutput;
-    //     return 0;
-    // } else if (roundedValue > maxOutput) {
+	//     return 0;
+	// } else if (roundedValue > maxOutput) {
 	// 	*intValue = maxOutput;
-    //     return 0;
-    // } else {
+	//     return 0;
+	// } else {
 	// 	*intValue = roundedValue;
-    //     return 0;
-    // }
+	//     return 0;
+	// }
 	return 0;
 }
 
@@ -276,17 +277,12 @@ void implementLPFPhi()
 	if (tmpAngle < -18000)
 		tmpAngle += 36000;
 	/* Calculate the new low pass filtered angle */
-	tmpAngle = (int32_t)iLPPhi + ((ANGLE_LPF * tmpAngle) >> 30);
+	tmpAngle = (int32_t)iLPPhi + ((ANGLE_LPF * tmpAngle) >> 5);
 	/* Check that the angle remains in -180 to 180 deg bounds */
 	if (tmpAngle > 18000)
 		tmpAngle -= 36000;
 	if (tmpAngle < -18000)
 		tmpAngle += 36000;
-
-	// if (tmpAngle > 9000)
-	// 	tmpAngle = (Int16)(18000 - tmpAngle);
-	// if (tmpAngle < -9000)
-	// 	tmpAngle = (Int16)(-18000 - tmpAngle);
 
 	/* Store the correctly bounded low pass filtered angle */
 	iLPPhi = (int16_t)tmpAngle;
@@ -302,7 +298,7 @@ void implementLPFThe()
 	if (tmpAngle < -18000)
 		tmpAngle += 36000;
 	/* Calculate the new low pass filtered angle */
-	tmpAngle = (int32_t)iLPThe + ((ANGLE_LPF * tmpAngle) >> 30);
+	tmpAngle = (int32_t)iLPThe + ((ANGLE_LPF * tmpAngle) >> 5);
 	/* Check that the angle remains in -90 to 90 deg bounds */
 	if (tmpAngle > 9000)
 		tmpAngle = (18000 - tmpAngle);
@@ -328,8 +324,13 @@ void iecompass(int16_t iBpx, int16_t iBpy, int16_t iBpz,
 
 	/* calculate current roll angle Phi */
 	iPhi = iHundredAtan2Deg(iGpy, iGpz); /* Eq 13 */
-	//implementLPFPhi();
-	printf("roll/iPhi = %i\n", iPhi/100);
+	iPhi -= 18000;						 // 180 degree offset
+	if (iPhi > 18000)					// make sure it stays between -180 and 180 degrees
+		iPhi -= 36000;
+	if (iPhi < -18000)
+		iPhi += 36000;
+	// implementLPFPhi();
+	printf("roll/iPhi = %i\n", iPhi / 100);
 	/* calculate sin and cosine of roll angle Phi */
 	iSin = iTrig(iGpy, iGpz); /* Eq 13: sin = opposite / hypotenuse */
 	iCos = iTrig(iGpz, iGpy); /* Eq 13: cos = adjacent / hypotenuse */
@@ -340,8 +341,8 @@ void iecompass(int16_t iBpx, int16_t iBpy, int16_t iBpz,
 
 	/* calculate current pitch angle Theta */
 	iThe = iHundredAtan2Deg((int16_t)-iGpx, iGpz); /* Eq 15 */
-	//implementLPFThe();
-	printf("pitch/iThe = %i\n", iThe/100);
+	// implementLPFThe();
+	printf("pitch/iThe = %i\n", iThe / 100);
 	/* restrict pitch angle to range -90 to 90 degrees */
 	if (iThe > 9000)
 		iThe = (int16_t)(18000 - iThe);
@@ -359,8 +360,8 @@ void iecompass(int16_t iBpx, int16_t iBpy, int16_t iBpz,
 
 	/* calculate current yaw = e-compass angle Psi */
 	iPsi = iHundredAtan2Deg((int16_t)-iBfy, iBfx); /* Eq 22 */
-	//implementLPFPsi();
-	printf("yaw/iPsi = %i\n\n", iPsi/100);
+	// implementLPFPsi();
+	printf("yaw/iPsi = %i\n\n", iPsi / 100);
 
 	*angle = iPsi;
 }
@@ -400,12 +401,14 @@ void rotate_data(int16_t aMagnoData[3], int16_t aAccelData[3])
 
 	// Apply rotations
 	multiplyMatrices(tempResult, rotation_magno, aMagnoData);
-	for(int i = 0; i < 3; i++){
+	for (int i = 0; i < 3; i++)
+	{
 		aMagnoData[i] = tempResult[i];
 	}
 
 	multiplyMatrices(tempResult, rotation_accel, aAccelData);
-		for(int i = 0; i < 3; i++){
+	for (int i = 0; i < 3; i++)
+	{
 		aAccelData[i] = tempResult[i];
 	}
 
@@ -545,7 +548,7 @@ uint8_t magnetometer_get_magneto(int16_t *aMagneto)
 	for (int i = 0; i < 3; i++)
 	{
 		float floatValue = magn_xyz[i].val2;
-		aMagneto[i] = floatValue/1000000*32767;
+		aMagneto[i] = floatValue / 1000000 * 32767;
 	}
 
 	aMagneto[0] -= X_OFFSET;
@@ -702,7 +705,7 @@ uint8_t gyroscope_get_acceleration(int16_t aAcceleration[3])
 	for (int i = 0; i < 3; i++)
 	{
 		float floatValue = sensor_value_to_float(&gyro_xyz[i]);
-		aAcceleration[i] = floatValue*0.061*32767;
+		aAcceleration[i] = floatValue * 0.061 * 32767;
 	}
 
 	// printf("accel x:%f ms/2 y:%f ms/2 z:%f ms/2\n",
@@ -746,7 +749,7 @@ uint8_t gyroscope_get_gyro(float aGyro[3])
 uint8_t gyroCompass_get_heading(double *aHeading)
 {
 	int16_t MagnetoValue[3], AccelValue[3];
-	//int intMagnetoValue[3], intAccelValue[3];
+	// int intMagnetoValue[3], intAccelValue[3];
 	int16_t angle;
 	magnetometer_get_magneto(MagnetoValue);
 	gyroscope_get_acceleration(AccelValue);
