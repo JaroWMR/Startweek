@@ -32,8 +32,6 @@ static bool gyroscope_is_init = false;
 static int32_t iPhi, iThe, iPsi;
 /* magnetic field readings corrected for hard iron effects and PCB orientation */
 static int16_t iBfx, iBfy, iBfz;
-/* hard iron estimate */
-static int16_t iVx, iVy, iVz;
 
 int32_t tmpAngle;					   /* temporary angle*100 deg: range -36000 to 36000 */
 static int16_t iLPPsi;				   /* low pass filtered angle*100 deg: range -18000 to 18000 */
@@ -50,37 +48,6 @@ const int16_t K3 = 446;
 
 /* Final step size for iDivide */
 const uint16_t MINDELTADIV = 1;
-
-uint8_t mapFloatToInt(float floatValue, int *intValue)
-{
-	// // Define the range of the output integer (-1 to 1)
-	// const int minOutput = -1;
-	// const int maxOutput = 1;
-
-	// // Define the range of the input float (assumed to be between 0 and 1)
-	// const float minInput = 0.0f;
-	// const float maxInput = 1.0f;
-
-	// // Map the input value to the output range
-	// float mappedValue = minOutput + (maxOutput - minOutput) * ((floatValue - minInput) / (maxInput - minInput));
-	*intValue = (int)(floatValue * 32767);
-
-	// Round the mapped value to the nearest integer
-	// int roundedValue = (int)(mappedValue + 0.5f);
-
-	// Clamp the result to ensure it stays within the range [-1, 1]
-	// if (roundedValue < minOutput) {
-	// 	*intValue = minOutput;
-	//     return 0;
-	// } else if (roundedValue > maxOutput) {
-	// 	*intValue = maxOutput;
-	//     return 0;
-	// } else {
-	// 	*intValue = roundedValue;
-	//     return 0;
-	// }
-	return 0;
-}
 
 /* Function to calculate ir = iy / ix with iy <= ix, and ix, iy both > 0 */
 static int16_t iDivide(int16_t iy, int16_t ix)
@@ -190,13 +157,19 @@ static int16_t iTrig(int16_t ix, int16_t iy)
 
 	/* correct for pathological case: ix==iy==0 */
 	if ((ix == 0) && (iy == 0))
+	{
 		ix = iy = 1;
+	}
 
 	/* check for -32768 which is not handled correctly */
 	if (ix == -32768)
+	{
 		ix = -32767;
+	}
 	if (iy == -32768)
+	{
 		iy = -32767;
+	}
 
 	/* store the sign for later use. algorithm assumes x is positive for convenience */
 	isignx = 1;
@@ -217,8 +190,8 @@ static int16_t iTrig(int16_t ix, int16_t iy)
 	}
 
 	/* calculate ix*ix and the hypotenuse squared */
-	ixsq = (uint32_t)(ix * ix);			 /* ixsq=ix*ix: 0 to 32767^2 = 1073676289 */
-	ihypsq = (uint32_t)(ixsq + iy * iy); /* ihypsq=(ix*ix+iy*iy) 0 to 2*32767*32767=2147352578 */
+	ixsq = ((int32_t)ix * (int32_t)ix);			 /* ixsq=ix*ix: 0 to 32767^2 = 1073676289 */
+	ihypsq = (ixsq + (int32_t)iy * (int32_t)iy); /* ihypsq=(ix*ix+iy*iy) 0 to 2*32767*32767=2147352578 */
 
 	/* set result r to zero and binary search step to 16384 = 0.5 */
 	ir = 0;
@@ -229,7 +202,7 @@ static int16_t iTrig(int16_t ix, int16_t iy)
 	{
 		/* generate new candidate solution for ir and test if we are too high or too low */
 		/* itmp=(ir+delta)^2, range 0 to 32767*32767 = 2^30 = 1073676289 */
-		itmp = ((uint32_t)(ir + idelta) * (ir + idelta));
+		itmp = (((int32_t)ir + (int32_t)idelta) * ((int32_t)ir + (int32_t)idelta));
 		/* itmp=(ir+delta)^2*(ix*ix+iy*iy), range 0 to 2^31 = 2147221516 */
 		itmp = (itmp >> 15) * (ihypsq >> 15);
 		if (itmp <= ixsq)
@@ -242,17 +215,18 @@ static int16_t iTrig(int16_t ix, int16_t iy)
 }
 
 /* Implement a modulo arithmetic exponential low pass filter on the yaw angle */
+/*
 void implementLPFPsi()
 {
-	/* Compute the change in angle modulo 360 degrees */
+	/* Compute the change in angle modulo 360 degrees 
 	tmpAngle = (int32_t)iPsi - (int32_t)iLPPsi;
 	if (tmpAngle > 18000)
 		tmpAngle -= 36000;
 	if (tmpAngle < -18000)
 		tmpAngle += 36000;
-	/* Calculate the new low pass filtered angle */
+	/* Calculate the new low pass filtered angle 
 	tmpAngle = (int32_t)iLPPsi + ((ANGLE_LPF * tmpAngle) >> 30);
-	/* Check that the angle remains in -180 to 180 deg bounds */
+	/* Check that the angle remains in -180 to 180 deg bounds 
 	if (tmpAngle > 18000)
 		tmpAngle -= 36000;
 	if (tmpAngle < -18000)
@@ -263,69 +237,71 @@ void implementLPFPsi()
 	// if (tmpAngle < -9000)
 	// 	tmpAngle = (Int16)(-18000 - tmpAngle);
 
-	/* Store the correctly bounded low pass filtered angle */
+	/* Store the correctly bounded low pass filtered angle 
 	iLPPsi = (int16_t)tmpAngle;
-}
+} */
 
 /* Implement a modulo arithmetic exponential low pass filter on the roll angle */
+/*
 void implementLPFPhi()
 {
-	/* Compute the change in angle modulo 360 degrees */
+	/* Compute the change in angle modulo 360 degrees 
 	tmpAngle = (int32_t)iPhi - (int32_t)iLPPhi;
 	if (tmpAngle > 18000)
 		tmpAngle -= 36000;
 	if (tmpAngle < -18000)
 		tmpAngle += 36000;
-	/* Calculate the new low pass filtered angle */
+	/* Calculate the new low pass filtered angle 
 	tmpAngle = (int32_t)iLPPhi + ((ANGLE_LPF * tmpAngle) >> 5);
-	/* Check that the angle remains in -180 to 180 deg bounds */
+	/* Check that the angle remains in -180 to 180 deg bounds 
 	if (tmpAngle > 18000)
 		tmpAngle -= 36000;
 	if (tmpAngle < -18000)
 		tmpAngle += 36000;
 
-	/* Store the correctly bounded low pass filtered angle */
+	/* Store the correctly bounded low pass filtered angle 
 	iLPPhi = (int16_t)tmpAngle;
-}
+} */
 
 /* Implement a modulo arithmetic exponential low pass filter on the yaw angle */
+/*
 void implementLPFThe()
 {
-	/* Compute the change in angle modulo 360 degrees */
+	// Compute the change in angle modulo 360 degrees 
 	tmpAngle = (int32_t)iThe - (int32_t)iLPThe;
 	if (tmpAngle > 18000)
 		tmpAngle -= 36000;
 	if (tmpAngle < -18000)
 		tmpAngle += 36000;
-	/* Calculate the new low pass filtered angle */
+	// Calculate the new low pass filtered angle 
 	tmpAngle = (int32_t)iLPThe + ((ANGLE_LPF * tmpAngle) >> 5);
-	/* Check that the angle remains in -90 to 90 deg bounds */
+	// Check that the angle remains in -90 to 90 deg bounds 
 	if (tmpAngle > 9000)
 		tmpAngle = (18000 - tmpAngle);
 	if (tmpAngle < -9000)
 		tmpAngle = (-18000 - tmpAngle);
 
-	/* Store the correctly bounded low pass filtered angle */
+	// Store the correctly bounded low pass filtered angle 
 	iLPThe = (int16_t)tmpAngle;
 }
+*/
 
 void iecompass(int16_t iBpx, int16_t iBpy, int16_t iBpz,
 			   int16_t iGpx, int16_t iGpy, int16_t iGpz, int16_t *angle)
 {
+	printf("iBpx: %i, iBpy: %i, iBpz: %i\n", iBpx, iBpy, iBpz);
+	printf("iGpx: %i, iGpy: %i, iGpz: %i\n", iGpx, iGpy, iGpz);
 	/* stack variables */
 	/* iBpx, iBpy, iBpz: the three components of the magnetometer sensor */
 	/* iGpx, iGpy, iGpz: the three components of the accelerometer sensor */
 	/* local variables */
 	int16_t iSin, iCos; /* sine and cosine */
-	/* subtract the hard iron offset */
-	// iBpx -= iVx; /* see Eq 16 */
-	// iBpy -= iVy; /* see Eq 16 */
-	// iBpz -= iVz; /* see Eq 16 */
+
 
 	/* calculate current roll angle Phi */
 	iPhi = iHundredAtan2Deg(iGpy, iGpz); /* Eq 13 */
 	iPhi -= 18000;						 // 180 degree offset
-	if (iPhi > 18000)					// make sure it stays between -180 and 180 degrees
+	if (iPhi > 18000)					 // make sure it stays between -180 and 180 degrees
 		iPhi -= 36000;
 	if (iPhi < -18000)
 		iPhi += 36000;
@@ -334,10 +310,12 @@ void iecompass(int16_t iBpx, int16_t iBpy, int16_t iBpz,
 	/* calculate sin and cosine of roll angle Phi */
 	iSin = iTrig(iGpy, iGpz); /* Eq 13: sin = opposite / hypotenuse */
 	iCos = iTrig(iGpz, iGpy); /* Eq 13: cos = adjacent / hypotenuse */
+	printf("iSin = %i\niCos = %i\n", iSin, iCos);
 	/* de-rotate by roll angle Phi */
 	iBfy = (int16_t)((iBpy * iCos - iBpz * iSin) >> 15); /* Eq 19 y component */
 	iBpz = (int16_t)((iBpy * iSin + iBpz * iCos) >> 15); /* Bpy*sin(Phi)+Bpz*cos(Phi)*/
 	iGpz = (int16_t)((iGpy * iSin + iGpz * iCos) >> 15); /* Eq 15 denominator */
+	printf("iBfy: %i, iBpz: %i, iGpz: %i\n", iBfy, iBpz, iGpz);
 
 	/* calculate current pitch angle Theta */
 	iThe = iHundredAtan2Deg((int16_t)-iGpx, iGpz); /* Eq 15 */
@@ -357,13 +335,14 @@ void iecompass(int16_t iBpx, int16_t iBpy, int16_t iBpz,
 	/* de-rotate by pitch angle Theta */
 	iBfx = (int16_t)((iBpx * iCos + iBpz * iSin) >> 15);  /* Eq 19: x component */
 	iBfz = (int16_t)((-iBpx * iSin + iBpz * iCos) >> 15); /* Eq 19: z component */
+	printf("iBfx: %i, iBfz: %i\n", iBfx, iBfz);
 
 	/* calculate current yaw = e-compass angle Psi */
 	iPsi = iHundredAtan2Deg((int16_t)-iBfy, iBfx); /* Eq 22 */
 	// implementLPFPsi();
-	printf("yaw/iPsi = %i\n\n", iPsi / 100);
+	printf("yaw/iPsi = %d\n\n", iPsi / 100);
 
-	*angle = iPsi;
+	*angle = iPsi / 100;
 }
 
 // Function to perform matrix multiplication
@@ -381,22 +360,8 @@ void multiplyMatrices(int16_t result[3], const int16_t matrix1[3][3], const int1
 }
 
 // Function to rotate the x/y/z axis
-void rotate_data(int16_t aMagnoData[3], int16_t aAccelData[3])
+uint8_t rotate_data(int16_t aMagnoData[3], int16_t aAccelData[3])
 {
-	// printf("Original Data magno: ");
-	// for (int i = 0; i < 3; ++i)
-	// {
-	// 	printf("%f ", aMagnoData[i]);
-	// }
-	// printf("\n");
-
-	// printf("Original Data accel: ");
-	// for (int i = 0; i < 3; ++i)
-	// {
-	// 	printf("%f ", aAccelData[i]);
-	// }
-	// printf("\n");
-
 	uint16_t tempResult[3];
 
 	// Apply rotations
@@ -411,21 +376,6 @@ void rotate_data(int16_t aMagnoData[3], int16_t aAccelData[3])
 	{
 		aAccelData[i] = tempResult[i];
 	}
-
-	// Print rotated data
-	// printf("Rotated Data magno: ");
-	// for (int i = 0; i < 3; ++i)
-	// {
-	// 	printf("%f ", aMagnoData[i]);
-	// }
-	// printf("\n");
-
-	// printf("Rotated Data accel: ");
-	// for (int i = 0; i < 3; ++i)
-	// {
-	// 	printf("%f ", aAccelData[i]);
-	// }
-	// printf("\n");
 
 	return 0;
 }
@@ -705,7 +655,7 @@ uint8_t gyroscope_get_acceleration(int16_t aAcceleration[3])
 	for (int i = 0; i < 3; i++)
 	{
 		float floatValue = sensor_value_to_float(&gyro_xyz[i]);
-		aAcceleration[i] = floatValue * 0.061 * 32767;
+		aAcceleration[i] = floatValue / 19.6 * 32767;
 	}
 
 	// printf("accel x:%f ms/2 y:%f ms/2 z:%f ms/2\n",
@@ -749,20 +699,13 @@ uint8_t gyroscope_get_gyro(float aGyro[3])
 uint8_t gyroCompass_get_heading(double *aHeading)
 {
 	int16_t MagnetoValue[3], AccelValue[3];
-	// int intMagnetoValue[3], intAccelValue[3];
 	int16_t angle;
 	magnetometer_get_magneto(MagnetoValue);
 	gyroscope_get_acceleration(AccelValue);
 	rotate_data(MagnetoValue, AccelValue);
-	// for(int i = 0; i < 3; i++){
-	// 	mapFloatToInt(floatMagnetoValue[i], &intMagnetoValue[i]);
-	// 	mapFloatToInt(floatAccelValue[i], &intAccelValue[i]);
-	// }
 
 	iecompass(MagnetoValue[0], MagnetoValue[1], MagnetoValue[2], AccelValue[0], AccelValue[1], AccelValue[2], &angle);
 
-	// printf("Angle * 100 is: %i\n", angle);
-	// angle = angle * 0.01;
 	// printf("Angle is: %i\n\n", angle);
 	return 0;
 }
