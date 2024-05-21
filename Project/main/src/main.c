@@ -18,20 +18,20 @@ void tmain(void) // Core thread
 	printf("Main\n");
 	// startStatemachine();
 	magnetometer_init();
+	gyroscope_init();
 	double heading = 0;
-	while (1)
-	{
-
-		magnetometer_get_heading(&heading);
-		//printf("heading = %.2f\n", heading);
-		k_sleep(K_MSEC(1000));
-	}
+while(1){
+gyroCompass_get_heading(&heading);
+k_sleep(K_MSEC(200));
+}
+	
+	magnetometer_exit();
+	gyroscope_exit();
 
 	// double gyro[3];
-	// gyroscope_init();
+	
 	// gyroscope_get_acceleration(gyro);
 	// gyroscope_get_gyro(gyro);
-	// gyroscope_exit();
 }
 
 // Define the threads

@@ -50,6 +50,9 @@
 		"cmake.configureOnOpen": false,
 
 		"files.associations": {
+			"gyrocompass.h": "c",
+			"stdio.h": "c",
+			"sensor.h": "c"
 		},
 
 		// The number of spaces a tab is equal to. This setting is overridden
