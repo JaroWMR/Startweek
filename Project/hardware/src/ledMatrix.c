@@ -104,7 +104,7 @@ int8_t ledMatrixInit ()
  * Returns a 2 if the Initialiazation has not been perfomed.
  * Returns a 3 if the Configuration and the Initialiazation has not been perfomed.
  */ 
-int8_t ledMatrixSetLeds(int16_t data[LEDMATRIXROWS])
+int8_t ledMatrixSet(int16_t data[LEDMATRIXROWS])
 {
 	for (size_t row = 0; row < LEDMATRIXROWS; row++)
 	{
@@ -129,7 +129,7 @@ int8_t ledMatrixSetLeds(int16_t data[LEDMATRIXROWS])
 		gpio_pin_set_dt(&ledMatrixMuxD,(row & 0x8));
 
 		//TODO: determine this k_sleep delay
-		k_sleep(K_USEC(100));
+		k_sleep(K_USEC(1000));
 	}
 	return 0;
 }

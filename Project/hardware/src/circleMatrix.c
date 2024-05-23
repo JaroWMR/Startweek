@@ -58,7 +58,7 @@ bool circleMatrixConfig()
  * 
  * @return Returns a 0 on succes and a 1 on error.
  */ 
-int8_t circleMatrixInit ()
+uint8_t circleMatrixInit ()
 {
 	uint8_t ret = 0;
 	ret += gpio_pin_set_dt(&circleMatrixShiftDataIn,LOW);
@@ -102,7 +102,7 @@ int8_t circleMatrixInit ()
  * Returns a 2 if the Initialiazation has not been perfomed.
  * Returns a 3 if the Configuration and the Initialiazation has not been perfomed.
  */ 
-int8_t circleMatrixSetLeds(int8_t data[CIRCLEMATRIXROWS])
+uint8_t circleMatrixSet(uint8_t data[CIRCLEMATRIXROWS])
 {
 	for (size_t row = 0; row < CIRCLEMATRIXROWS; row++)
 	{
@@ -126,7 +126,7 @@ int8_t circleMatrixSetLeds(int8_t data[CIRCLEMATRIXROWS])
 		gpio_pin_set_dt(&circleMatrixMuxC,(row & 0x4));
 
 		//TODO: determine this k_sleep delay
-		k_sleep(K_USEC(100));
+		k_sleep(K_USEC(2000));
 	}
 	return 0;
 }

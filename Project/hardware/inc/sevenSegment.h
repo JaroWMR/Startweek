@@ -27,7 +27,6 @@ static const struct gpio_dt_spec sevenSegmentMuxDig4 	= GPIO_DT_SPEC_GET(DT_ALIA
 
 bool sevenSegmentConfig();
 uint8_t sevenSegmentInit();
-void sevenSegmentOneSegment(char value,bool dp);
 uint8_t sevenSegmentSet(char input[4],uint8_t dpPosition);
 
 #endif // SEVEN_SEGMENT_H
