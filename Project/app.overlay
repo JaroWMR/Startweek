@@ -119,20 +119,16 @@
 				pinmux = <STM32_PINMUX('f', 11, AF10)>;
 				status = "okay";
 			};
-			tim1_ch1_pe9: tim1_ch1_pe9 {
-				pinmux = <STM32_PINMUX('e', 9, AF1)>;
+			tim2_ch3_pb10: tim2_ch3_pb10{
+				pinmux = <STM32_PINMUX('b', 10, AF1)>;
 				status = "okay";
 			};
-			tim1_ch2_pe11: tim1_ch2_pe11 {
-				pinmux = <STM32_PINMUX('e', 11, AF1)>;
+			tim4_ch1_pd12: tim4_ch1_pd12{
+				pinmux = <STM32_PINMUX('d', 12, AF2)>;
 				status = "okay";
 			};
-			tim1_ch3_pe13: tim1_ch3_pe13 {
-				pinmux = <STM32_PINMUX('e', 13, AF1)>;
-				status = "okay";
-			};
-			tim1_ch4_pe14: tim1_ch4_pe14 {
-				pinmux = <STM32_PINMUX('e', 14, AF1)>;
+			tim5_ch2_pa1: tim5_ch2_pa1{
+				pinmux = <STM32_PINMUX('a', 1, AF2)>;
 				status = "okay";
 			};
 		};
@@ -452,7 +448,9 @@
 		lcddisplayd2 = &LCD_Display_D2;
 		lcddisplayd1 = &LCD_Display_D1;
 		lcddisplayd0 = &LCD_Display_D0;
-		buzzer=&buzzer;
+		buzzer1=&buzzer1;
+		buzzer2=&buzzer2;
+		buzzer3=&buzzer3;
 		3dcompassdataready = &data_ready_3d_compass;
 		3dcompassintterupt = &interupt_3d_compass;
 	};
@@ -465,11 +463,16 @@
 	pwmdevs {
 		compatible = "pwm-leds";
 		status = "okay";
-		buzzer: buzzer_pwm {
-			pwms = 	<&pwm1 1 0 PWM_POLARITY_NORMAL>;
-			// <&pwm1 2 0 PWM_POLARITY_NORMAL>,
-			// <&pwm1 3 0 PWM_POLARITY_NORMAL>,
-			// <&pwm1 4 0 PWM_POLARITY_NORMAL>;
+		buzzer1: buzzer_pwm1 {
+			pwms = 	<&pwm1 2 0 PWM_POLARITY_NORMAL>;
+			status = "okay";
+		};
+		buzzer2: buzzer_pwm2 {
+			pwms = 	<&pwm2 3 0 PWM_POLARITY_NORMAL>;
+			status = "okay";
+		};
+		buzzer3: buzzer_pwm3 {
+			pwms = 	<&pwm3 1 0 PWM_POLARITY_NORMAL>;
 			status = "okay";
 		};
 	};
@@ -550,14 +553,50 @@
 		};
 };
 
-&timers1{
+// &timers1{
+// 	status = "okay";
+// 	st,prescaler = < 0x140 >; 
+// 	pwm1: pwm{
+// 		compatible = "st,stm32-pwm";
+// 		status = "okay";
+// 		#pwm-cells = < 0x3 >;
+// 		pinctrl-0 = < &tim1_ch1_pe9>;
+// 		pinctrl-names = "default";
+// 	};
+// };
+
+&timers2{
+	status = "okay";
+	st,prescaler = < 0x140 >; 
+	pwm2: pwm{
+		compatible = "st,stm32-pwm";
+		status = "okay";
+		#pwm-cells = < 0x3 >;
+		pinctrl-0 = < &tim2_ch3_pb10>;
+		pinctrl-names = "default";
+	};
+};
+
+&timers4{
+	status = "okay";
+	st,prescaler = < 0x140 >; 
+	pwm3: pwm{
+		compatible = "st,stm32-pwm";
+		status = "okay";
+		#pwm-cells = < 0x3 >;
+		pinctrl-0 = < &tim4_ch1_pd12>;
+		pinctrl-names = "default";
+	};
+};
+
+&timers5{
 	status = "okay";
 	st,prescaler = < 0x140 >; 
 	pwm1: pwm{
 		compatible = "st,stm32-pwm";
 		status = "okay";
 		#pwm-cells = < 0x3 >;
-		pinctrl-0 = < &tim1_ch1_pe9 &tim1_ch2_pe11 &tim1_ch3_pe13 &tim1_ch4_pe14>;
+		pinctrl-0 = < &tim5_ch2_pa1>;
 		pinctrl-names = "default";
 	};
 };
