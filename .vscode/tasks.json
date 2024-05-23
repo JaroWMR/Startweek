@@ -24,6 +24,29 @@
 			 ],
 			"problemMatcher": [ "$gcc" ]
 		},
+		{
+			"label": "West Build Test",
+			"type": "process",
+			"group": "build",
+			"command": "${config:west}",
+			"args": [
+				"build",
+				"-p",
+				"always",
+				"-d",
+				"${config:app.build_dir}",
+				"-b",
+				"${config:bsp.board}${config:bsp.cpu}",
+				"${config:app_boot.name}",
+				"${config:app.zephyr_config}",
+				"${config:app.zephyr_dtc_overlay}",
+				"${config:app_boot.compile_args}"
+			],
+			"dependsOn": [
+				// "Clean Build",
+			 ],
+			"problemMatcher": [ "$gcc" ]
+		},
 		// {
 		// 	"label": "West flash",
 		// 	"type": "process",

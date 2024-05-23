@@ -11,7 +11,7 @@
 #include <zephyr/kernel.h>
 #include <stdio.h>
 #include "threads.h"
-#include "buttonMatrix.h"
+#include "lcd.h"
 #include <zephyr/random/random.h>
 
 #define mg2ThreadCount 4

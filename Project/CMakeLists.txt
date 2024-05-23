@@ -9,7 +9,7 @@ project(blinky)
 file(GLOB SRC_HARDWARE_SOURCES 			"hardware/src/*.c")
 file(GLOB SRC_HARDWARECONTROL_SOURCES 	"hardwareControl/src/*.c")
 file(GLOB SRC_MAIN_SOURCES 				"main/src/*.c")
-file(GLOB SRC_STATES_SOURCES 		"states/src/*.c")
+file(GLOB SRC_STATES_SOURCES 			"states/src/*.c")
 
 # Add your source files
 target_sources(app PRIVATE 

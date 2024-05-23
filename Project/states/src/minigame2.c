@@ -1,6 +1,6 @@
 #include "minigame2.h"
 
-K_TIMER_DEFINE(secTimer, NULL, NULL);
+K_TIMER_DEFINE(secTimerMg2, NULL, NULL);
 
 char *mg2Threads[mg2ThreadCount] = {"startbtn", "btnmatrix_in", "btnmatrix_out", "buzzers"};
 
@@ -52,15 +52,15 @@ void showLevel(uint8_t level,uint8_t sequence[8]){
 	{
 		showButton(sequence[i]);
 		printf_minigame2("sequence[%d]: %d\n",i,sequence[i]);
-		k_timer_start(&secTimer, K_MSEC(1000), K_NO_WAIT);
-		while (!(k_timer_status_get(&secTimer) > 0)){}	
+		k_timer_start(&secTimerMg2, K_MSEC(1000), K_NO_WAIT);
+		while (!(k_timer_status_get(&secTimerMg2) > 0)){}	
 		showButton(5);
-		k_timer_start(&secTimer, K_MSEC(1000), K_NO_WAIT);
-		while (!(k_timer_status_get(&secTimer) > 0)){}	
+		k_timer_start(&secTimerMg2, K_MSEC(1000), K_NO_WAIT);
+		while (!(k_timer_status_get(&secTimerMg2) > 0)){}	
 	}
 	showButton(6);
-	k_timer_start(&secTimer, K_MSEC(1000), K_NO_WAIT);
-	while (!(k_timer_status_get(&secTimer) > 0)){}	
+	k_timer_start(&secTimerMg2, K_MSEC(1000), K_NO_WAIT);
+	while (!(k_timer_status_get(&secTimerMg2) > 0)){}	
 	showButton(5);
 }
 
@@ -171,6 +171,15 @@ int playMg2() {
 	uint8_t sequence[8] = {0,0,0,0,0,0,0,0};
 	uint8_t level = 0;
 	bool genValue = false;
+	lcdEnable();
+
+	lcdStringWrite("    Minigame       Simon Says");
+	k_timer_start(&secTimerMg2, K_MSEC(3000), K_NO_WAIT);
+	while (!(k_timer_status_get(&secTimerMg2) > 0)){}	
+	lcdClear();
+	
+	lcdDisable();
+
 	while (true)
 	{
 		if(genValue == false)
@@ -179,8 +188,8 @@ int playMg2() {
 			generateSequence(sequence,8,0b11);
 			genValue = true;
 		}
-		k_timer_start(&secTimer, K_MSEC(1000), K_NO_WAIT);
-		while (!(k_timer_status_get(&secTimer) > 0)){}	
+		k_timer_start(&secTimerMg2, K_MSEC(1000), K_NO_WAIT);
+		while (!(k_timer_status_get(&secTimerMg2) > 0)){}	
 		showLevel(level,sequence);
 		level += checkinput(&genValue, &score, level, sequence);
 		if(level == 8 || score == 0)
