@@ -311,7 +311,7 @@ static uint8_t gyroCompass_i_trig(int16_t ix, int16_t iy, int16_t *result)
  * @return Error code (0 for success)
  */
 static uint8_t gyroCompass_i_ecompass(int16_t iBpx, int16_t iBpy, int16_t iBpz,
-				  int16_t iGpx, int16_t iGpy, int16_t iGpz, int16_t *angle)
+									  int16_t iGpx, int16_t iGpy, int16_t iGpz, int16_t *angle)
 {
 	printf("iBpx: %i, iBpy: %i, iBpz: %i\n", iBpx, iBpy, iBpz);
 	printf("iGpx: %i, iGpy: %i, iGpz: %i\n", iGpx, iGpy, iGpz);
@@ -323,7 +323,9 @@ static uint8_t gyroCompass_i_ecompass(int16_t iBpx, int16_t iBpy, int16_t iBpz,
 
 	errorCode = gyroCompass_i_hundred_atan2_deg(iGpy, iGpz, &iPhi); /* Eq 13 */
 	if (errorCode != 0)
+	{
 		return errorCode;
+	}
 	iPhi -= 18000;	  // 180 degree offset
 	if (iPhi > 18000) // make sure it stays between -180 and 180 degrees
 		iPhi -= 36000;
@@ -778,10 +780,96 @@ uint8_t gyroscope_get_gyro(float aGyro[3])
 	return 0;
 }
 
+/**
+ * @brief Retrieves the roll angle from the gyroscope sensor.
+ *
+ * This function calculates the roll angle using the gyroscope's acceleration data.
+ *
+ * @param aRoll[out] Pointer to a variable where the roll angle will be stored. Value is degress * 100 (so 5 degress would return 500)
+ *
+ * @return 0 if successful, 1 if the gyroscope was not initialized, or error code if there is an error in getting acceleration or calculating the roll.
+ */
+uint8_t gyroscope_get_roll(int16_t *aRoll)
+{
+	int16_t acceleration[3];
+	int errorCode = 0;
+	if (!gyroscope_is_init)
+	{
+		printf("Gyroscope not initialized\n");
+		return 1;
+	}
+
+	errorCode = gyroscope_get_acceleration(acceleration);
+	if (errorCode > 0)
+	{
+		return errorCode;
+	}
+	errorCode = gyroCompass_i_hundred_atan2_deg(acceleration[1], acceleration[2], aRoll); /* Eq 13 */
+	if (errorCode != 0)
+	{
+		return errorCode;
+	}
+
+	return 0;
+}
+
+/**
+ * @brief Retrieves the pitch angle from the gyroscope sensor.
+ *
+ * This function calculates the pitch angle using the gyroscope's acceleration data.
+ *
+ * @param aPitch[out] Pointer to a variable where the pitch angle will be stored. Value is in degress * 100 (so 5 degress would return 500)
+ *
+ * @return 0 if successful, 1 if the gyroscope was not initialized, or error code if there is an error in getting acceleration or calculating the pitch.
+ */
+uint8_t gyroscope_get_pitch(int16_t *aPitch)
+{
+	int16_t acceleration[3];
+	int errorCode = 0;
+	if (!gyroscope_is_init)
+	{
+		printf("Gyroscope not initialized\n");
+		return 1;
+	}
+
+	errorCode = gyroscope_get_acceleration(acceleration);
+	if (errorCode > 0)
+	{
+		return errorCode;
+	}
+	errorCode = gyroCompass_i_hundred_atan2_deg((int16_t)-acceleration[1], acceleration[0], aPitch);
+	if (errorCode != 0)
+	{
+		return errorCode;
+	}
+
+	return 0;
+}
+
+/**
+ * @brief Retrieves the heading from the gyroscope and magnetometer sensors.
+ *
+ * This function calculates the heading using data from both the gyroscope and the magnetometer sensors.
+ *
+ * @param aHeading[out] Pointer to a variable where the heading will be stored. Expects a double variable. Value is in degress * 100 (so 5 degress would be 500)
+ *
+ * @return 0 if successful. 1 if gyroscope is not initialized. 2 if magnetometer is not initialized.
+ */
 uint8_t gyroCompass_get_heading(double *aHeading)
 {
 	int16_t MagnetoValue[3], AccelValue[3];
 	int16_t angle;
+		int errorCode = 0;
+	if (!gyroscope_is_init)
+	{
+		printf("Gyroscope not initialized\n");
+		return 1;
+	}
+		if (!magnetometer_is_init)
+	{
+		printf("Magnetometer not initialized\n");
+		return 2;
+	}
 	magnetometer_get_magneto(MagnetoValue);
 	gyroscope_get_acceleration(AccelValue);
 	gyroCompass_rotate_data(MagnetoValue, AccelValue);
