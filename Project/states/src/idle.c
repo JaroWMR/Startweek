@@ -38,19 +38,26 @@ int playIdle() {
 			printf("Angle: %Lf\n", angle);
 		}
 		uint8_t ledData[8] = {0b0, 0b0, 0b0, 0b0, 0b0, 0b0, 0b0, 0b0};
-		// for (int i = 0; i < 8; i++) {
-		// 	for (int j = 7; j >= 0; j--) {
-		// 		ledData[i] |= (1 << j);
-		// 		ledcircleSetMutexValue(ledData);
-		// 		k_msleep(200);
-		// 	}
-		// }
-		// setLedCircleDirWidth(180, 10);
-		// k_msleep(200);
+		for (int i = 6; i < 40; i++) {
+			setLedCircleDirWidth(0, i);
+			k_msleep(4);
+		}
+		k_msleep(400);
+		for (int i = 39; i >= 6; i--) {
+			setLedCircleDirWidth(0, i);
+			k_msleep(4);
+		}
+		k_msleep(400);
 		for (int i = 0; i < 360; i++) {
 			setLedCircleDirWidth(i, 10);
 			k_msleep(2);
 		}
+		k_msleep(200);
+		for (int i = 359; i >= 0; i--) {
+			setLedCircleDirWidth(i, 10);
+			k_msleep(2);
+		}
+		k_msleep(300);
 	}
 
 
