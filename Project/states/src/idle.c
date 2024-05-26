@@ -16,29 +16,34 @@ void getIdleThreads(char ***names, unsigned *amount) {
 	*amount = idleThreadCount;
 }
 
+// Dummy function that can be called until the actual direction (yaw) function is finished
+int getDirOffsetDummy() {
+	return 0;
+}
+
 int playIdle() {
 	int i = 0;
-	while(1) {
-	//for (int i = 0; i < 10; i++) {
-		printf("Looping idle\n");
+	// while(1) {
+	// //for (int i = 0; i < 10; i++) {
+	// 	printf("Looping idle\n");
 
-		int64_t currLatNanoDeg = getLatitude();
-		int64_t currLonNanoDeg = getLongitude();
-		if (currLatNanoDeg == 0 && currLonNanoDeg == 0) {
-			printf("GPS does not have a fix!\n");
-		} else {
-			long double currLat = nanoDegToLdDeg(getLatitude());
-			long double currLon = nanoDegToLdDeg(getLongitude());
-			long double vnrLat = nanoDegToLdDeg(LAT_DB);
-			long double vnrLon = nanoDegToLdDeg(LON_DB);
-			long double dist = getDistanceMeters(currLat,currLon,vnrLat, vnrLon);
-			long double angle = getAngle(currLat, currLon, vnrLat, vnrLon);
+	// 	int64_t currLatNanoDeg = getLatitude();
+	// 	int64_t currLonNanoDeg = getLongitude();
+	// 	if (currLatNanoDeg == 0 && currLonNanoDeg == 0) {
+	// 		printf("GPS does not have a fix!\n");
+	// 	} else {
+	// 		long double currLat = nanoDegToLdDeg(getLatitude());
+	// 		long double currLon = nanoDegToLdDeg(getLongitude());
+	// 		long double vnrLat = nanoDegToLdDeg(LAT_DB);
+	// 		long double vnrLon = nanoDegToLdDeg(LON_DB);
+	// 		long double dist = getDistanceMeters(currLat,currLon,vnrLat, vnrLon);
+	// 		long double angle = getAngle(currLat, currLon, vnrLat, vnrLon);
 
-			printf("Distance (rounded to whole meters): %d\n", (int)round(dist));
-			printf("Angle: %Lf\n", angle);
-		}
-		ledCircleDemo();
-	}
+	// 		printf("Distance (rounded to whole meters): %d\n", (int)round(dist));
+	// 		printf("Angle: %Lf\n", angle);
+	// 	}
+	// 	ledCircleDemo();
+	// }
 
 
 	/******/
@@ -50,18 +55,22 @@ int playIdle() {
 	// Loop that iterates through the array of coords
 	for (int i = 0; i < NR_OF_LOCS; i++) {
 		int distMeters = 99;	// Initialize to a value outside the expected range
-		while(distMeters > REQUIRED_DIST_METERS) {
+		int dir = 0;			// Direction the user must head in
+		while(distMeters > REQUIRED_DIST_METERS) {	// Device is too far away from next target
 			int64_t currLat = getLatitude();
 			int64_t currLon = getLongitude();
-			if ( currLat == 0 && currLon == 0) {
-				printf("GPS does not have a lock!\n");
-				continue;
-			}
-			distMeters = getDistanceMeters(nanoDegToLdDeg(currLon), nanoDegToLdDeg(currLat), nanoDegToLdDeg(lons[i]), nanoDegToLdDeg(lats[i]));
+			//if ( currLat == 0 && currLon == 0) {	// GPS doesn't have lock
+			//	printf("GPS does not have a lock!\n");
+			//	continue;
+			//}
+			distMeters = getDistanceMeters(nanoDegToLdDeg(currLon), nanoDegToLdDeg(currLat), nanoDegToLdDeg(lons[i]), nanoDegToLdDeg(lats[i])); // Distance from current position to next location (meters)
+			//dir = getAngle(currLat, currLon, lats[i], lons[i]);
+			dir = round(getAngle(lats[0], lons[0], lats[1], lons[1]));
+			printf("dir: %d\n", dir);
+			dir += getDirOffsetDummy();
+			// 
 		}
 	}
-	// Inside that a loop that checks if arrived and updates leds
-	/******/
 }
 
 void setLedCircleDirWidth(unsigned dir, unsigned width) {

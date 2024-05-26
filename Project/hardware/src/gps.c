@@ -97,6 +97,15 @@ long double nanoDegToLdDeg(int64_t value) {
 	return (long double)value/1000000000;
 }
 
+/** 
+ * @brief Get the angle between two coordinates
+ * 
+ * Calculate the angle between coordinates in degrees. Takes a latitude and longitude (twice) for two coordinates.
+ * For example, if the second coordinate is directly east of the first coordinate, it returns 90.
+ * If the second coordinate is directly northwest of the first coordinate, it returns 315.
+ * 
+ * @return Angle between the coordinate arguments in degrees
+ */ 
 long double getAngle(long double lat1, long double lon1, long double lat2, long double lon2) {
 	lat1 = toRadians(lat1);
 	lon1 = toRadians(lon1);
