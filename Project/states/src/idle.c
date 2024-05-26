@@ -49,7 +49,7 @@ int playIdle() {
 		// k_msleep(200);
 		for (int i = 0; i < 360; i++) {
 			setLedCircleDirWidth(i, 10);
-			k_msleep(40);
+			k_msleep(2);
 		}
 	}
 
@@ -112,7 +112,7 @@ void setLedCircleDirWidth(unsigned dir, unsigned width) {
 			//bool enableLed = (!overlap && (bitIndex >= leftBound) && (bitIndex >= rightBound)) || (overlap && (bitIndex >= leftBound || bitIndex <= rightBound));
 			bool enableLed = false;
 			if (!overlap) {
-				if (bitIndex <= leftBound && bitIndex >= rightBound) {
+				if (bitIndex >= leftBound && bitIndex <= rightBound) {
 					enableLed = true;
 				}
 			} else {
