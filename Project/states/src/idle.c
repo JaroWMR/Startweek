@@ -84,19 +84,47 @@ void setLedCircleDirWidth(unsigned dir, unsigned width) {
 
 	// dir must be in degrees (so zero through 359)
 	// widtb: total width of the 'band' in pixels
+
 	const int nrPixels = 64;
 	const int maxDir = 359;
 	float centerFloat = (float)dir / maxDir;
 	int centerPixel = round(centerFloat * nrPixels);
+
+	int leftBound = centerPixel - (width / 2);
+	if (leftBound < 0 ) {
+		leftBound = nrPixels + leftBound;
+	}
+	int rightBound = centerPixel + (width / 2);
+	if (rightBound > (nrPixels - 1)) {
+		rightBound = rightBound - nrPixels;
+	}
+	bool overlap = false;
+	if (leftBound > rightBound) {
+		overlap = true;
+	}
+
 	const int nrBytes = 8;
 	const int nrBits = 8;
 	uint8_t outputValues[8] = {0,0,0,0,0,0,0,0};	// Initialize to zero (all LEDs off)
 	for (int byteCount = 0; byteCount < nrBytes; byteCount++) {
 		for (int bitCount = 0; bitCount < nrBits; bitCount++) {
 			int bitIndex = 8 * byteCount + bitCount;
-			if (bitIndex > centerPixel - (width/2) && bitIndex < centerPixel + (width / 2)) {
+			//bool enableLed = (!overlap && (bitIndex >= leftBound) && (bitIndex >= rightBound)) || (overlap && (bitIndex >= leftBound || bitIndex <= rightBound));
+			bool enableLed = false;
+			if (!overlap) {
+				if (bitIndex <= leftBound && bitIndex >= rightBound) {
+					enableLed = true;
+				}
+			} else {
+				if (bitIndex >= leftBound || bitIndex <= rightBound) {
+					enableLed = true;
+				}
+			}
+			//printf("Byte %d bit %d (bitindex %d): %d\n", byteCount, bitCount, bitIndex, enableLed);
+			if (enableLed) {
 				outputValues[byteCount] |= (1 << (7-bitCount));
 			}
+
 		}
 	}
 	ledcircleSetMutexValue(outputValues);
