@@ -37,27 +37,7 @@ int playIdle() {
 			printf("Distance (rounded to whole meters): %d\n", (int)round(dist));
 			printf("Angle: %Lf\n", angle);
 		}
-		uint8_t ledData[8] = {0b0, 0b0, 0b0, 0b0, 0b0, 0b0, 0b0, 0b0};
-		for (int i = 6; i < 40; i++) {
-			setLedCircleDirWidth(0, i);
-			k_msleep(4);
-		}
-		k_msleep(400);
-		for (int i = 39; i >= 6; i--) {
-			setLedCircleDirWidth(0, i);
-			k_msleep(4);
-		}
-		k_msleep(400);
-		for (int i = 0; i < 360; i++) {
-			setLedCircleDirWidth(i, 10);
-			k_msleep(2);
-		}
-		k_msleep(200);
-		for (int i = 359; i >= 0; i--) {
-			setLedCircleDirWidth(i, 10);
-			k_msleep(2);
-		}
-		k_msleep(300);
+		ledCircleDemo();
 	}
 
 
@@ -85,10 +65,6 @@ int playIdle() {
 }
 
 void setLedCircleDirWidth(unsigned dir, unsigned width) {
-	// NOTE: two issues currently
-	//	1. When the dir is low and width too great, the pixels below zero are not turend on (e.g. dir = 2, width = 10, the pixels below zero (359, 359 etc.) are not turned on)
-	//	2. Vice versa but when dir is great (near 359)
-
 	// dir must be in degrees (so zero through 359)
 	// widtb: total width of the 'band' in pixels
 
@@ -135,4 +111,28 @@ void setLedCircleDirWidth(unsigned dir, unsigned width) {
 		}
 	}
 	ledcircleSetMutexValue(outputValues);
+}
+
+void ledCircleDemo() {
+	// Just a small demo to show off the led circle in all its glory
+	for (int i = 6; i < 40; i++) {
+		setLedCircleDirWidth(0, i);
+		k_msleep(4);
+	}
+	k_msleep(400);
+	for (int i = 39; i >= 6; i--) {
+		setLedCircleDirWidth(0, i);
+		k_msleep(4);
+	}
+	k_msleep(400);
+	for (int i = 0; i < 360; i++) {
+		setLedCircleDirWidth(i, 10);
+		k_msleep(2);
+	}
+	k_msleep(200);
+	for (int i = 359; i >= 0; i--) {
+		setLedCircleDirWidth(i, 10);
+		k_msleep(2);
+	}
+	k_msleep(300);
 }
