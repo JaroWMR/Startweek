@@ -60,9 +60,11 @@ static uint8_t gyroCompass_i_divide(int16_t iy, int16_t ix, int16_t *result)
 	int16_t ir;		/* Result = iy / ix, range 0. to 1., returned in range 0 to 32767 */
 	int16_t idelta; /* Delta on candidate result, dividing each stage by factor of 2 */
 
+	/* Set result r to zero and binary search step to 16384 = 0.5 */
 	ir = 0;
 	idelta = 16384; /* Set as 2^14 = 0.5 */
 
+	/* To reduce quantization effects, boost ix and iy to the maximum signed 16 bit value */
 	while ((ix < 16384) && (iy < 16384))
 	{
 		ix += ix;
@@ -71,6 +73,7 @@ static uint8_t gyroCompass_i_divide(int16_t iy, int16_t ix, int16_t *result)
 
 	do /* Loop over binary sub-division algorithm solving for ir*ix = iy */
 	{
+		/* Generate new candidate solution for ir and test if we are too high or too low */
 		itmp = ir + idelta; /* itmp=ir+delta, the candidate solution */
 		itmp = (int16_t)((itmp * ix) >> 15);
 		if (itmp <= iy)
@@ -101,6 +104,7 @@ static uint8_t gyroCompass_i_hundred_atan_deg(int16_t iy, int16_t ix, int16_t *r
 	int32_t iTmp;	/* Temporary variable */
 	uint8_t errorCode;
 
+	/* Check for pathological cases */
 	if ((ix == 0) && (iy == 0))
 	{
 		*result = 0;
@@ -112,6 +116,7 @@ static uint8_t gyroCompass_i_hundred_atan_deg(int16_t iy, int16_t ix, int16_t *r
 		return 0;
 	}
 
+	/* Check for non-pathological cases */
 	if (iy <= ix)
 	{
 		errorCode = gyroCompass_i_divide(iy, ix, &iRatio); /* return a fraction in range 0. to 32767 = 0. to 1. */
@@ -122,6 +127,7 @@ static uint8_t gyroCompass_i_hundred_atan_deg(int16_t iy, int16_t ix, int16_t *r
 	}
 	else
 	{
+		/* First, third, and fifth order polynomial approximation */
 		errorCode = gyroCompass_i_divide(ix, iy, &iRatio); /* return a fraction in range 0. to 32767 = 0. to 1. */
 		if (errorCode != 0)
 		{
@@ -136,9 +142,11 @@ static uint8_t gyroCompass_i_hundred_atan_deg(int16_t iy, int16_t ix, int16_t *r
 	iAngle += (iTmp >> 15) * (int32_t)K3;
 	iAngle = iAngle >> 15;
 
+	/* Check if above 45 degrees */
 	if (iy > ix)
 		iAngle = 9000 - iAngle;
 
+	/* For tidiness, limit result to range 0 to 9000 equals 0.0 to 90.0 degrees */
 	if (iAngle < 0)
 		iAngle = 0;
 	if (iAngle > 9000)
@@ -165,6 +173,7 @@ static uint8_t gyroCompass_i_hundred_atan2_deg(int16_t iy, int16_t ix, int16_t *
 	int16_t iAngle; /* angle in degrees times 100 */
 	uint8_t errorCode;
 
+	/* Check for -32768 which is not handled correctly */
 	if (ix == -32768)
 	{
 		ix = -32767;
@@ -174,6 +183,7 @@ static uint8_t gyroCompass_i_hundred_atan2_deg(int16_t iy, int16_t ix, int16_t *
 		iy = -32767;
 	}
 
+	/* Check for quadrants */
 	if ((ix >= 0) && (iy >= 0)) /* Range 0 to 90 degrees */
 	{
 		errorCode = gyroCompass_i_hundred_atan_deg(iy, ix, &iAngle);
@@ -235,11 +245,13 @@ static uint8_t gyroCompass_i_trig(int16_t ix, int16_t iy, int16_t *result)
 	int16_t ir;		 /* Result = ix / sqrt(ix*ix+iy*iy) range -1, 1 returned as signed int16 */
 	int16_t idelta;	 /* Delta on candidate result dividing each stage by factor of 2 */
 
+	/* correct for pathological case: ix==iy==0 */
 	if ((ix == 0) && (iy == 0))
 	{
 		ix = iy = 1;
 	}
 
+	/* check for -32768 which is not handled correctly */
 	if (ix == -32768)
 	{
 		ix = -32767;
@@ -249,6 +261,7 @@ static uint8_t gyroCompass_i_trig(int16_t ix, int16_t iy, int16_t *result)
 		iy = -32767;
 	}
 
+	/* store the sign for later use. algorithm assumes x is positive for convenience */
 	isignx = 1;
 	if (ix < 0)
 	{
@@ -256,31 +269,38 @@ static uint8_t gyroCompass_i_trig(int16_t ix, int16_t iy, int16_t *result)
 		isignx = -1;
 	}
 
+	/* for convenience in the boosting set iy to be positive as well as ix */
 	iy = (int16_t)abs(iy);
 
+	/* to reduce quantization effects, boost ix and iy but keep below maximum signed 16 bit */
 	while ((ix < 16384) && (iy < 16384))
 	{
 		ix += ix;
 		iy += iy;
 	}
 
-	ixsq = ((int32_t)ix * (int32_t)ix);			 /* ixsq=ix*ix: 0 to 32767^2 = 1073676289 */
-	ihypsq = (ixsq + (int32_t)iy * (int32_t)iy); /* ihypsq=(ix*ix+iy*iy) 0 to 2*32767*32767=2147352578 */
+	/* calculate ix*ix and the hypotenuse squared */
+	ixsq = (uint32_t)((uint32_t)ix * (uint32_t)ix);			 /* ixsq=ix*ix: 0 to 32767^2 = 1073676289 */
+	ihypsq = (uint32_t)(ixsq + (uint32_t)iy * (uint32_t)iy); /* ihypsq=(ix*ix+iy*iy) 0 to 2*32767*32767=2147352578 */
 
+	/* set result r to zero and binary search step to 16384 = 0.5 */
 	ir = 0;
-	idelta =
+	idelta = 16384; /* Set as 2^14 = 0.5 */
 
-		16384; /* Set as 2^14 = 0.5 */
-
+	/* loop over binary sub-division algorithm */
 	do
 	{
-		itmp = ((uint32_t)(ir + idelta) * (uint32_t)(ir + idelta)); /* itmp=(ir+idelta)^2 */
+		/* generate new candidate solution for ir and test if we are too high or too low */
+		/* itmp=(ir+delta)^2, range 0 to 32767*32767 = 2^30 = 1073676289 */
+		itmp = (uint32_t)((int32_t)(ir + idelta) * (int32_t)(ir + idelta)); /* itmp=(ir+idelta)^2 */
 
-		if (itmp <= (uint32_t)ixsq)
+		/* itmp=(ir+delta)^2*(ix*ix+iy*iy), range 0 to 2^31 = 2147221516 */
+		itmp = (itmp >> 15) * (ihypsq >> 15);
+		if (itmp <= ixsq)
 		{
-			itmp += (uint32_t)((uint32_t)(ir + idelta) * (uint32_t)ix);
-			itmp = (itmp >> 15) * (uint32_t)ix;
-			itmp = itmp + (uint32_t)ixsq;
+			itmp += (uint32_t)((int32_t)(ir + idelta) * (int32_t)ix);
+			itmp = (itmp >> 15) * (int32_t)ix;
+			itmp = itmp + ixsq;
 
 			if (itmp <= ihypsq)
 				ir += idelta;
