@@ -9,6 +9,13 @@ void getMg2Threads(char ***names, unsigned *amount) {
 	*amount = mg2ThreadCount;
 }
 
+#define MG2_ONELINERS 2
+char oneLinersMG2[MG2_ONELINERS][32] = {
+	"    Minigame      Simon Says1",
+	"    Minigame      Simon Says2"
+};
+
+
 void generateSequence(uint8_t *sequence,uint8_t size,uint8_t bits) {
 	for (uint8_t i = 0; i < size; i++)	{
 			uint8_t randomValue = 0;
@@ -166,20 +173,49 @@ uint8_t checkinput(bool* genValue,uint32_t* score, uint8_t level,uint8_t sequenc
 	return 0;
 }
 
+void showOnelinersMG2()
+{
+	bool done = false;
+	lcdEnable();
+	lcdStringWrite("press start to  begin");
+	while (!done)
+	{
+		if(startbuttonGet())
+		{	
+			startledSet(1);
+		}
+		else
+		{
+			startledSet(0);
+			for (uint8_t i = 0; i < MG2_ONELINERS; i++)
+			{
+			lcdStringWrite(oneLinersMG2[i]);
+			k_timer_start(&secTimerMg2, K_MSEC(3000), K_NO_WAIT);
+			while (!(k_timer_status_get(&secTimerMg2) > 0)){}	
+			}
+			startledSet(1);
+			while (true)
+			{
+				if(!startbuttonGet())
+				{	
+				done = true;
+				break;
+				}
+			}
+			
+		}
+	}
+	startledSet(0);
+	lcdClear();
+	lcdDisable();
+}
+
 int playMg2() {
 	uint32_t score = 1000;
 	uint8_t sequence[8] = {0,0,0,0,0,0,0,0};
 	uint8_t level = 0;
 	bool genValue = false;
-	lcdEnable();
-
-	lcdStringWrite("    Minigame       Simon Says");
-	k_timer_start(&secTimerMg2, K_MSEC(3000), K_NO_WAIT);
-	while (!(k_timer_status_get(&secTimerMg2) > 0)){}	
-	lcdClear();
-	
-	lcdDisable();
-
+	showOnelinersMG2();
 	while (true)
 	{
 		if(genValue == false)

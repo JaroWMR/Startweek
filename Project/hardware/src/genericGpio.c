@@ -101,7 +101,6 @@ bool startbuttonledConfig()
 	//configures the gpio
 	uint8_t ret = 0;
 	ret += gpio_pin_configure_dt(&startled, GPIO_OUTPUT_ACTIVE);
-	ret += gpio_pin_configure_dt(&startbutton, GPIO_INPUT);
 	//return when gpio is configured incorrectly
 	if (ret != 0) 
 	{
@@ -193,7 +192,7 @@ uint8_t abcledsInit()
 uint8_t startbuttonledInit()
 {
 	uint8_t ret = 0;
-	ret += gpio_pin_configure_dt(&startbutton, GPIO_PULL_UP);
+	ret += gpio_pin_configure_dt(&startbutton, GPIO_INPUT);
 	ret += gpio_pin_set_dt(&startled,LOW);
 	if (ret != 0) 
 	{

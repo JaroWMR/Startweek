@@ -9,6 +9,11 @@ void getMg4Threads(char ***names, unsigned *amount) {
 	*amount = mg4ThreadCount;
 }
 
+#define MG4_ONELINERS 1
+char oneLinersMG4[MG4_ONELINERS][32] = {
+	"    Minigame          Quiz"
+};
+
 char questions[AMOUNT_QUESTIONS][MAX_SIZE] = {
 	"Hoe oud is Siem?",
 	"Hoe groot is    Siem?",
@@ -30,6 +35,43 @@ const int correctAnswer[AMOUNT_QUESTIONS] = {
 	0,
 };
 
+void showOnelinersMG4()
+{
+	bool done = false;
+	lcdEnable();
+	lcdStringWrite("press start to  begin");
+	while (!done)
+	{
+		if(startbuttonGet())
+		{	
+			startledSet(1);
+		}
+		else
+		{
+			startledSet(0);
+			for (uint8_t i = 0; i < MG4_ONELINERS; i++)
+			{
+			lcdStringWrite(oneLinersMG4[i]);
+			k_timer_start(&secTimerMg4, K_MSEC(3000), K_NO_WAIT);
+			while (!(k_timer_status_get(&secTimerMg4) > 0)){}	
+			}
+			startledSet(1);
+			while (true)
+			{
+				if(!startbuttonGet())
+				{	
+				done = true;
+				break;
+				}
+			}
+			
+		}
+	}
+	startledSet(0);
+	//lcdClear();
+	//lcdDisable();
+}
+
 
 int playMg4() {
 	uint32_t score = 1000;
@@ -37,9 +79,7 @@ int playMg4() {
 	bool showQuestion = true;
 	bool correct = false;
 	bool buttonReleased = true;
-	lcdEnable();
-	lcdClear();
-	lcdStringWrite("    Minigame          Quiz      ");
+	showOnelinersMG4();
 	k_timer_start(&secTimerMg4, K_MSEC(1000), K_NO_WAIT);
 	while (!(k_timer_status_get(&secTimerMg4) > 0)){}	
 	for (uint8_t questionIndex = 0; questionIndex < AMOUNT_QUESTIONS; questionIndex++)
