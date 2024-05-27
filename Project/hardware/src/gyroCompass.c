@@ -349,7 +349,7 @@ static uint8_t gyroCompass_i_ecompass(int16_t iBpx, int16_t iBpy, int16_t iBpz,
 	iBfy = (int16_t)((iBpy * iCos - iBpz * iSin) >> 15); /* Eq 19 y component */
 	iBpz = (int16_t)((iBpy * iSin + iBpz * iCos) >> 15); /* Bpy*sin(Phi)+Bpz*cos(Phi)*/
 	iGpz = (int16_t)((iGpy * iSin + iGpz * iCos) >> 15); /* Eq 15 denominator */
-	printf("iBfy: %i, iBpz: %i, iGpz: %i\n", iBfy, iBpz, iGpz);
+	// printf("iBfy: %i, iBpz: %i, iGpz: %i\n", iBfy, iBpz, iGpz);
 
 	errorCode = gyroCompass_i_hundred_atan2_deg((int16_t)-iGpx, iGpz, &iThe); /* Eq 15 */
 	if (errorCode != 0)
@@ -569,6 +569,7 @@ uint8_t magnetometer_exit(void)
 uint8_t magnetometer_get_magneto(int16_t *aMagneto)
 {
 	struct sensor_value magn_xyz[3];
+	double magn_xyz_double[3];
 
 	if (!magnetometer_is_init)
 	{
@@ -579,24 +580,38 @@ uint8_t magnetometer_get_magneto(int16_t *aMagneto)
 	sensor_sample_fetch_chan(magnetometer, SENSOR_CHAN_MAGN_XYZ);
 	sensor_channel_get(magnetometer, SENSOR_CHAN_MAGN_XYZ, &magn_xyz);
 
+	// Change value to float
 	for (int i = 0; i < 3; i++)
 	{
-		float floatValue = magn_xyz[i].val2;
-		aMagneto[i] = floatValue / 1000000 * 32767;
+		magn_xyz_double[i] = sensor_value_to_double(&magn_xyz[i]);
+		// printf("Float value %i original: %f\n", i, magn_xyz_double[i]);
 	}
 
-	aMagneto[0] -= X_OFFSET;
-	aMagneto[1] -= Y_OFFSET;
-	aMagneto[2] -= Z_OFFSET;
+	// Subtract the hard iron offset
+	magn_xyz_double[0] -= X_OFFSET;
+	magn_xyz_double[1] -= Y_OFFSET;
+	magn_xyz_double[2] -= Z_OFFSET;
+	// printf("\nFloat value 0 with offset: %f\n", magn_xyz_double[0]);
+	// printf("Float value 1 with offset: %f\n", magn_xyz_double[1]);
+	// printf("Float value 2 with offset: %f\n", magn_xyz_double[2]);
+
+	// Scale value over max range of int. Value is max 1 or -1
+	for (int i = 0; i < 3; i++)
+	{
+		aMagneto[i] = (int16_t)(magn_xyz_double[i] * 32767);
+	}
+	// printf("\nScaled value 0 with offset: %d\n", aMagneto[0]);
+	// printf("Scaled value 1 with offset: %d\n", aMagneto[1]);
+	// printf("Scaled value 2 with offset: %d\n\n\n", aMagneto[2]);
 
 	// double direction;
-	// if (aMagneto[0] == 0)
+	// if (magn_xyz_double[0] == 0)
 	// {
-	// 	direction = (aMagneto[1] < 0) ? 90 : 0;
+	// 	direction = (magn_xyz_double[1] < 0) ? 90 : 0;
 	// }
 	// else
 	// {
-	// 	direction = atan2(aMagneto[1], aMagneto[0]) * 180 / M_PIL;
+	// 	direction = atan2(magn_xyz_double[1], magn_xyz_double[0]) * 180 / M_PIL;
 	// }
 
 	// if (direction < 0)
@@ -608,7 +623,7 @@ uint8_t magnetometer_get_magneto(int16_t *aMagneto)
 	// 	direction -= 360;
 	// }
 
-	// *aHeading = direction;
+	// printf("Heading for magneto is: %f\n", direction);
 	return 0;
 }
 
@@ -859,13 +874,13 @@ uint8_t gyroCompass_get_heading(double *aHeading)
 {
 	int16_t MagnetoValue[3], AccelValue[3];
 	int16_t angle;
-		int errorCode = 0;
+	int errorCode = 0;
 	if (!gyroscope_is_init)
 	{
 		printf("Gyroscope not initialized\n");
 		return 1;
 	}
-		if (!magnetometer_is_init)
+	if (!magnetometer_is_init)
 	{
 		printf("Magnetometer not initialized\n");
 		return 2;
