@@ -297,19 +297,11 @@ static uint8_t gyroCompass_i_trig(int16_t ix, int16_t iy, int16_t *result)
 		/* itmp=(ir+delta)^2*(ix*ix+iy*iy), range 0 to 2^31 = 2147221516 */
 		itmp = (itmp >> 15) * (ihypsq >> 15);
 		if (itmp <= ixsq)
-		{
-			itmp += (uint32_t)((int32_t)(ir + idelta) * (int32_t)ix);
-			itmp = (itmp >> 15) * (int32_t)ix;
-			itmp = itmp + ixsq;
+			ir += idelta;
+		idelta >>= 1; /* divide by 2 using right shift one bit */
+	} while (idelta >= MINDELTATRIG); /* last loop is performed for idelta=MINDELTATRIG */
 
-			if (itmp <= ihypsq)
-				ir += idelta;
-		}
-
-		idelta >>= 1; /* Divide by 2 using right shift one bit */
-
-	} while (idelta >= MINDELTATRIG);
-
+	/* correct the sign */
 	*result = (int16_t)(ir * isignx);
 	return 0;
 }
@@ -354,6 +346,7 @@ static uint8_t gyroCompass_i_ecompass(int16_t iBpx, int16_t iBpy, int16_t iBpz,
 	// implementLPFPhi();
 	printf("roll/iPhi = %i\n", iPhi / 100);
 
+	/* calculate sin and cosine of roll angle Phi */
 	errorCode = gyroCompass_i_trig(iGpy, iGpz, &iSin); /* Eq 13: sin = opposite / hypotenuse */
 	if (errorCode != 0)
 	{
@@ -366,11 +359,14 @@ static uint8_t gyroCompass_i_ecompass(int16_t iBpx, int16_t iBpy, int16_t iBpz,
 	}
 	printf("iSin = %i\niCos = %i\n", iSin, iCos);
 
+	/* de-rotate by roll angle Phi */
 	iBfy = (int16_t)((iBpy * iCos - iBpz * iSin) >> 15); /* Eq 19 y component */
 	iBpz = (int16_t)((iBpy * iSin + iBpz * iCos) >> 15); /* Bpy*sin(Phi)+Bpz*cos(Phi)*/
 	iGpz = (int16_t)((iGpy * iSin + iGpz * iCos) >> 15); /* Eq 15 denominator */
 	// printf("iBfy: %i, iBpz: %i, iGpz: %i\n", iBfy, iBpz, iGpz);
 
+
+	/* calculate current pitch angle Theta */
 	errorCode = gyroCompass_i_hundred_atan2_deg((int16_t)-iGpx, iGpz, &iThe); /* Eq 15 */
 	if (errorCode != 0)
 	{
@@ -379,6 +375,7 @@ static uint8_t gyroCompass_i_ecompass(int16_t iBpx, int16_t iBpy, int16_t iBpz,
 	// implementLPFThe();
 	printf("pitch/iThe = %i\n", iThe / 100);
 
+	/* restrict pitch angle to range -90 to 90 degrees */
 	if (iThe > 9000)
 	{
 		iThe = (int16_t)(18000 - iThe);
@@ -388,17 +385,20 @@ static uint8_t gyroCompass_i_ecompass(int16_t iBpx, int16_t iBpy, int16_t iBpz,
 		iThe = (int16_t)(-18000 - iThe);
 	}
 
+	/* calculate sin and cosine of pitch angle Theta */
 	errorCode = gyroCompass_i_trig(iGpx, iGpz, &iSin); /* Eq 15: sin = opposite / hypotenuse */
 	if (errorCode != 0)
 	{
 		return errorCode;
 	}
+	iSin = (int16_t)-iSin;
 	errorCode = gyroCompass_i_trig(iGpz, iGpx, &iCos); /* Eq 15: cos = adjacent / hypotenuse */
 	if (errorCode != 0)
 	{
 		return errorCode;
 	}
 
+	/* correct cosine if pitch not in range -90 to 90 degrees */
 	if (iCos < 0)
 	{
 		iCos = (int16_t)-iCos;
