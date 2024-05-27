@@ -26,10 +26,11 @@ void tmain(void) // Core thread
 	{
 		return;
 	}
-	double heading = 0;
+	int heading = 0;
 	while (1)
 	{
 		gyroCompass_get_heading(&heading);
+		printf("Heading is: %d\n", heading);
 		// uint16_t magneto[3];
 		// magnetometer_get_magneto(magneto);
 		k_sleep(K_MSEC(500));
