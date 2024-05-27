@@ -29,9 +29,9 @@ void tmain(void) // Core thread
 	double heading = 0;
 	while (1)
 	{
-		// gyroCompass_get_heading(&heading);
-		uint16_t magneto[3];
-		magnetometer_get_magneto(magneto);
+		gyroCompass_get_heading(&heading);
+		// uint16_t magneto[3];
+		// magnetometer_get_magneto(magneto);
 		k_sleep(K_MSEC(500));
 	}
 

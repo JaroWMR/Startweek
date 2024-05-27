@@ -26,6 +26,6 @@ uint8_t gyroscope_get_gyro(float aGyro[3]);
 //Useful data functions
 uint8_t gyroscope_get_roll(int16_t *aRoll);
 uint8_t gyroscope_get_pitch(int16_t *aPitch);
-uint8_t gyroCompass_get_heading(double *aHeading);
+uint8_t gyroCompass_get_heading(int *aHeading);
 
 #endif /* GYROCOMPASS_H */

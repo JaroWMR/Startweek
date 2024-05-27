@@ -325,11 +325,8 @@ static uint8_t gyroCompass_i_trig(int16_t ix, int16_t iy, int16_t *result)
  * @return Error code (0 for success)
  */
 static uint8_t gyroCompass_i_ecompass(int16_t iBpx, int16_t iBpy, int16_t iBpz,
-									  int16_t iGpx, int16_t iGpy, int16_t iGpz, int16_t *angle)
+									  int16_t iGpx, int16_t iGpy, int16_t iGpz, double *angle)
 {
-	// printf("iBpx: %i, iBpy: %i, iBpz: %i\n", iBpx, iBpy, iBpz);
-	// printf("iGpx: %i, iGpy: %i, iGpz: %i\n", iGpx, iGpy, iGpz);
-
 	int16_t iSin, iCos;		  /* sine and cosine */
 	int16_t iPhi, iThe, iPsi; /* roll, pitch, and yaw angles */
 	int16_t iBfy, iBfx, iBfz;
@@ -345,8 +342,6 @@ static uint8_t gyroCompass_i_ecompass(int16_t iBpx, int16_t iBpy, int16_t iBpz,
 		iPhi -= 36000;
 	if (iPhi < -18000)
 		iPhi += 36000;
-	// implementLPFPhi();
-	printf("roll/iPhi = %i\n", iPhi / 100);
 
 	/* calculate sin and cosine of roll angle Phi */
 	errorCode = gyroCompass_i_trig(iGpy, iGpz, &iSin); /* Eq 13: sin = opposite / hypotenuse */
@@ -359,14 +354,11 @@ static uint8_t gyroCompass_i_ecompass(int16_t iBpx, int16_t iBpy, int16_t iBpz,
 	{
 		return errorCode;
 	}
-	// printf("iSin = %i\niCos = %i\n", iSin, iCos);
 
 	/* de-rotate by roll angle Phi */
 	iBfy = (int16_t)((iBpy * iCos - iBpz * iSin) >> 15); /* Eq 19 y component */
 	iBpz = (int16_t)((iBpy * iSin + iBpz * iCos) >> 15); /* Bpy*sin(Phi)+Bpz*cos(Phi)*/
 	iGpz = (int16_t)((iGpy * iSin + iGpz * iCos) >> 15); /* Eq 15 denominator */
-	// printf("iBfy: %i, iBpz: %i, iGpz: %i\n", iBfy, iBpz, iGpz);
-
 
 	/* calculate current pitch angle Theta */
 	errorCode = gyroCompass_i_hundred_atan2_deg((int16_t)-iGpx, iGpz, &iThe); /* Eq 15 */
@@ -376,7 +368,6 @@ static uint8_t gyroCompass_i_ecompass(int16_t iBpx, int16_t iBpy, int16_t iBpz,
 	}
 	// implementLPFThe();
 
-	/* restrict pitch angle to range -90 to 90 degrees */
 	if (iThe > 9000)
 	{
 		iThe = (int16_t)(18000 - iThe);
@@ -385,7 +376,6 @@ static uint8_t gyroCompass_i_ecompass(int16_t iBpx, int16_t iBpy, int16_t iBpz,
 	{
 		iThe = (int16_t)(-18000 - iThe);
 	}
-	printf("pitch/iThe = %i\n", iThe / 100);
 
 	/* calculate sin and cosine of pitch angle Theta */
 	errorCode = gyroCompass_i_trig(iGpx, iGpz, &iSin); /* Eq 15: sin = opposite / hypotenuse */
@@ -408,17 +398,17 @@ static uint8_t gyroCompass_i_ecompass(int16_t iBpx, int16_t iBpy, int16_t iBpz,
 
 	iBfx = (int16_t)((iBpx * iCos + iBpz * iSin) >> 15);  /* Eq 19: x component */
 	iBfz = (int16_t)((-iBpx * iSin + iBpz * iCos) >> 15); /* Eq 19: z component */
-	// printf("iBfx: %i, iBfz: %i\n", iBfx, iBfz);
 
-	errorCode = gyroCompass_i_hundred_atan2_deg((int16_t)-iBfy, iBfx, &iPsi); /* Eq 22 */
-	if (errorCode != 0)
-	{
-		return errorCode;
-	}
+	*angle = atan2(iBfy, iBfx) * 180 / M_PIL;
 	// implementLPFPsi();
-	printf("yaw/iPsi = %d\n\n", iPsi / 100);
 
-	*angle = iPsi / 100;
+	/* restrict yaw angle to range 0 to 360 degrees */
+	if(*angle > 360){
+		*angle -= 360;
+	}else if(*angle < 0){
+		*angle += 360;
+	}
+
 	return 0;
 }
 
@@ -626,36 +616,36 @@ uint8_t magnetometer_get_magneto(int16_t *aMagneto)
 	// printf("Scaled value 1 with offset: %d\n", aMagneto[1]);
 	// printf("Scaled value 2 with offset: %d\n", aMagneto[2]);
 
-	double direction;
-	if (magn_xyz_double[0] == 0)
-	{
-		direction = (magn_xyz_double[1] < 0) ? 90 : 0;
-	}
-	else
-	{
-		direction = atan2(magn_xyz_double[1], magn_xyz_double[0]) * 180 / M_PIL;
-	}
+	// double direction;
+	// if (magn_xyz_double[0] == 0)
+	// {
+	// 	direction = (magn_xyz_double[1] < 0) ? 90 : 0;
+	// }
+	// else
+	// {
+	// 	direction = atan2(magn_xyz_double[1], magn_xyz_double[0]) * 180 / M_PIL;
+	// }
 
-	if (direction < 0)
-	{
-		direction += 360;
-	}
-	else if (direction > 360)
-	{
-		direction -= 360;
-	}
+	// if (direction < 0)
+	// {
+	// 	direction += 360;
+	// }
+	// else if (direction > 360)
+	// {
+	// 	direction -= 360;
+	// }
 
-	for(int i = 4; i > 0; i--){
-		headingBuf[i] = headingBuf[i-1];
-	}
-	headingBuf[0] = direction;
-	direction = 0;
-	for(int i =0; i < 5; i++){
-		direction += headingBuf[i];
-	}
-	direction = direction / 5;
+	// for(int i = 4; i > 0; i--){
+	// 	headingBuf[i] = headingBuf[i-1];
+	// }
+	// headingBuf[0] = direction;
+	// direction = 0;
+	// for(int i =0; i < 5; i++){
+	// 	direction += headingBuf[i];
+	// }
+	// direction = direction / 5;
 
-	printf("Heading for magneto is: %f\n", direction);
+	// printf("Heading for magneto is: %f\n", direction);
 	return 0;
 }
 
@@ -898,14 +888,14 @@ uint8_t gyroscope_get_pitch(int16_t *aPitch)
  *
  * This function calculates the heading using data from both the gyroscope and the magnetometer sensors.
  *
- * @param aHeading[out] Pointer to a variable where the heading will be stored. Expects a double variable. Value is in degress * 100 (so 5 degress would be 500)
+ * @param aHeading[out] Pointer to a variable where the heading will be stored. Expects a int variable. Value is in degress
  *
  * @return 0 if successful. 1 if gyroscope is not initialized. 2 if magnetometer is not initialized.
  */
-uint8_t gyroCompass_get_heading(double *aHeading)
+uint8_t gyroCompass_get_heading(int *aHeading)
 {
 	int16_t MagnetoValue[3], AccelValue[3];
-	int16_t angle;
+	double angle;
 	int errorCode = 0;
 	if (!gyroscope_is_init)
 	{
@@ -923,6 +913,7 @@ uint8_t gyroCompass_get_heading(double *aHeading)
 
 	gyroCompass_i_ecompass(MagnetoValue[0], MagnetoValue[1], MagnetoValue[2], AccelValue[0], AccelValue[1], AccelValue[2], &angle);
 
-	// printf("Angle is: %i\n\n", angle);
+	*aHeading = angle;
+
 	return 0;
 }
