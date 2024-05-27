@@ -6,7 +6,6 @@
 #include <zephyr/sys/util.h>
 #include <zephyr/sys/printk.h>
 #include <zephyr/drivers/gpio.h>
-#include "gyroCompass.h"
 
 // The stack size of all threads
 #define STACKSIZE 1024
@@ -17,32 +16,7 @@
 void tmain(void) // Core thread
 {
 	printf("Main\n");
-	// startStatemachine();
-	if (magnetometer_init() > 0)
-	{
-		return;
-	}
-	if (gyroscope_init() > 0)
-	{
-		return;
-	}
-	int heading = 0;
-	while (1)
-	{
-		gyroCompass_get_heading(&heading);
-		printf("Heading is: %d\n", heading);
-		// uint16_t magneto[3];
-		// magnetometer_get_magneto(magneto);
-		k_sleep(K_MSEC(500));
-	}
-
-	magnetometer_exit();
-	gyroscope_exit();
-
-	// double gyro[3];
-
-	// gyroscope_get_acceleration(gyro);
-	// gyroscope_get_gyro(gyro);
+	startStatemachine();
 }
 
 // Define the threads
