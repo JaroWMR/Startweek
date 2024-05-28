@@ -25,7 +25,7 @@ static const struct gpio_dt_spec circleMatrixMuxC 					= GPIO_DT_SPEC_GET(DT_ALI
 #endif
 
 bool circleMatrixConfig();
-int8_t circleMatrixInit();
-int8_t circleMatrixSetLeds(int8_t data[8]);
+uint8_t circleMatrixInit();
+uint8_t circleMatrixSet(uint8_t data[8]);
 
 #endif // CIRCLE_MATRIX_H

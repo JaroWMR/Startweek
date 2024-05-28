@@ -1,5 +1,5 @@
 #include "statemachine.h"
-#include "buzzers.h"
+#include "threads.h"
 #include <stdio.h>
 #include <zephyr/kernel.h>
 #include <zephyr/device.h>
@@ -11,7 +11,7 @@
 #define STACKSIZE 1024
 
 // Thread priority values (lower value is higher priority)
-#define TMAIN_PRIORITY 1
+#define TMAIN_PRIORITY 8
 
 void tmain(void) // Core thread
 {

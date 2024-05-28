@@ -27,6 +27,6 @@ static const struct gpio_dt_spec ledMatrixMuxD 					= GPIO_DT_SPEC_GET(DT_ALIAS(
 
 bool ledMatrixConfig();
 int8_t ledMatrixInit();
-int8_t ledMatrixSetLeds(int16_t data[16]);
+int8_t ledMatrixSet(int16_t data[16]);
 
 #endif // LED_MATRIX_H
