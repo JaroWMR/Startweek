@@ -91,7 +91,7 @@ int playIdle() {
 		k_msleep(300);
 	}
 	completedGames[locIndex] = true;
-
+	return locIndex;
 	//}
 }
 
