@@ -5,13 +5,8 @@
 #include <zephyr/kernel.h>
 
 #define M_PIL 3.141592653589793238462643383279502884L
-#define X_OFFSET -28.76 / 100
-#define Y_OFFSET 45.67 / 100
-#define Z_OFFSET -7.58 / 100
 #define zero 0
 #define MINDELTATRIG 1
-
-double headingBuf[5];
 
 // rotation matrix for magnetometer
 const int16_t rotation_magno[3][3] = {
@@ -21,8 +16,8 @@ const int16_t rotation_magno[3][3] = {
 
 // rotation matrix for accelometer
 const int16_t rotation_accel[3][3] = {
+	{-1, 0, 0},
 	{0, 1, 0},
-	{1, 0, 0},
 	{0, 0, -1}};
 
 static const struct device *magnetometer;

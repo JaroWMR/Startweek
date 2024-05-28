@@ -10,6 +10,10 @@
 #define magno_sample_freq 155 //see lis3mdl kconfig of zephyr for acceptable values.
 #define magno_sample_freq_off 0.625 //see lis3mdl kconfig of zephyr for acceptable values.
 
+#define X_OFFSET -87.17 / 100
+#define Y_OFFSET -2.34 / 100
+#define Z_OFFSET -7.18 / 100
+
 //magnetometer functions
 uint8_t magnetometer_set_sampling_freq(int aFreq);
 uint8_t magnetometer_init(void);

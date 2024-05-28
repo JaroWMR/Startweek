@@ -530,7 +530,7 @@
 
 		magnetometer: lis3mdl-magn@1e {
 			compatible = "st,lis3mdl-magn";
-			reg = <0x1E>;
+			reg = <0x1C>;
 			irq-gpios = <&gpioa 9 GPIO_ACTIVE_HIGH>;
 		};
 
