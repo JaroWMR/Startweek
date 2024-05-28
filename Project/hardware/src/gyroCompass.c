@@ -390,7 +390,8 @@ static uint8_t gyroCompass_i_ecompass(int16_t iBpx, int16_t iBpy, int16_t iBpz,
 	iBfz = (int16_t)((-iBpx * iSin + iBpz * iCos) >> 15); /* Eq 19: z component */
 
 	*angle = atan2(iBfy, iBfx) * 180 / M_PIL;
-	// implementLPFPsi();
+
+	*angle += 180; //Add 180 degrees offset
 
 	/* restrict yaw angle to range 0 to 360 degrees */
 	if (*angle > 360)
