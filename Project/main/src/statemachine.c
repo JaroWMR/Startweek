@@ -32,6 +32,11 @@ struct state {
 };
 
 state_fn init_state, idle_state, mg1_state, mg2_state, mg3_state, mg4_state, mg5_state, mg6_state, mg7_state, mg8_state, mg9_state, mg10_state, exit_state;
+// Array of state functions
+state_fn* minigame_states[] = {
+    mg1_state, mg2_state, mg3_state, mg4_state, mg5_state,
+    mg6_state, mg7_state, mg8_state, mg9_state, mg10_state
+};
 
 // State functions
 void init_state(struct state *state) {
@@ -56,14 +61,18 @@ void idle_state(struct state *state) {
 	unsigned amount;
 	getIdleThreads(&names, &amount);
 	enableThreads(names, amount);
-	// for (int i = 0; i < 10; i++) {
-	// 	printf("Walking\n");
-	// 	k_msleep(90);
-	// }
 	int ret = playIdle();
 	disableThreads(names, amount);
 
-	state->next = mg1_state;
+	if (ret < -1 || ret > 9) {
+		printf("Error in idle state\n");
+		state->next = 0;
+	} else if (ret == -1) {
+		printf("Going to exit state\n");
+		state->next = exit_state;
+	} else {
+		state->next = minigame_states[ret];
+	}
 }
 
 void mg1_state(struct state *state) { // Makes use of button and led
