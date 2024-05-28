@@ -1,5 +1,6 @@
 #include "idle.h"
 #include "gps.h"
+#include "gyroCompass.h"
 #include "threads.h"
 #include "circleMatrix.h"
 #include "locations.h"
@@ -54,21 +55,29 @@ int playIdle() {
 
 	// Loop that iterates through the array of coords
 	for (int i = 0; i < NR_OF_LOCS; i++) {
+	//while (1) {
 		int distMeters = 99;	// Initialize to a value outside the expected range
 		int dir = 0;			// Direction the user must head in
 		while(distMeters > REQUIRED_DIST_METERS) {	// Device is too far away from next target
 			int64_t currLat = getLatitude();
 			int64_t currLon = getLongitude();
-			//if ( currLat == 0 && currLon == 0) {	// GPS doesn't have lock
-			//	printf("GPS does not have a lock!\n");
-			//	continue;
-			//}
+			if ( currLat == 0 && currLon == 0) {	// GPS doesn't have lock
+				printf("GPS does not have a lock!\n");
+				continue;
+			}
 			distMeters = getDistanceMeters(nanoDegToLdDeg(currLon), nanoDegToLdDeg(currLat), nanoDegToLdDeg(lons[i]), nanoDegToLdDeg(lats[i])); // Distance from current position to next location (meters)
-			//dir = getAngle(currLat, currLon, lats[i], lons[i]);
-			dir = round(getAngle(lats[0], lons[0], lats[1], lons[1]));
+			dir = round(getAngle(currLat, currLon, lats[i], lons[i]));
 			printf("dir: %d\n", dir);
-			dir += getDirOffsetDummy();
-			// 
+			int compassDir;
+			gyroCompass_get_heading(&compassDir);
+			dir = dir - compassDir;
+			if (dir < 0 ) {
+				dir += 360;
+			} else if (dir >= 360) {
+				dir -= 360;
+			}
+			setLedCircleDirWidth(dir, 10);
+			k_msleep(300);
 		}
 	}
 }
