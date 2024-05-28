@@ -317,21 +317,27 @@ static uint8_t gyroCompass_i_trig(int16_t ix, int16_t iy, int16_t *result)
 static uint8_t gyroCompass_i_ecompass(int16_t iBpx, int16_t iBpy, int16_t iBpz,
 									  int16_t iGpx, int16_t iGpy, int16_t iGpz, double *angle)
 {
-	int16_t iSin, iCos;		  /* sine and cosine */
-	int16_t iPhi, iThe; /* roll and pitch angles */
+	int16_t iSin, iCos; /* sine and cosine */
+	int16_t iPhi_16t, iThe; /* roll and pitch angles */
+	int iPhi;
 	int16_t iBfy, iBfx, iBfz;
 	uint8_t errorCode;
 
-	errorCode = gyroCompass_i_hundred_atan2_deg(iGpy, iGpz, &iPhi); /* Eq 13 */
+	errorCode = gyroCompass_i_hundred_atan2_deg(iGpy, iGpz, &iPhi_16t); /* Eq 13 */
 	if (errorCode != 0)
 	{
 		return errorCode;
 	}
+	iPhi = iPhi_16t;
 	iPhi -= 18000;	  // 180 degree offset
 	if (iPhi > 18000) // make sure it stays between -180 and 180 degrees
+	{
 		iPhi -= 36000;
+	}
 	if (iPhi < -18000)
+	{
 		iPhi += 36000;
+	}
 
 	/* calculate sin and cosine of roll angle Phi */
 	errorCode = gyroCompass_i_trig(iGpy, iGpz, &iSin); /* Eq 13: sin = opposite / hypotenuse */
@@ -356,9 +362,8 @@ static uint8_t gyroCompass_i_ecompass(int16_t iBpx, int16_t iBpy, int16_t iBpz,
 	{
 		return errorCode;
 	}
-	// implementLPFThe();
 
-	if (iThe > 9000)
+	if (iThe > 9000) // make sure it stays between -90 and 90 degrees
 	{
 		iThe = (int16_t)(18000 - iThe);
 	}
@@ -391,7 +396,7 @@ static uint8_t gyroCompass_i_ecompass(int16_t iBpx, int16_t iBpy, int16_t iBpz,
 
 	*angle = atan2(iBfy, iBfx) * 180 / M_PIL;
 
-	*angle += 180; //Add 180 degrees offset
+	*angle += 180; // Add 180 degrees offset
 
 	/* restrict yaw angle to range 0 to 360 degrees */
 	if (*angle > 360)
@@ -772,14 +777,16 @@ uint8_t gyroscope_get_gyro(float aGyro[3])
  *
  * This function calculates the roll angle using the gyroscope's acceleration data.
  *
- * @param aRoll[out] Pointer to a variable where the roll angle will be stored. Value is degress * 100 (so 5 degress would return 500)
+ * @param aRoll[out] Pointer to a variable where the roll angle will be stored. Value is in degrees
  *
  * @return 0 if successful, 1 if the gyroscope was not initialized, or error code if there is an error in getting acceleration or calculating the roll.
  */
-uint8_t gyroscope_get_roll(int16_t *aRoll)
+uint8_t gyroscope_get_roll(int *aRoll)
 {
 	int16_t acceleration[3];
 	int errorCode = 0;
+	int16_t roll;
+	uint16_t tempResult[3];
 	if (!gyroscope_is_init)
 	{
 		printf("Gyroscope not initialized\n");
@@ -791,11 +798,33 @@ uint8_t gyroscope_get_roll(int16_t *aRoll)
 	{
 		return errorCode;
 	}
-	errorCode = gyroCompass_i_hundred_atan2_deg(acceleration[1], acceleration[2], aRoll); /* Eq 13 */
+
+	errorCode = gyroCompass_multiply_matrices(tempResult, rotation_magno, acceleration);
 	if (errorCode != 0)
 	{
 		return errorCode;
 	}
+	for (int i = 0; i < 3; i++)
+	{
+		acceleration[i] = tempResult[i];
+	}
+	errorCode = gyroCompass_i_hundred_atan2_deg(acceleration[1], acceleration[2], &roll); /* Eq 13 */
+	if (errorCode != 0)
+	{
+		return errorCode;
+	}
+	*aRoll = roll;
+	*aRoll -= 18000;	  // 180 degree offset
+	if (*aRoll > 18000) // make sure it stays between -180 and 180 degrees
+	{
+		*aRoll -= 36000;
+	}
+	if (*aRoll < -18000)
+	{
+		*aRoll += 36000;
+	}
+
+	*aRoll = *aRoll / 100;
 
 	return 0;
 }
@@ -805,14 +834,16 @@ uint8_t gyroscope_get_roll(int16_t *aRoll)
  *
  * This function calculates the pitch angle using the gyroscope's acceleration data.
  *
- * @param aPitch[out] Pointer to a variable where the pitch angle will be stored. Value is in degress * 100 (so 5 degress would return 500)
+ * @param aPitch[out] Pointer to a variable where the pitch angle will be stored. Value is in degrees
  *
  * @return 0 if successful, 1 if the gyroscope was not initialized, or error code if there is an error in getting acceleration or calculating the pitch.
  */
-uint8_t gyroscope_get_pitch(int16_t *aPitch)
+uint8_t gyroscope_get_pitch(int *aPitch)
 {
 	int16_t acceleration[3];
 	int errorCode = 0;
+	int16_t pitch;
+	int16_t tempResult[3];
 	if (!gyroscope_is_init)
 	{
 		printf("Gyroscope not initialized\n");
@@ -824,11 +855,31 @@ uint8_t gyroscope_get_pitch(int16_t *aPitch)
 	{
 		return errorCode;
 	}
-	errorCode = gyroCompass_i_hundred_atan2_deg((int16_t)-acceleration[1], acceleration[0], aPitch);
+	errorCode = gyroCompass_multiply_matrices(tempResult, rotation_magno, acceleration);
 	if (errorCode != 0)
 	{
 		return errorCode;
 	}
+	for (int i = 0; i < 3; i++)
+	{
+		acceleration[i] = tempResult[i];
+	}
+	errorCode = gyroCompass_i_hundred_atan2_deg((int16_t)-acceleration[0], acceleration[2], &pitch);
+	if (errorCode != 0)
+	{
+		return errorCode;
+	}
+
+	if (pitch > 9000) // make sure it stays between -90 and 90 degrees
+	{
+		pitch = (int16_t)(18000 - pitch);
+	}
+	if (pitch < -9000)
+	{
+		pitch = (int16_t)(-18000 - pitch);
+	}
+
+	*aPitch = pitch / 100;
 
 	return 0;
 }
@@ -840,8 +891,8 @@ uint8_t gyroscope_get_pitch(int16_t *aPitch)
  *
  * @param aHeading[out] Pointer to a variable where the heading will be stored. Expects a int variable. Value is in degress
  *
- * @return 0 if successful. 
- * 			1 if gyroscope is not initialized. 
+ * @return 0 if successful.
+ * 			1 if gyroscope is not initialized.
  * 			2 if magnetometer is not initialized.
  * 			3 if function error
  */
