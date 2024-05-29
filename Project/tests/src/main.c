@@ -1,6 +1,7 @@
 #include <zephyr/ztest.h>
 #include "threads.h"
 #include <stdio.h>
+#include <stdint.h>
 #include "config.h"
 
 void test_main(void)

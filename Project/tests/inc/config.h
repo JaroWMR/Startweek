@@ -1,9 +1,14 @@
-#define LED_MATRIX
-#define BUTTON_MATRIX
-#define CIRCLE_MATRIX
-#define GENERIC_GPIO
-#define LCD
-#define SEVEN_SEGMENT
+// #define LED_MATRIX
+// #define BUTTON_MATRIX
+// #define CIRCLE_MATRIX
+// #define GENERIC_GPIO
+// #define LCD
+// #define SEVEN_SEGMENT
+#define INTEGRATION
+
+#ifdef INTEGRATION
+#include "testIntegration.h"
+#endif //INTEGRATION
 
 #ifdef LED_MATRIX
 #include "testLedMatrix.h"

@@ -16,7 +16,7 @@ ZTEST(sevenSegmentMatrix, test_Init_one)
 
 ZTEST(sevenSegmentMatrix, test_Set_one)
 {
-	char msg[4] = 1234;
+	char msg[4] = "1234";
 	uint8_t a = sevenSegmentSet(msg,1);
 	zassert_equal(a,0);
 }
