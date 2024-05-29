@@ -1,5 +1,7 @@
 #include "testGenericGpio.h"
 
+
+#ifdef GENERIC_GPIO
 int8_t a = 0;
 ZTEST_SUITE(testGenericGpio, NULL, NULL, NULL, NULL, NULL);
 
@@ -83,3 +85,5 @@ ZTEST(testGenericGpio, test_start_GetSet_one)
 	a = startledSet(0);
 	zassert_equal(a,0);
 }
+
+#endif //GENERIC_GPIO

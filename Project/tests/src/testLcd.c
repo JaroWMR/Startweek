@@ -1,6 +1,7 @@
 
 #include "testLcd.h"
 
+#ifdef LCD
 ZTEST_SUITE(testLcd, NULL, NULL, NULL, NULL, NULL);
 
 ZTEST(testLcd, test_Config_one)
@@ -28,3 +29,5 @@ ZTEST(testLcd, test_Set_one)
 	zassert_equal(a,0);
 
 }
+
+#endif //LCD

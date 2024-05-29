@@ -1,7 +1,16 @@
 #include "testIntegration.h"
+#define INTEGRATION
+#ifdef INTEGRATION
 
 
-ZTEST_SUITE(testIntegration, NULL, NULL, NULL, NULL, NULL);
+// The stack size of all threads
+#define STACKSIZE 1024
+
+// Thread priority values (lower value is higher priority)
+#define TMAIN_PRIORITY 8
+void integration(void);
+// Define the threads
+K_THREAD_DEFINE(t_integrationid, STACKSIZE, integration, NULL, NULL, NULL, TMAIN_PRIORITY, 0, 0);
 
 
 #define TIME_INTERVAL 60 	// Time in seconds
@@ -17,8 +26,10 @@ ZTEST_SUITE(testIntegration, NULL, NULL, NULL, NULL, NULL);
 // uint8_t* abcbtnGetMutexValue();
 
 
-ZTEST(testIntegration, test_integration_one)
+void integration(void)
 {
+	configure();
+	initialize();
 	//thread values
 	uint32_t duration = 0;
 	unsigned amount = 9;
@@ -27,7 +38,7 @@ ZTEST(testIntegration, test_integration_one)
 
 	// Matrix values
 	// Initial state with all bits set to 1 (all on)
-	uint8_t databtnmatrix_on[4] = {0b11111111, 0b11111111, 0b11111111, 0b11111111};
+	uint8_t databtnmatrix_on[4] = {0b00001111, 0b00001111, 0b00001111, 0b00001111};
 	uint8_t dataledcircle_on[8] = {0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111};
 	uint16_t dataledmatrix_on[16] = {
 		0b1111111111111111, 0b1111111111111111, 0b1111111111111111, 0b1111111111111111,
@@ -54,7 +65,7 @@ ZTEST(testIntegration, test_integration_one)
 		0b0000000000000000, 0b0000000000000000, 0b0000000000000000, 0b0000000000000000,
 		0b0000000000000000, 0b0000000000000000, 0b0000000000000000, 0b0000000000000000,
 		0b0000000000000000, 0b0000000000000000, 0b0000000000000000, 0b0000000000000000
-};
+	};
 
 	//sevensegment values
 	char inputsevensegment_on[4] = "1234";
@@ -73,12 +84,13 @@ ZTEST(testIntegration, test_integration_one)
 
 	//start looping for 6 hours each system.
 	while (duration != TEST_DURATION_INT) {
-
+		printf("currentIndex %d\n",currentIndex);
 		switch (currentIndex)
 		{
 		case 0:
 			btnmatrix_outSetMutexValue(databtnmatrix_on);
 			sevensegSetMutexValue(inputsevensegment_off,5);
+			
 			break;
 		case 1:
 			ledmatrixSetMutexValue(dataledmatrix_on);
@@ -117,3 +129,4 @@ ZTEST(testIntegration, test_integration_one)
     }
 	disableThreads(names, amount);
 }
+#endif //INTEGRATION
