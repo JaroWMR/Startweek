@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include "threads.h"
 #include "lcd.h"
+#include "genericGpio.h"
 #include <zephyr/random/random.h>
 
 #define mg2ThreadCount 4
