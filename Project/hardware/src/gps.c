@@ -1,8 +1,10 @@
 #include "gps.h"
+#include "lcd.h"
 #include <zephyr/device.h>
 #include <zephyr/drivers/gnss.h>
 #include <math.h>
 #include <stdio.h>
+#include <string.h>
 
 # define M_PI		3.14159265358979323846	/* pi */
 
@@ -34,6 +36,15 @@ static void gnss_satellites_cb(const struct device *dev, const struct gnss_satel
 			       uint16_t size)
 {
 	//printf("%s reported %u satellites!\r\n", dev->name, size);
+	//lcdClear();
+	//char words[27];
+	//char value[3];
+	//sprintf(value, "%d", size);
+	////value[0] = (char)(size + '0');
+	//strcpy(words,"Nr. of satellites:");
+	//strcat(words, value);
+	//lcdStringWrite(words);
+	//k_busy_wait(3000000);	
 }
 #endif
 
@@ -97,6 +108,15 @@ long double nanoDegToLdDeg(int64_t value) {
 	return (long double)value/1000000000;
 }
 
+/** 
+ * @brief Get the angle between two coordinates
+ * 
+ * Calculate the angle between coordinates in degrees. Takes a latitude and longitude (twice) for two coordinates.
+ * For example, if the second coordinate is directly east of the first coordinate, it returns 90.
+ * If the second coordinate is directly northwest of the first coordinate, it returns 315.
+ * 
+ * @return Angle between the coordinate arguments in degrees
+ */ 
 long double getAngle(long double lat1, long double lon1, long double lat2, long double lon2) {
 	lat1 = toRadians(lat1);
 	lon1 = toRadians(lon1);
