@@ -1,6 +1,7 @@
 #include "idle.h"
 #include "gps.h"
 #include "gyroCompass.h"
+#include "lcd.h"
 #include "threads.h"
 #include "circleMatrix.h"
 #include "locations.h"
@@ -8,10 +9,36 @@
 #include <stdio.h>
 
 #define REQUIRED_DIST_METERS 30
+#define ANGLE_BUFFER_SIZE 10
 #define GAMES_AMOUNT 10
 
 unsigned idleThreadCount = 1;
 char *idleThreads[1] = {"ledcircle"};
+double angleSinBuffer[ANGLE_BUFFER_SIZE];
+double angleCosBuffer[ANGLE_BUFFER_SIZE];
+
+int circleMovingAvg(int newValue) {
+	double rad = toRadians(newValue);
+	double sinVal = sin(rad);
+	double cosVal = cos(rad);
+
+	for (int i = ANGLE_BUFFER_SIZE-1; i > 0; i--) {	// Move every entry in the buffer up by one index
+		angleSinBuffer[i] = angleSinBuffer[i-1];
+		angleCosBuffer[i] = angleCosBuffer[i-1];
+	}
+	angleSinBuffer[0] = sinVal;						// Insert the new value
+	angleCosBuffer[0] = cosVal;
+
+	double sinSum = 0;
+	double cosSum = 0;
+	for (int i = 0; i < ANGLE_BUFFER_SIZE; i++) {
+		sinSum += angleSinBuffer[i];
+		cosSum += angleCosBuffer[i];
+	}
+	double sinAvg = sinSum / ANGLE_BUFFER_SIZE;
+	double cosAvg = cosSum / ANGLE_BUFFER_SIZE;
+	return toDegrees(atan2(sinAvg,cosAvg));
+}
 
 void getIdleThreads(char ***names, unsigned *amount) {
 	*names = idleThreads;
@@ -44,8 +71,8 @@ int playIdle() {
 
 	/******/
 	// Create and randomize array of coordinates
-	int64_t lats[NR_OF_LOCS] = {LAT_LOC_A, LAT_LOC_B};
-	int64_t lons[NR_OF_LOCS] = {LON_LOC_A, LON_LOC_B};
+	int64_t lats[NR_OF_LOCS] = {LAT_LOC_A, LAT_LOC_B, LAT_LOC_C};
+	int64_t lons[NR_OF_LOCS] = {LON_LOC_A, LON_LOC_B, LON_LOC_C};
 	static int locIndex = 0;
 	locIndex = rand() % GAMES_AMOUNT;
 	static bool completedGames[GAMES_AMOUNT] = {false, false, false, false, false, false, false, false, false, false};
@@ -64,23 +91,46 @@ int playIdle() {
 	}
 	// How to use the random generator to randomize?
 
-	// Loop that iterates through the array of coords
-	//for (int i = 0; i < NR_OF_LOCS; i++) {
-	//while (1) {
 	int distMeters = 20;	// Initialize to a value outside the expected range
 	int dir = 0;			// Direction the user must head in
-	while(distMeters > REQUIRED_DIST_METERS) {	// Device is too far away from next target
+	lcdEnable();
+	for (int i = 0; i < 3; i++) {
+	while(1) {
+	//while(distMeters > REQUIRED_DIST_METERS) {	// Device is too far away from next target
 		int64_t currLat = getLatitude();		// Get the current latitude
 		int64_t currLon = getLongitude();		// Get the current longitude
-		if ( currLat == 0 && currLon == 0) {	// GPS doesn't have lock
-			printf("GPS does not have a lock!\n");
-			continue;
-		}
-		distMeters = getDistanceMeters(nanoDegToLdDeg(currLon), nanoDegToLdDeg(currLat), nanoDegToLdDeg(lons[locIndex]), nanoDegToLdDeg(lats[locIndex])); // Distance from current position to next location (meters)
-		dir = getAngle(nanoDegToLdDeg(currLat), nanoDegToLdDeg(currLon), nanoDegToLdDeg(lats[locIndex]), nanoDegToLdDeg(lons[locIndex]));					// Angle between current location and next location
-		printf("dir: %d\n", dir);
+		//currLat = 51688805560;
+		//currLon = 5285611110;
+		//if ( currLat == 0 && currLon == 0) {	// GPS doesn't have lock
+		//if (getGnssData().info.fix_status == GNSS_FIX_STATUS_NO_FIX) {
+		//	//printf("GPS does not have a lock!\n");
+		//	//lcdClear();
+		//	lcdStringWrite("No fix 1");
+		//	k_msleep(500);
+		//	lcdStringWrite("No fix 2");
+		//	k_msleep(500);
+		//	continue;
+		//}
+		distMeters = getDistanceMeters(nanoDegToLdDeg(currLon), nanoDegToLdDeg(currLat), nanoDegToLdDeg(lons[i]), nanoDegToLdDeg(lats[i])); // Distance from current position to next location (meters)
+		//lcdClear();
+		dir = getAngle(nanoDegToLdDeg(currLat), nanoDegToLdDeg(currLon), nanoDegToLdDeg(lats[i]), nanoDegToLdDeg(lons[i]));					// Angle between current location and next location
+		//printf("dir: %d\n", dir);
 		int compassDir;
 		gyroCompass_get_heading(&compassDir);	// Angle of device
+		
+		char banana[25];
+		char distValue[3];
+		strcpy(banana, "Distance: ");
+		sprintf(distValue, "%d", distMeters);
+		strcat(banana,distValue);
+		strcat(banana, " angle: ");
+		char rotationValue[3];
+		sprintf(rotationValue, "%d", compassDir);
+		strcat(banana, rotationValue);
+		lcdStringWrite(banana);
+
+		compassDir = circleMovingAvg(compassDir);
+		
 		dir = dir - compassDir;					// Add to get the direction compared to the device
 		if (dir < 0 ) {
 			dir += 360;
@@ -88,7 +138,13 @@ int playIdle() {
 			dir -= 360;
 		}
 		setLedCircleDirWidth(dir, 10);			// Point the user in the correct direction
-		k_msleep(300);
+		if (distMeters < 20) {
+			lcdStringWrite("Arrived at location!!");
+			k_msleep(4000);
+			break;
+		}
+		k_msleep(1);
+	}
 	}
 	completedGames[locIndex] = true;
 	return locIndex;

@@ -1,8 +1,10 @@
 #include "gps.h"
+#include "lcd.h"
 #include <zephyr/device.h>
 #include <zephyr/drivers/gnss.h>
 #include <math.h>
 #include <stdio.h>
+#include <string.h>
 
 # define M_PI		3.14159265358979323846	/* pi */
 
@@ -34,6 +36,15 @@ static void gnss_satellites_cb(const struct device *dev, const struct gnss_satel
 			       uint16_t size)
 {
 	//printf("%s reported %u satellites!\r\n", dev->name, size);
+	//lcdClear();
+	//char words[27];
+	//char value[3];
+	//sprintf(value, "%d", size);
+	////value[0] = (char)(size + '0');
+	//strcpy(words,"Nr. of satellites:");
+	//strcat(words, value);
+	//lcdStringWrite(words);
+	//k_busy_wait(3000000);	
 }
 #endif
 
