@@ -34,6 +34,7 @@ void integration(void)
 	uint32_t duration = 0;
 	unsigned amount = 9;
 	char *names[10] = {"startbtn", "btnmatrix_in", "switches", "potmeter", "abcbtn","btnmatrix_out","ledmatrix","ledcircle","sevenseg"};
+	Startupdelay = 0;
 	enableThreads(names, amount);
 
 	// Matrix values
