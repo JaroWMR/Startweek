@@ -1,5 +1,7 @@
 #include "testButtonMatrix.h"
 
+
+#ifdef BUTTON_MATRIX
 ZTEST_SUITE(testButtonMatrix, NULL, NULL, NULL, NULL, NULL);
 
 ZTEST(testButtonMatrix, test_Matrix_Config_one)
@@ -41,3 +43,7 @@ ZTEST(testButtonMatrix, test_Buttons_Get_one)
 		zassert_equal(a,1);
 	}
 }
+
+
+
+#endif //BUTTON_MATRIX
