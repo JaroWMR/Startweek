@@ -31,9 +31,11 @@ To get started with Startweek, follow these steps:
 13. Then press `File` again and select `edit project file`.
 14. In this configuration file change the following settings:
    * `Project.SetDevice ("STM32H743ZI");` Change board to correct board if not testing STM32H743ZI.
-15. To start debugging press the `green drop down arrow` besides the `green power button` on the top left.
-16. Select `Download and Reset Program`.
-17. Debugging has been started tools to debug are in the top left.
+15. Press the bootpin button and hold it.
+16. Press the hardwarereset button an release both buttons.
+17. To start debugging press the `green drop down arrow` besides the `green power button` on the top left.
+18. Select `Download and Reset Program`.
+19. Debugging has been started tools to debug are in the top left.
 
 ## Additonal info
 The branch named `EmptyEnvironment_DO_NOT_DELETE` offers the environment in its starting state.
