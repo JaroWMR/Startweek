@@ -10,17 +10,18 @@ void getMg6Threads(char ***names, unsigned *amount) {
 	*amount = mg6ThreadCount;
 }
 
-#define MG6_ONELINERS 2
+#define MG6_ONELINERS 3
 char oneLinersMG6[MG6_ONELINERS][32] = {
 	"    Minigame          Timer",
-	"     press           start"
+	"Druk op de      verlichte knop",
+	"Het dichtst bij de 0"
 };
 
 void showOnelinersMG6()
 {
 	bool done = false;
 	lcdEnable();
-	lcdStringWrite("press start to  begin");
+	lcdStringWrite("Druk op start");
 	while (!done)
 	{
 		if(startbuttonGet())
@@ -49,8 +50,8 @@ void showOnelinersMG6()
 		}
 	}
 	startledSet(0);
-	//lcdClear();
-	//lcdDisable();
+	lcdClear();
+	lcdDisable();
 }
 
 
@@ -66,7 +67,7 @@ int playMg6() {
 	char clear[4] = {"0000"};
 
 	showOnelinersMG6();
-	
+	abcledsSet('a', true);
 	while(true)
 	{
 		abcBtn = abcbtnGetMutexValue();
@@ -107,6 +108,7 @@ int playMg6() {
 			}
 		}
 	}
+	abcledsSet('a', false);
 	score = 1000 - ((value10 * 1000)+(value1 * 100)+(value01 * 10)+(value001 * 1));
 	k_timer_start(&secTimerMg6, K_MSEC(3000), K_NO_WAIT);
 	while (!(k_timer_status_get(&secTimerMg6) > 0)){}

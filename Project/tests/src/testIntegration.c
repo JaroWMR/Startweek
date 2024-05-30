@@ -111,7 +111,7 @@ void integration(void)
 			break;
 		case 4:
 			lcdEnable();
-			lcdStringWrite("press start to  begin");
+			lcdStringWrite("Druk op start");
 			ledmatrixSetMutexValue(dataledmatrix_off);
 			break;
 		case 5:
