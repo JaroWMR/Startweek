@@ -16,7 +16,7 @@
 void tmain(void) // Core thread
 {
 	printf("Main\n");
-	startStatemachine();
+	tbuzzers();
 }
 
 // Define the threads

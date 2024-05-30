@@ -10,3 +10,5 @@ build/*
 # Ignore specfic files:
 Zephyr.code-workspace
 h7ConfigScriptOzone.jdebug.user
+
+Project/h7ConfigScriptOzone.jdebug.user
