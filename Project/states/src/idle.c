@@ -11,11 +11,26 @@
 #define REQUIRED_DIST_METERS 30
 #define ANGLE_BUFFER_SIZE 10
 #define GAMES_AMOUNT 10
+#define DIST_MAX_WIDTH 20	// Distance at which the circle has minimum width
+#define DIST_MIN_WIDTH 100 // Was 1000	//Distance at which the circle has maximum width
+#define DIST_RANGE (DIST_MIN_WIDTH - DIST_MAX_WIDTH)
+#define LEDS_MIN_WIDTH 7	// Amount of LEDS at DIST_MIN_WIDTH
+#define LEDS_MAX_WIDTH 32	// Amount of LEDS at DIST_MAX_WIDTH
+#define LEDS_RANGE_WIDTH (LEDS_MAX_WIDTH - LEDS_MIN_WIDTH)
 
 unsigned idleThreadCount = 1;
 char *idleThreads[1] = {"ledcircle"};
 double angleSinBuffer[ANGLE_BUFFER_SIZE];
 double angleCosBuffer[ANGLE_BUFFER_SIZE];
+
+int getLedWidth(int distance) {
+	if (distance > DIST_MIN_WIDTH) { return LEDS_MIN_WIDTH; }
+	if (distance < DIST_MAX_WIDTH) { return LEDS_MAX_WIDTH; }
+	distance -= DIST_MAX_WIDTH;
+	double distFraction = (double)distance / DIST_RANGE;
+	distFraction = 1 - distFraction;
+	return LEDS_RANGE_WIDTH*distFraction + LEDS_MIN_WIDTH;
+}
 
 int circleMovingAvg(int newValue) {
 	double rad = toRadians(newValue);
@@ -101,16 +116,16 @@ int playIdle() {
 		int64_t currLon = getLongitude();		// Get the current longitude
 		//currLat = 51688805560;
 		//currLon = 5285611110;
-		//if ( currLat == 0 && currLon == 0) {	// GPS doesn't have lock
+		if ( currLat == 0 && currLon == 0) {	// GPS doesn't have lock
 		//if (getGnssData().info.fix_status == GNSS_FIX_STATUS_NO_FIX) {
-		//	//printf("GPS does not have a lock!\n");
-		//	//lcdClear();
-		//	lcdStringWrite("No fix 1");
-		//	k_msleep(500);
-		//	lcdStringWrite("No fix 2");
-		//	k_msleep(500);
-		//	continue;
-		//}
+			//printf("GPS does not have a lock!\n");
+			//lcdClear();
+			lcdStringWrite("No fix 1");
+			k_msleep(500);
+			lcdStringWrite("No fix 2");
+			k_msleep(500);
+			continue;
+		}
 		distMeters = getDistanceMeters(nanoDegToLdDeg(currLon), nanoDegToLdDeg(currLat), nanoDegToLdDeg(lons[i]), nanoDegToLdDeg(lats[i])); // Distance from current position to next location (meters)
 		//lcdClear();
 		dir = getAngle(nanoDegToLdDeg(currLat), nanoDegToLdDeg(currLon), nanoDegToLdDeg(lats[i]), nanoDegToLdDeg(lons[i]));					// Angle between current location and next location
@@ -123,10 +138,10 @@ int playIdle() {
 		strcpy(banana, "Distance: ");
 		sprintf(distValue, "%d", distMeters);
 		strcat(banana,distValue);
-		strcat(banana, " angle: ");
-		char rotationValue[3];
-		sprintf(rotationValue, "%d", compassDir);
-		strcat(banana, rotationValue);
+		//strcat(banana, " angle: ");
+		//char rotationValue[3];
+		//sprintf(rotationValue, "%d", compassDir);
+		//strcat(banana, rotationValue);
 		lcdStringWrite(banana);
 
 		compassDir = circleMovingAvg(compassDir);
@@ -137,7 +152,10 @@ int playIdle() {
 		} else if (dir >= 360) {
 			dir -= 360;
 		}
-		setLedCircleDirWidth(dir, 10);			// Point the user in the correct direction
+
+		int ledWidth = getLedWidth(distMeters);
+
+		setLedCircleDirWidth(dir, ledWidth);			// Point the user in the correct direction
 		if (distMeters < 20) {
 			lcdStringWrite("Arrived at location!!");
 			k_msleep(4000);
