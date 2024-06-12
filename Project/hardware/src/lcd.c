@@ -70,7 +70,7 @@ void lcdWriteInstruction(uint8_t bits)
 	if(lastaction == actiondata)
 	{
 		gpio_pin_set_dt(&lcdRS,LOW);
-		k_sleep(K_USEC(1));
+		k_sleep(K_MSEC(1));
 	}
 	lastaction = actioninstruction;
 	lcdWrite8bits(bits);
@@ -88,7 +88,7 @@ void lcdWriteData(uint8_t bits)
 	if(lastaction == actioninstruction)
 	{
 		gpio_pin_set_dt(&lcdRS,HIGH);
-		k_sleep(K_USEC(1));
+		k_sleep(K_MSEC(1));
 	}
 	lastaction = actiondata;
 	lcdWrite8bits(bits);

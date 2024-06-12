@@ -20,5 +20,7 @@ uint8_t initialize()
 	ret += lcdInit();
 	ret += ledMatrixInit();
 	ret += sevenSegmentInit();
+	ret += magnetometer_init();
+	ret += gyroscope_init();
 	return ret;
 }
