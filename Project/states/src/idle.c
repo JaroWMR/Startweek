@@ -90,18 +90,19 @@ int playIdle() {
 	int dir = 0;			// Direction the user must head in
 	lcdEnable();
 	bool lcdSet = false;
-	while(distMeters > REQUIRED_DIST_METERS) {	// Device is too far away from next target
+	while(1) {
+	//while(distMeters > REQUIRED_DIST_METERS) {	// Device is too far away from next target
 		int64_t currLat = getLatitude();		// Get the current latitude
 		int64_t currLon = getLongitude();		// Get the current longitude
 		if ( currLat == 0 && currLon == 0) {	// GPS doesn't have lock
 			//printf("GPS does not have a lock!\n");
-			lcdStringWrite("GPS heeft geen  fix..");
-			k_msleep(500);
-			lcdStringWrite("GPS heeft geen  fix...");
-			k_msleep(500);
+			//lcdStringWrite("GPS heeft geen  fix..");
+			//k_msleep(500);
+			//lcdStringWrite("GPS heeft geen  fix...");
+			//k_msleep(500);
 			continue;
 		} else if (!lcdSet) {
-			lcdStringWrite("Volg de LEDs!");
+			//lcdStringWrite("Volg de LEDs!");
 			lcdSet = true;
 		}
 		distMeters = getDistanceMeters(nanoDegToLdDeg(currLon), nanoDegToLdDeg(currLat), nanoDegToLdDeg(lons[locIndex]), nanoDegToLdDeg(lats[locIndex])); // Distance from current position to next location (meters)
@@ -135,7 +136,7 @@ int playIdle() {
 		if (distMeters < 20) {
 			break;
 		}
-		k_msleep(1);
+		k_msleep(10);
 	}
 	lcdStringWrite("Gearriveerd!!");
 	k_msleep(4000);

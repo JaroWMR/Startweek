@@ -35,16 +35,16 @@ GNSS_DATA_CALLBACK_DEFINE(DEVICE_DT_GET(DT_ALIAS(gnss)), gnss_data_cb);
 static void gnss_satellites_cb(const struct device *dev, const struct gnss_satellite *satellites,
 			       uint16_t size)
 {
-	//printf("%s reported %u satellites!\r\n", dev->name, size);
-	//lcdClear();
-	//char words[27];
-	//char value[3];
-	//sprintf(value, "%d", size);
-	////value[0] = (char)(size + '0');
-	//strcpy(words,"Nr. of satellites:");
-	//strcat(words, value);
-	//lcdStringWrite(words);
-	//k_busy_wait(3000000);	
+	printf("%s reported %u satellites!\r\n", dev->name, size);
+	lcdClear();
+	char words[27];
+	char value[3];
+	sprintf(value, "%d", size);
+	//value[0] = (char)(size + '0');
+	strcpy(words,"Nr. of satellites:");
+	strcat(words, value);
+	lcdStringWrite(words);
+	k_busy_wait(300);	
 }
 #endif
 
