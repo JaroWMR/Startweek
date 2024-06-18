@@ -499,7 +499,18 @@
 };
 
 &spi1 {
-		status = "disabled";
+        status = "okay";
+
+        sdhc0: sdhc@0 {
+                compatible = "zephyr,sdhc-spi-slot";
+                reg = <0>;
+                status = "okay";
+                mmc {
+                    compatible = "zephyr,sdmmc-disk";
+                    status = "okay";
+                };
+                spi-max-frequency = <24000000>;
+        };
 };
 
 &fdcan1{
