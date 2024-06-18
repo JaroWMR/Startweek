@@ -9,9 +9,10 @@ void getMg4Threads(char ***names, unsigned *amount) {
 	*amount = mg4ThreadCount;
 }
 
-#define MG4_ONELINERS 1
+#define MG4_ONELINERS 2
 char oneLinersMG4[MG4_ONELINERS][32] = {
-	"    Minigame          Quiz"
+	"Quiz: beantwoordde vragen",
+	"Druk op de startknop"
 };
 
 char questions[AMOUNT_QUESTIONS][MAX_SIZE] = {
@@ -22,10 +23,10 @@ char questions[AMOUNT_QUESTIONS][MAX_SIZE] = {
 };
 
 char answers[AMOUNT_QUESTIONS][AMOUNT_ANSWERS][MAX_SIZE] = {
-	{"3 jaar", "8 jaar", "14 minuten"},
-	{"77cm", "108cm", "135cm"},
-	{"Supermarkt", "Dierentuin", "School"},
-	{"Limburg", "Gelderland", "Brabant"}
+	{"A: 3 jaar", "B: 8 jaar", "C: 14 minuten"},
+	{"A: 77cm", "B: 108cm", "C: 135cm"},
+	{"A: Supermarkt", "B: Dierentuin", "C: School"},
+	{"A: Limburg", "B: Gelderland", "C: Brabant"}
 };
 
 const int correctAnswer[AMOUNT_QUESTIONS] = {
@@ -39,7 +40,7 @@ void showOnelinersMG4()
 {
 	bool done = false;
 	lcdEnable();
-	lcdStringWrite("press start to  begin");
+	lcdStringWrite("Druk op start");
 	while (!done)
 	{
 		if(startbuttonGet())
@@ -81,6 +82,9 @@ int playMg4() {
 	bool buttonReleased = true;
 	showOnelinersMG4();
 	k_timer_start(&secTimerMg4, K_MSEC(1000), K_NO_WAIT);
+	abcledsSet('a',true);
+	abcledsSet('b',true);
+	abcledsSet('c',true);
 	while (!(k_timer_status_get(&secTimerMg4) > 0)){}	
 	for (uint8_t questionIndex = 0; questionIndex < AMOUNT_QUESTIONS; questionIndex++)
 	{
@@ -108,7 +112,7 @@ int playMg4() {
 					while (!(k_timer_status_get(&secTimerMg4) > 0)){}
 				}
 				
-				lcdStringWrite("    Antwoord      A , B of C    ");
+				lcdStringWrite("    Antwoord      A, B of C    ");
 				
 			}
 
@@ -168,6 +172,9 @@ int playMg4() {
 			}
 		}
 	}
+	abcledsSet('a',false);
+	abcledsSet('b',false);
+	abcledsSet('c',false);
 	lcdDisable();
 	lcdClear();
 	return score;

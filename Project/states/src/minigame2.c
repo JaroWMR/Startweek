@@ -9,10 +9,12 @@ void getMg2Threads(char ***names, unsigned *amount) {
 	*amount = mg2ThreadCount;
 }
 
-#define MG2_ONELINERS 2
+#define MG2_ONELINERS 4
 char oneLinersMG2[MG2_ONELINERS][32] = {
-	"    Minigame      Simon Says1",
-	"    Minigame      Simon Says2"
+	"Simon Says: Drukop de        ",
+	"lichtgevende    knoppen      ",
+	"in de juiste    volgorde     ",
+	"Druk op de      startknop!   "
 };
 
 
@@ -177,7 +179,7 @@ void showOnelinersMG2()
 {
 	bool done = false;
 	lcdEnable();
-	lcdStringWrite("press start to  begin");
+	lcdStringWrite("Druk op start");
 	while (!done)
 	{
 		if(startbuttonGet())
