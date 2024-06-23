@@ -8,7 +8,7 @@
 #include "gyroCompass.h"
 #include "lcd.h"
 #include "ledMatrix.h"
-#include "potmeter.h"
+#include "adc.h"
 #include "sevenSegment.h"
 
 

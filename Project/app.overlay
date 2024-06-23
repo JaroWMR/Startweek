@@ -112,10 +112,6 @@
 				status = "okay";
 				phandle = < 0xc >;
 			};
-			adc1_inp2_pf11: adc1_inp2_pf11 {
-				pinmux = <STM32_PINMUX('f', 11, AF10)>;
-				status = "okay";
-			};
 			tim2_ch3_pb10: tim2_ch3_pb10{
 				pinmux = <STM32_PINMUX('b', 10, AF1)>;
 				status = "okay";
@@ -126,6 +122,14 @@
 			};
 			tim5_ch2_pa1: tim5_ch2_pa1{
 				pinmux = <STM32_PINMUX('a', 1, AF2)>;
+				status = "okay";
+			};
+			adc1_inp2_pf11: adc1_inp2_pf11 {
+			pinmux = < 0xb70 >;
+			status = "okay";
+			};
+			adc12_inp5_pb1: adc12_inp5_pb1 {
+				pinmux = < 0x230 >;
 				status = "okay";
 			};
 		};
@@ -365,7 +369,6 @@
 		interupt_3d_compass: gpioa_8 {
 			gpios = <&gpioa 8 GPIO_PULL_UP>;
 		};
-
 	};
 
 	aliases {
@@ -477,14 +480,41 @@
 	};
 };
 
-
-//disable unused
-
+/ {
+	zephyr,user {
+		/* adjust channel number according to pinmux in board.dts */
+		io-channels = <&adc1 2>, <&adc1 5>;
+	};
+};
 
 &adc1{
 		status = "okay";
-		pinctrl-0 = < &adc1_inp2_pf11 >;
+		pinctrl-0 = < &adc1_inp2_pf11 &adc12_inp5_pb1>;
+		
+
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		channel@2 {
+			reg = <2>;
+			zephyr,gain = "ADC_GAIN_1";
+			zephyr,reference = "ADC_REF_INTERNAL";
+			zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
+			zephyr,resolution = <12>;
+		};
+
+		channel@5 {
+			reg = <5>;
+			zephyr,gain = "ADC_GAIN_1";
+			zephyr,reference = "ADC_REF_INTERNAL";
+			zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
+			zephyr,resolution = <12>;
+		};
+	
 };
+
+//disable unused
+
 
 &adc3{
 		status = "disabled";

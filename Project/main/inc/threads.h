@@ -8,7 +8,7 @@ extern uint32_t Startupdelay;
 // Total number of threads
 #define THREAD_AMOUNT 10
 
-#define printf(...)
+// #define printf(...)
 
 // The stack size of all threads
 #define STACKSIZE 1024
