@@ -64,7 +64,7 @@ int playMg6() {
 	uint8_t value01 = 0;
 	uint8_t value001 = 0;
 	char input[4] = {"1000"};
-	char clear[4] = {"0000"};
+	char clear[4] = {"NULL"};
 
 	showOnelinersMG6();
 	abcledsSet('a', true);

@@ -70,9 +70,9 @@ uint8_t ledcircleMutexValue[8] = {0,0,0,0,0,0,0,0} ;// MutexValue (Protected)
 uint8_t ledcircleMutexValueOld[8] = {0,0,0,0,0,0,0,0} ;// Return value for mutexValue (Not protected)
 
 K_MUTEX_DEFINE(sevensegMutex); // Mutex
-char sevensegMutexValueInput[4] = "0000";// MutexValue (Protected)
+char sevensegMutexValueInput[4] = "NULL";// MutexValue (Protected)
 uint8_t sevensegMutexValuedpPosition = 0 ;// MutexValue (Protected)
-char sevensegMutexValueInputOld[4] = "0000" ;// Return value for mutexValue (Not protected)
+char sevensegMutexValueInputOld[4] = "NULL" ;// Return value for mutexValue (Not protected)
 uint8_t sevensegMutexValuedpPositionOld = 0 ;// MutexValue (Protected)
 
 // Input thread and mutex functions
@@ -390,7 +390,14 @@ void tsevenseg(void) {
 			sevensegMutexValuedpPositionOld = sevensegMutexValuedpPosition;
 			k_mutex_unlock(&sevensegMutex);	
 		} 
-		sevenSegmentSet(sevensegMutexValueInputOld,sevensegMutexValuedpPositionOld);
+		if(strcmp(sevensegMutexValueInputOld, "NULL") == 0)
+		{
+			sevenSegmentInit();
+		}
+		else
+		{
+			sevenSegmentSet(sevensegMutexValueInputOld,sevensegMutexValuedpPositionOld);
+		}
 		//k_msleep(16);	// This delay should depend on how frequently this sensor / actuator is read / written
 	}
 }
