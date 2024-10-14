@@ -1,10 +1,10 @@
 # Startweek
 
-## Brief Description
-Project made for Avans as a game to assist in the Startweek. The game will inlcude a route and minigames that are playing along the route.
+## Project Overview
+This project, developed for Avans, is designed to assist in the Startweek event through a game. The game features a route with integrated mini-games that are played along the way.
 
-## Getting Started
-To get started with Startweek, follow these steps:
+## Getting Started (For Developers)
+This guide is intended for developers working on the project. Please note that the game requires a custom-made PCB to function properly. Follow the steps below to set up the development environment.
 
 1. Make sure the folders are named as below or some setting may need changing later on.
    Keep in mind that some steps of the zephyr getting started may be a bit different because of the folder layout.
